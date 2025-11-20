@@ -1,0 +1,34 @@
+{
+	"name": "tanstack-meta",
+	"version": "0.0.1",
+	"description": "TODO:",
+	"keywords": [],
+	"author": "Shinya Fujino <shf0811@gmail.com> (https://github.com/morinokami)",
+	"license": "MIT",
+	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/morinokami/tanstack-meta.git",
+		"directory": "packages/meta"
+	},
+	"bugs": {
+		"url": "https://github.com/morinokami/tanstack-meta/issues"
+	},
+	"exports": {
+		".": "./dist/index.js"
+	},
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsdown"
+	},
+	"devDependencies": {
+		"@tanstack/react-router": "1.136.18",
+		"next": "16.0.3",
+		"tsdown": "0.16.6"
+	}
+}

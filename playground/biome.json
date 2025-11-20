@@ -1,0 +1,21 @@
+{
+	"root": false,
+	"extends": "//",
+	"files": {
+		"includes": [
+			"**/src/**/*",
+			"**/.vscode/**/*",
+			"**/index.html",
+			"**/content-collections.ts",
+			"**/prisma.config.ts",
+			"**/vite.config.ts",
+			"!**/src/routeTree.gen.ts",
+			"!**/src/styles/*.css"
+		]
+	},
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  }
+}
