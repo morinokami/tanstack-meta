@@ -1,9 +1,41 @@
 import type { AnyRouteMatch } from "@tanstack/react-router";
-import type { Metadata as NextMetadata } from "next";
+import type { Metadata as NextMetadata, ResolvedMetadata } from "next";
 
 export type InputMetadata = {
+	// TODO: metadataBase
+	charSet?: string | null;
 	title?: string | null;
-	description?: string | null;
+	description?: NextMetadata["description"];
+	applicationName?: NextMetadata["applicationName"];
+	// authors: NextMetadata["authors"];
+	// manifest: NextMetadata["manifest"];
+	generator?: NextMetadata["generator"];
+	keywords?: NextMetadata["keywords"];
+	referrer?: NextMetadata["referrer"];
+	creator?: NextMetadata["creator"];
+	publisher?: NextMetadata["publisher"];
+	robots?: NextMetadata["robots"];
+	abstract?: NextMetadata["abstract"];
+	category?: NextMetadata["category"];
+	classification?: NextMetadata["classification"];
+	other?: NextMetadata["other"];
+};
+
+export type NormalizedMetadata = {
+	charSet: string | null;
+	title: string | null;
+	description: ResolvedMetadata["description"];
+	applicationName: ResolvedMetadata["applicationName"];
+	generator: ResolvedMetadata["generator"];
+	keywords: ResolvedMetadata["keywords"];
+	referrer: ResolvedMetadata["referrer"];
+	creator: ResolvedMetadata["creator"];
+	publisher: ResolvedMetadata["publisher"];
+	robots: ResolvedMetadata["robots"];
+	abstract: ResolvedMetadata["abstract"];
+	category: ResolvedMetadata["category"];
+	classification: ResolvedMetadata["classification"];
+	other: ResolvedMetadata["other"];
 };
 
 export type OutputMetadata = AnyRouteMatch["meta"];
