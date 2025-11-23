@@ -49,7 +49,7 @@ describe("generateOpenGraph", () => {
 			},
 		};
 
-		expect(generateOpenGraph(metadata)?.filter(Boolean) ?? []).toEqual([
+		expect(generateOpenGraph(metadata)).toEqual([
 			{ property: "og:determiner", content: "the" },
 			{ property: "og:title", content: "OG Title" },
 			{ property: "og:description", content: "OG Description" },
@@ -99,7 +99,7 @@ describe("generateOpenGraph", () => {
 			},
 		};
 
-		expect(generateOpenGraph(metadata)?.filter(Boolean) ?? []).toEqual([
+		expect(generateOpenGraph(metadata)).toEqual([
 			{ property: "og:image", content: "https://img.com/1.png" },
 			{ property: "og:image:secure_url", content: "https://img.com/2-sec.png" },
 			{ property: "og:image", content: "https://img.com/3.png" },
@@ -333,9 +333,7 @@ describe("generateOpenGraph", () => {
 
 		for (const { name, openGraph, expected } of cases) {
 			test(name, () => {
-				expect(generateOpenGraph({ openGraph })?.filter(Boolean) ?? []).toEqual(
-					expected,
-				);
+				expect(generateOpenGraph({ openGraph })).toEqual(expected);
 			});
 		}
 	});
@@ -360,7 +358,7 @@ describe("generateTwitter", () => {
 			},
 		};
 
-		expect(generateTwitter(metadata)?.filter(Boolean) ?? []).toEqual([
+		expect(generateTwitter(metadata)).toEqual([
 			{ name: "twitter:card", content: "summary" },
 			{ name: "twitter:site", content: "@site" },
 			{ name: "twitter:site:id", content: "111" },
@@ -398,7 +396,7 @@ describe("generateTwitter", () => {
 			},
 		};
 
-		expect(generateTwitter(metadata)?.filter(Boolean) ?? []).toEqual([
+		expect(generateTwitter(metadata)).toEqual([
 			{ name: "twitter:card", content: "player" },
 			{ name: "twitter:site", content: "@site" },
 			{ name: "twitter:site:id", content: "999" },
@@ -440,7 +438,7 @@ describe("generateTwitter", () => {
 			},
 		};
 
-		expect(generateTwitter(metadata)?.filter(Boolean) ?? []).toEqual([
+		expect(generateTwitter(metadata)).toEqual([
 			{ name: "twitter:card", content: "app" },
 			{ name: "twitter:site", content: "@site" },
 			{ name: "twitter:title", content: "App Title" },
@@ -483,7 +481,7 @@ describe("generateAppLinks", () => {
 			},
 		};
 
-		expect(generateAppLinks(metadata)?.filter(Boolean) ?? []).toEqual([
+		expect(generateAppLinks(metadata)).toEqual([
 			{ property: "al:ios:url", content: "ios-url" },
 			{ property: "al:ios:app_store_id", content: "111" },
 			{ property: "al:ios:app_name", content: "iOS" },
@@ -513,7 +511,7 @@ describe("generateAppLinks", () => {
 			},
 		};
 
-		expect(generateAppLinks(metadata)?.filter(Boolean) ?? []).toEqual([
+		expect(generateAppLinks(metadata)).toEqual([
 			{ property: "al:ios:url", content: "ios-url-1" },
 			{ property: "al:ios:app_store_id", content: "111" },
 			{ property: "al:ios:url", content: "ios-url-2" },
@@ -533,7 +531,7 @@ describe("generateAppLinks", () => {
 			},
 		};
 
-		expect(generateAppLinks(metadata)?.filter(Boolean) ?? []).toEqual([
+		expect(generateAppLinks(metadata)).toEqual([
 			{ property: "al:ios:url", content: "ios-only" },
 			{ property: "al:ios:app_store_id", content: "123" },
 			{ property: "al:web:url", content: "web-fallback" },
@@ -551,7 +549,7 @@ describe("generateAppLinks", () => {
 			},
 		};
 
-		expect(generateAppLinks(metadata)?.filter(Boolean) ?? []).toEqual([
+		expect(generateAppLinks(metadata)).toEqual([
 			{ property: "al:ios:url", content: "ios-url-1" },
 			{ property: "al:ios:app_store_id", content: "111" },
 			{ property: "al:ios:app_name", content: "App1" },

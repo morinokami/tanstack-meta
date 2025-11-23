@@ -17,18 +17,12 @@ export const Route = createRootRoute({
 			...meta({
 				charSet: "utf-8",
 				title: "TanStack Start Starter",
-				appLinks: {
-					ios: {
-						url: "https://nextjs.org/ios",
-						app_store_id: "app_store_id",
-					},
-					android: {
-						package: "com.example.android/package",
-						app_name: "app_name_android",
-					},
-					web: {
-						url: "https://nextjs.org/web",
-						should_fallback: true,
+				verification: {
+					google: "google",
+					yandex: "yandex",
+					yahoo: "yahoo",
+					other: {
+						me: ["my-email", "my-link"],
 					},
 				},
 			}),

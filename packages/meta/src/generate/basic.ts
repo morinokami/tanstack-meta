@@ -1,6 +1,6 @@
 import { normalizeMetadata } from "../normalize";
 import type { InputMetadata, OutputMetadata } from "../types/io";
-import { _meta } from "./utils";
+import { _meta, _multiMeta, nonNullable } from "./utils";
 
 // https://github.com/vercel/next.js/blob/5b97f1f7b51dddfc1df42e0bd03730f90ebc9337/packages/next/src/lib/metadata/generate/basic.tsx#L54
 export function generateBasic(metadata: InputMetadata): OutputMetadata {
@@ -40,5 +40,31 @@ export function generateBasic(metadata: InputMetadata): OutputMetadata {
 					return _meta({ name, content });
 				})
 			: []),
-	];
+	].filter(nonNullable);
+}
+
+export function generateVerification(metadata: InputMetadata): OutputMetadata {
+	const { verification } = normalizeMetadata(metadata);
+
+	if (!verification) return [];
+
+	return [
+		_multiMeta({
+			namePrefix: "google-site-verification",
+			contents: verification.google,
+		}),
+		_multiMeta({ namePrefix: "y_key", contents: verification.yahoo }),
+		_multiMeta({
+			namePrefix: "yandex-verification",
+			contents: verification.yandex,
+		}),
+		_multiMeta({ namePrefix: "me", contents: verification.me }),
+		...(verification.other
+			? Object.entries(verification.other).map(([key, value]) =>
+					_multiMeta({ namePrefix: key, contents: value }),
+				)
+			: []),
+	]
+		.flat()
+		.filter(nonNullable);
 }

@@ -20,7 +20,7 @@ export function _meta({
 	return undefined;
 }
 
-function nonNullable<T>(value: T): value is NonNullable<T> {
+export function nonNullable<T>(value: T): value is NonNullable<T> {
 	return value !== null && value !== undefined;
 }
 

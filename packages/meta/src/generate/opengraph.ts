@@ -1,7 +1,7 @@
 import { normalizeMetadata } from "../normalize";
 import type { InputMetadata, OutputMetadata } from "../types/io";
 import type { TwitterAppDescriptor } from "../types/twitter-types";
-import { _meta, _multiMeta } from "./utils";
+import { _meta, _multiMeta, nonNullable } from "./utils";
 
 // https://github.com/vercel/next.js/blob/f9f625b90e6d4a562758c6a43234e168dcc23aa1/packages/next/src/lib/metadata/generate/opengraph.tsx
 export function generateOpenGraph(metadata: InputMetadata): OutputMetadata {
@@ -217,7 +217,9 @@ export function generateOpenGraph(metadata: InputMetadata): OutputMetadata {
 			contents: openGraph.alternateLocale,
 		}),
 		...(typedOpenGraph ? typedOpenGraph.flat() : []),
-	].flat();
+	]
+		.flat()
+		.filter(nonNullable);
 }
 
 function TwitterAppItem({
@@ -273,7 +275,9 @@ export function generateTwitter(metadata: InputMetadata): OutputMetadata {
 					TwitterAppItem({ app: twitter.app, type: "googleplay" }),
 				]
 			: []),
-	].flat();
+	]
+		.flat()
+		.filter(nonNullable);
 }
 
 export function generateAppLinks(metadata: InputMetadata): OutputMetadata {
@@ -296,5 +300,7 @@ export function generateAppLinks(metadata: InputMetadata): OutputMetadata {
 			contents: appLinks.windows_universal,
 		}),
 		_multiMeta({ propertyPrefix: "al:web", contents: appLinks.web }),
-	].flat();
+	]
+		.flat()
+		.filter(nonNullable);
 }

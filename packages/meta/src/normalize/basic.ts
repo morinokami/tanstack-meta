@@ -1,4 +1,6 @@
 import type { InputMetadata } from "../types/io";
+import type { ResolvedVerification } from "../types/metadata-types";
+import { resolveAsArrayOrUndefined } from "./utils";
 
 const robotsKeys = [
 	"noarchive",
@@ -35,4 +37,28 @@ export const normalizeRobotsValue: (
 	}
 
 	return values.join(", ");
+};
+
+const VerificationKeys = ["google", "yahoo", "yandex", "me", "other"] as const;
+export const normalizeVerification = (
+	verification: InputMetadata["verification"],
+) => {
+	if (!verification) return null;
+	const res: ResolvedVerification = {};
+
+	for (const key of VerificationKeys) {
+		const value = verification[key];
+		if (value) {
+			if (key === "other") {
+				res.other = {};
+				for (const otherKey in verification.other) {
+					const otherValue = resolveAsArrayOrUndefined(
+						verification.other[otherKey],
+					);
+					if (otherValue) res.other[otherKey] = otherValue;
+				}
+			} else res[key] = resolveAsArrayOrUndefined(value) as (string | number)[];
+		}
+	}
+	return res;
 };

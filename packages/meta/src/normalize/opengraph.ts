@@ -3,22 +3,7 @@ import type { ResolvedMetadataWithURLs } from "next/dist/lib/metadata/types/meta
 
 import type { InputMetadata, SimplifyTitleInUnion } from "../types/io";
 import type { OpenGraphType } from "../types/opengraph-types";
-
-function resolveArray<T>(value: T | T[]): T[] {
-	if (Array.isArray(value)) {
-		return value as any;
-	}
-	return [value] as any;
-}
-
-function resolveAsArrayOrUndefined<T>(
-	value: T | T[] | undefined | null,
-): T extends undefined | null ? undefined : T[] {
-	if (typeof value === "undefined" || value === null) {
-		return undefined as any;
-	}
-	return resolveArray(value) as any;
-}
+import { resolveArray, resolveAsArrayOrUndefined } from "./utils";
 
 // type FlattenArray<T> = T extends (infer U)[] ? U : T;
 
