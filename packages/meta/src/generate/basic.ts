@@ -49,7 +49,25 @@ export function generateBasicLinks(metadata: InputMetadata): OutputLinks {
 		normalizedMetadata.manifest
 			? { rel: "manifest", href: normalizedMetadata.manifest }
 			: undefined,
-	];
+		...(normalizedMetadata.archives
+			? normalizedMetadata.archives.map((archive) => ({
+					rel: "archives",
+					href: archive,
+				}))
+			: []),
+		...(normalizedMetadata.assets
+			? normalizedMetadata.assets.map((asset) => ({
+					rel: "assets",
+					href: asset,
+				}))
+			: []),
+		...(normalizedMetadata.bookmarks
+			? normalizedMetadata.bookmarks.map((bookmark) => ({
+					rel: "bookmarks",
+					href: bookmark,
+				}))
+			: []),
+	].filter(nonNullable);
 }
 
 export function generateFacebook(metadata: InputMetadata): OutputMeta {

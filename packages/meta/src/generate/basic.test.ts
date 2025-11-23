@@ -119,6 +119,48 @@ describe("generateBasicLinks", () => {
 			{ rel: "manifest", href: "https://example.com/app.webmanifest" },
 		]);
 	});
+
+	test("emits archives links when provided", () => {
+		const metadata: InputMetadata = {
+			archives: [
+				"https://example.com/archive1",
+				"https://example.com/archive2",
+			],
+		};
+
+		expect(generateBasicLinks(metadata)).toEqual([
+			{ rel: "archives", href: "https://example.com/archive1" },
+			{ rel: "archives", href: "https://example.com/archive2" },
+		]);
+	});
+
+	test("emits assets links when provided", () => {
+		const metadata: InputMetadata = {
+			assets: [
+				"https://example.com/assets.css",
+				"https://example.com/assets.js",
+			],
+		};
+
+		expect(generateBasicLinks(metadata)).toEqual([
+			{ rel: "assets", href: "https://example.com/assets.css" },
+			{ rel: "assets", href: "https://example.com/assets.js" },
+		]);
+	});
+
+	test("emits bookmarks links when provided", () => {
+		const metadata: InputMetadata = {
+			bookmarks: [
+				"https://example.com/bookmark1",
+				"https://example.com/bookmark2",
+			],
+		};
+
+		expect(generateBasicLinks(metadata)).toEqual([
+			{ rel: "bookmarks", href: "https://example.com/bookmark1" },
+			{ rel: "bookmarks", href: "https://example.com/bookmark2" },
+		]);
+	});
 });
 
 describe("generateFormatDetection", () => {

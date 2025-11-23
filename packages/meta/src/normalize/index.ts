@@ -11,6 +11,7 @@ import {
 	normalizeOpenGraph,
 	normalizeTwitter,
 } from "./opengraph";
+import { resolveAsArrayOrUndefined } from "./utils";
 
 // https://github.com/vercel/next.js/blob/d673568300ab9336ebe610516c5a3439ab7cb8f5/packages/next/src/lib/metadata/resolve-metadata.ts#L213
 export function normalizeMetadata(metadata: InputMetadata): NormalizedMetadata {
@@ -39,6 +40,9 @@ export function normalizeMetadata(metadata: InputMetadata): NormalizedMetadata {
 				}
 			: null,
 		abstract: metadata.abstract ?? null,
+		archives: resolveAsArrayOrUndefined(metadata.archives) ?? null,
+		assets: resolveAsArrayOrUndefined(metadata.assets) ?? null,
+		bookmarks: resolveAsArrayOrUndefined(metadata.bookmarks) ?? null,
 		category: metadata.category ?? null,
 		classification: metadata.classification ?? null,
 		other: metadata.other ?? null,

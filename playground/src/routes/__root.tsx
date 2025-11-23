@@ -12,7 +12,7 @@ export const Route = createRootRoute({
 		const { meta, links } = generateMetadata({
 			charSet: "utf-8",
 			title: "TanStack Start Starter",
-			manifest: "https://nextjs.org/manifest.json",
+			archives: ["https://nextjs.org/13"],
 		});
 
 		return {

@@ -47,9 +47,9 @@ export const Route = createFileRoute("/")({
 - [x] `publisher`
 - [x] `robots`
 - [x] `abstract`
-- [ ] `archives`
-- [ ] `assets`
-- [ ] `bookmarks`
+- [x] `archives`
+- [x] `assets`
+- [x] `bookmarks`
 - [ ] `pagination`
 - [x] `category`
 - [x] `classification`

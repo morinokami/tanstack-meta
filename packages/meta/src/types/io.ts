@@ -21,6 +21,9 @@ export type InputMetadata = {
 	publisher?: NextMetadata["publisher"];
 	robots?: NextMetadata["robots"];
 	abstract?: NextMetadata["abstract"];
+	archives?: NextMetadata["archives"];
+	assets?: NextMetadata["assets"];
+	bookmarks?: NextMetadata["bookmarks"];
 	category?: NextMetadata["category"];
 	classification?: NextMetadata["classification"];
 	other?: NextMetadata["other"];
@@ -47,6 +50,9 @@ export type NormalizedMetadata = {
 	publisher: ResolvedMetadata["publisher"];
 	robots: ResolvedMetadata["robots"];
 	abstract: ResolvedMetadata["abstract"];
+	archives: ResolvedMetadata["archives"];
+	assets: ResolvedMetadata["assets"];
+	bookmarks: ResolvedMetadata["bookmarks"];
 	category: ResolvedMetadata["category"];
 	classification: ResolvedMetadata["classification"];
 	other: ResolvedMetadata["other"];
