@@ -10,7 +10,7 @@ export function _meta({
 	media?: string;
 	content?: string | number | URL | null | undefined;
 }) {
-	if (content) {
+	if ((name || property) && content) {
 		return {
 			...(name ? { name } : { property }),
 			...(media ? { media } : {}),

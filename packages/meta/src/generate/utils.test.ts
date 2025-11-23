@@ -58,7 +58,7 @@ describe("_meta", () => {
 	});
 
 	test("returns undefined for falsy content", () => {
-		const falsyContents: Array<string | number | URL | null | undefined> = [
+		const falsyContents: (string | number | URL | null | undefined)[] = [
 			null,
 			undefined,
 			"",
@@ -69,12 +69,20 @@ describe("_meta", () => {
 			expect(_meta({ name: "description", content })).toBeUndefined();
 		}
 	});
+
+	test("returns undefined when neither name nor property is provided", () => {
+		expect(_meta({ content: "value" })).toBeUndefined();
+	});
 });
 
 describe("_multiMeta", () => {
 	test("returns undefined when contents is nullish", () => {
-		expect(_multiMeta({ propertyPrefix: "og:image", contents: undefined })).toBeUndefined();
-		expect(_multiMeta({ propertyPrefix: "og:image", contents: null })).toBeUndefined();
+		expect(
+			_multiMeta({ propertyPrefix: "og:image", contents: undefined }),
+		).toBeUndefined();
+		expect(
+			_multiMeta({ propertyPrefix: "og:image", contents: null }),
+		).toBeUndefined();
 	});
 
 	test("creates meta entries for primitive contents with a property prefix", () => {
@@ -123,11 +131,11 @@ describe("_multiMeta", () => {
 				contents: [
 					"",
 					0,
-					{ url: undefined, width: 0, height: 400, alt: null },
+					{ url: undefined, width: 800, height: 400, alt: null },
 				],
 			}),
 		).toEqual([
-			{ property: "og:image:width", content: "0" },
+			{ property: "og:image:width", content: "800" },
 			{ property: "og:image:height", content: "400" },
 		]);
 	});
