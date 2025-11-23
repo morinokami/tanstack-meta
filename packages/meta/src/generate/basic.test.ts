@@ -1,7 +1,11 @@
 import { describe, expect, test } from "bun:test";
 
 import type { InputMetadata } from "../types/io";
-import { generateBasic, generateVerification } from "./basic";
+import {
+	generateBasic,
+	generateFormatDetection,
+	generateVerification,
+} from "./basic";
 
 describe("generateBasic", () => {
 	test("builds meta entries for provided metadata fields", () => {
@@ -84,6 +88,69 @@ describe("generateBasic", () => {
 
 		expect(generateBasic(metadata)).toEqual([
 			{ name: "googlebot", content: "index, nofollow" },
+		]);
+	});
+});
+
+describe("generateFormatDetection", () => {
+	test("returns an empty array when formatDetection is not provided", () => {
+		expect(generateFormatDetection({})).toEqual([]);
+	});
+
+	test("emits only disabled format-detection directives", () => {
+		const metadata: InputMetadata = {
+			formatDetection: { telephone: false, date: true, email: false },
+		};
+
+		expect(generateFormatDetection(metadata)).toEqual([
+			{
+				name: "format-detection",
+				content: "telephone=no, email=no",
+			},
+		]);
+	});
+
+	test("returns empty when all format-detection fields are enabled", () => {
+		const metadata: InputMetadata = {
+			formatDetection: { telephone: true, address: true },
+		};
+
+		expect(generateFormatDetection(metadata)).toEqual([]);
+	});
+
+	test("handles all format-detection fields disabled", () => {
+		const metadata: InputMetadata = {
+			formatDetection: {
+				telephone: false,
+				date: false,
+				address: false,
+				email: false,
+				url: false,
+			},
+		};
+
+		expect(generateFormatDetection(metadata)).toEqual([
+			{
+				name: "format-detection",
+				content: "telephone=no, date=no, address=no, email=no, url=no",
+			},
+		]);
+	});
+
+	test("respects formatDetectionKeys order regardless of input order", () => {
+		const metadata: InputMetadata = {
+			formatDetection: {
+				url: false,
+				telephone: false,
+				email: false,
+			},
+		};
+
+		expect(generateFormatDetection(metadata)).toEqual([
+			{
+				name: "format-detection",
+				content: "telephone=no, email=no, url=no",
+			},
 		]);
 	});
 });

@@ -36,6 +36,7 @@ export function normalizeMetadata(metadata: InputMetadata): NormalizedMetadata {
 		classification: metadata.classification ?? null,
 		other: metadata.other ?? null,
 
+		formatDetection: metadata.formatDetection ?? null,
 		verification: normalizeVerification(metadata.verification),
 		openGraph: normalizeOpenGraph(metadata.openGraph),
 		twitter: normalizeTwitter(metadata.twitter),

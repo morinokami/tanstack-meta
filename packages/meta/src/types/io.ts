@@ -26,6 +26,7 @@ export type InputMetadata = {
 	classification?: NextMetadata["classification"];
 	other?: NextMetadata["other"];
 
+	formatDetection?: NextMetadata["formatDetection"];
 	verification?: NextMetadata["verification"];
 	openGraph?: SimplifyTitleInUnion<NextMetadata["openGraph"]>;
 	twitter?: SimplifyTitleInUnion<NextMetadata["twitter"]>;
@@ -48,6 +49,7 @@ export type NormalizedMetadata = {
 	classification: ResolvedMetadata["classification"];
 	other: ResolvedMetadata["other"];
 
+	formatDetection: ResolvedMetadata["formatDetection"];
 	verification: ResolvedMetadata["verification"];
 	openGraph: SimplifyTitleInUnion<ResolvedMetadata["openGraph"]>;
 	twitter: SimplifyTitleInUnion<ResolvedMetadata["twitter"]>;

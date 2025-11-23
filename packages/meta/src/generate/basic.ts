@@ -43,6 +43,31 @@ export function generateBasic(metadata: InputMetadata): OutputMetadata {
 	].filter(nonNullable);
 }
 
+const formatDetectionKeys = [
+	"telephone",
+	"date",
+	"address",
+	"email",
+	"url",
+] as const;
+export function generateFormatDetection(
+	metadata: InputMetadata,
+): OutputMetadata {
+	const { formatDetection } = normalizeMetadata(metadata);
+
+	if (!formatDetection) return [];
+
+	let content = "";
+	for (const key of formatDetectionKeys) {
+		if (formatDetection[key] === false) {
+			if (content) content += ", ";
+			content += `${key}=no`;
+		}
+	}
+
+	return content ? [_meta({ name: "format-detection", content })] : [];
+}
+
 export function generateVerification(metadata: InputMetadata): OutputMetadata {
 	const { verification } = normalizeMetadata(metadata);
 

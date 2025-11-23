@@ -17,13 +17,10 @@ export const Route = createRootRoute({
 			...meta({
 				charSet: "utf-8",
 				title: "TanStack Start Starter",
-				verification: {
-					google: "google",
-					yandex: "yandex",
-					yahoo: "yahoo",
-					other: {
-						me: ["my-email", "my-link"],
-					},
+				formatDetection: {
+					email: false,
+					address: false,
+					telephone: false,
 				},
 			}),
 		],
