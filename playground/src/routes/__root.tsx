@@ -17,10 +17,8 @@ export const Route = createRootRoute({
 			...meta({
 				charSet: "utf-8",
 				title: "TanStack Start Starter",
-				formatDetection: {
-					email: false,
-					address: false,
-					telephone: false,
+				facebook: {
+					admins: ["12345678", "87654321"],
 				},
 			}),
 		],

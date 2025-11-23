@@ -62,3 +62,12 @@ export const normalizeVerification = (
 	}
 	return res;
 };
+
+export const normalizeFacebook = (facebook: InputMetadata["facebook"]) => {
+	if (!facebook) return null;
+
+	return {
+		appId: facebook.appId,
+		admins: resolveAsArrayOrUndefined(facebook.admins),
+	};
+};

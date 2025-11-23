@@ -43,6 +43,21 @@ export function generateBasic(metadata: InputMetadata): OutputMetadata {
 	].filter(nonNullable);
 }
 
+export function generateFacebook(metadata: InputMetadata): OutputMetadata {
+	const { facebook } = normalizeMetadata(metadata);
+
+	if (!facebook) return [];
+
+	const { appId, admins } = facebook;
+
+	return [
+		_meta({ property: "fb:app_id", content: appId }),
+		_multiMeta({ propertyPrefix: "fb:admins", contents: admins }),
+	]
+		.flat()
+		.filter(nonNullable);
+}
+
 const formatDetectionKeys = [
 	"telephone",
 	"date",

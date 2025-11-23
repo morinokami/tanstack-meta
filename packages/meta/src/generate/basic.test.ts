@@ -3,6 +3,7 @@ import { describe, expect, test } from "bun:test";
 import type { InputMetadata } from "../types/io";
 import {
 	generateBasic,
+	generateFacebook,
 	generateFormatDetection,
 	generateVerification,
 } from "./basic";
@@ -152,6 +153,60 @@ describe("generateFormatDetection", () => {
 				content: "telephone=no, email=no, url=no",
 			},
 		]);
+	});
+});
+
+describe("generateFacebook", () => {
+	test("returns an empty array when facebook is not provided", () => {
+		expect(generateFacebook({})).toEqual([]);
+	});
+
+	test("emits app_id when provided", () => {
+		const metadata: InputMetadata = {
+			facebook: {
+				appId: "123",
+			},
+		};
+
+		expect(generateFacebook(metadata)).toEqual([
+			{ property: "fb:app_id", content: "123" },
+		]);
+	});
+
+	test("emits only admins when app_id is absent", () => {
+		const metadata: InputMetadata = {
+			facebook: {
+				admins: ["admin-only"],
+			},
+		};
+
+		expect(generateFacebook(metadata)).toEqual([
+			{ property: "fb:admins", content: "admin-only" },
+		]);
+	});
+
+	test("handles multiple admins", () => {
+		const metadata: InputMetadata = {
+			facebook: {
+				admins: ["admin1", "admin2", "admin3"],
+			},
+		};
+
+		expect(generateFacebook(metadata)).toEqual([
+			{ property: "fb:admins", content: "admin1" },
+			{ property: "fb:admins", content: "admin2" },
+			{ property: "fb:admins", content: "admin3" },
+		]);
+	});
+
+	test("returns empty array when admins is empty", () => {
+		const metadata: InputMetadata = {
+			facebook: {
+				admins: [],
+			},
+		};
+
+		expect(generateFacebook(metadata)).toEqual([]);
 	});
 });
 

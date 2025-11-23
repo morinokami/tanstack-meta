@@ -1,5 +1,9 @@
 import type { InputMetadata, NormalizedMetadata } from "../types/io";
-import { normalizeRobotsValue, normalizeVerification } from "./basic";
+import {
+	normalizeFacebook,
+	normalizeRobotsValue,
+	normalizeVerification,
+} from "./basic";
 import {
 	normalizeAppLink,
 	normalizeOpenGraph,
@@ -36,6 +40,7 @@ export function normalizeMetadata(metadata: InputMetadata): NormalizedMetadata {
 		classification: metadata.classification ?? null,
 		other: metadata.other ?? null,
 
+		facebook: normalizeFacebook(metadata.facebook),
 		formatDetection: metadata.formatDetection ?? null,
 		verification: normalizeVerification(metadata.verification),
 		openGraph: normalizeOpenGraph(metadata.openGraph),
