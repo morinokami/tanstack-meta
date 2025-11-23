@@ -1,5 +1,6 @@
-import { normalizeMetadata } from "../normalize/normalize";
-import type { InputMetadata, OutputMetadata } from "../types";
+import { normalizeMetadata } from "../normalize";
+import type { InputMetadata, OutputMetadata } from "../types/io";
+import { _meta } from "./utils";
 
 // https://github.com/vercel/next.js/blob/5b97f1f7b51dddfc1df42e0bd03730f90ebc9337/packages/next/src/lib/metadata/generate/basic.tsx#L54
 export function generateBasic(metadata: InputMetadata): OutputMetadata {
@@ -40,21 +41,4 @@ export function generateBasic(metadata: InputMetadata): OutputMetadata {
 				})
 			: []),
 	];
-}
-
-// https://github.com/vercel/next.js/blob/d673568300ab9336ebe610516c5a3439ab7cb8f5/packages/next/src/lib/metadata/generate/meta.tsx#L4
-function _meta({
-	name,
-	content,
-}: {
-	name?: string;
-	content?: string | number | URL | null | undefined;
-}) {
-	if (content) {
-		return {
-			name,
-			content: typeof content === "string" ? content : content?.toString(),
-		};
-	}
-	return undefined;
 }

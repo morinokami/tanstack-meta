@@ -1,6 +1,11 @@
 import type { AnyRouteMatch } from "@tanstack/react-router";
 import type { Metadata as NextMetadata, ResolvedMetadata } from "next";
 
+// Simplify the type of the title property in the opengraph type
+export type SimplifyTitleInUnion<T> = T extends { title?: unknown }
+	? Omit<T, "title"> & { title?: string }
+	: T;
+
 export type InputMetadata = {
 	// TODO: metadataBase
 	charSet?: string | null;
@@ -19,6 +24,8 @@ export type InputMetadata = {
 	category?: NextMetadata["category"];
 	classification?: NextMetadata["classification"];
 	other?: NextMetadata["other"];
+
+	openGraph?: SimplifyTitleInUnion<NextMetadata["openGraph"]>;
 };
 
 export type NormalizedMetadata = {
@@ -36,6 +43,8 @@ export type NormalizedMetadata = {
 	category: ResolvedMetadata["category"];
 	classification: ResolvedMetadata["classification"];
 	other: ResolvedMetadata["other"];
+
+	openGraph: SimplifyTitleInUnion<ResolvedMetadata["openGraph"]>;
 };
 
 export type OutputMetadata = AnyRouteMatch["meta"];

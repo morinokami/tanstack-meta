@@ -1,2 +1,2 @@
 export { meta } from "./meta";
-export type { InputMetadata, OutputMetadata } from "./types";
+export type { InputMetadata, OutputMetadata } from "./types/io";

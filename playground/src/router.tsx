@@ -8,6 +8,8 @@ export const getRouter = () => {
 	const router = createRouter({
 		routeTree,
 		scrollRestoration: true,
+		defaultErrorComponent: (err) => <p>{err.error.stack}</p>,
+		defaultNotFoundComponent: () => <p>Not Found</p>,
 		defaultPreloadStaleTime: 0,
 	});
 
