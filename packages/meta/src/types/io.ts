@@ -8,7 +8,6 @@ export type SimplifyTitleInUnion<T> = T extends { title?: unknown }
 	: T;
 
 export type InputMetadata = {
-	// TODO: metadataBase
 	charSet?: string | null;
 	title?: string | null;
 	description?: NextMetadata["description"];
@@ -27,6 +26,7 @@ export type InputMetadata = {
 	other?: NextMetadata["other"];
 
 	facebook?: NextMetadata["facebook"];
+	pinterest?: NextMetadata["pinterest"];
 	formatDetection?: NextMetadata["formatDetection"];
 	verification?: NextMetadata["verification"];
 	openGraph?: SimplifyTitleInUnion<NextMetadata["openGraph"]>;
@@ -51,6 +51,7 @@ export type NormalizedMetadata = {
 	other: ResolvedMetadata["other"];
 
 	facebook: ResolvedMetadata["facebook"];
+	pinterest: ResolvedMetadata["pinterest"];
 	formatDetection: ResolvedMetadata["formatDetection"];
 	verification: ResolvedMetadata["verification"];
 	openGraph: SimplifyTitleInUnion<ResolvedMetadata["openGraph"]>;

@@ -34,7 +34,6 @@ export const Route = createFileRoute("/")({
 
 ## TODOs
 
-- [ ] `metadataBase`
 - [x] `charSet`
 - [x] `title`
 - [x] `description`

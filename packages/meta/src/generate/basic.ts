@@ -58,6 +58,18 @@ export function generateFacebook(metadata: InputMetadata): OutputMeta {
 		.filter(nonNullable);
 }
 
+export function generatePinterest(metadata: InputMetadata): OutputMeta {
+	const { pinterest } = normalizeMetadata(metadata);
+
+	if (!pinterest) return [];
+
+	const { richPin } = pinterest;
+
+	return [
+		_meta({ property: "pinterest-rich-pin", content: richPin?.toString() }),
+	];
+}
+
 const formatDetectionKeys = [
 	"telephone",
 	"date",

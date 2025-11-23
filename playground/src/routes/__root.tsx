@@ -12,8 +12,8 @@ export const Route = createRootRoute({
 		const { meta, links } = generateMetadata({
 			charSet: "utf-8",
 			title: "TanStack Start Starter",
-			facebook: {
-				admins: ["12345678", "87654321"],
+			pinterest: {
+				richPin: true,
 			},
 		});
 

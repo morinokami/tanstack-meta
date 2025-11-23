@@ -2,6 +2,7 @@ import {
 	generateBasic,
 	generateFacebook,
 	generateFormatDetection,
+	generatePinterest,
 	generateVerification,
 } from "./generate/basic";
 import {
@@ -17,6 +18,7 @@ export function meta(metadata: InputMetadata): OutputMeta {
 	return [
 		generateBasic(metadata),
 		generateFacebook(metadata),
+		generatePinterest(metadata),
 		generateFormatDetection(metadata),
 		generateVerification(metadata),
 		generateOpenGraph(metadata),

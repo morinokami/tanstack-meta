@@ -5,6 +5,7 @@ import {
 	generateBasic,
 	generateFacebook,
 	generateFormatDetection,
+	generatePinterest,
 	generateVerification,
 } from "./basic";
 
@@ -207,6 +208,22 @@ describe("generateFacebook", () => {
 		};
 
 		expect(generateFacebook(metadata)).toEqual([]);
+	});
+});
+
+describe("generatePinterest", () => {
+	test("returns an empty array when pinterest is not provided", () => {
+		expect(generatePinterest({})).toEqual([]);
+	});
+
+	test("emits rich pin flag when provided", () => {
+		const metadata: InputMetadata = {
+			pinterest: { richPin: true },
+		};
+
+		expect(generatePinterest(metadata)).toEqual([
+			{ property: "pinterest-rich-pin", content: "true" },
+		]);
 	});
 });
 

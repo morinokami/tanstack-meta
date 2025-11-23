@@ -41,6 +41,7 @@ export function normalizeMetadata(metadata: InputMetadata): NormalizedMetadata {
 		other: metadata.other ?? null,
 
 		facebook: normalizeFacebook(metadata.facebook),
+		pinterest: metadata.pinterest ?? null,
 		formatDetection: metadata.formatDetection ?? null,
 		verification: normalizeVerification(metadata.verification),
 		openGraph: normalizeOpenGraph(metadata.openGraph),
