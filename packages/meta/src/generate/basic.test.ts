@@ -2,7 +2,8 @@ import { describe, expect, test } from "bun:test";
 
 import type { InputMetadata } from "../types/io";
 import {
-	generateBasic,
+	generateBasicLinks,
+	generateBasicMeta,
 	generateFacebook,
 	generateFormatDetection,
 	generatePinterest,
@@ -38,7 +39,7 @@ describe("generateBasic", () => {
 			},
 		} satisfies InputMetadata;
 
-		expect(generateBasic(metadata)).toEqual([
+		expect(generateBasicMeta(metadata)).toEqual([
 			{ charSet: "utf-8" },
 			{ title: "My Title" },
 			{ name: "description", content: "A description" },
@@ -64,7 +65,7 @@ describe("generateBasic", () => {
 			other: { numeric: 7, empty: "", zero: 0 },
 		} satisfies InputMetadata;
 
-		expect(generateBasic(metadata)).toEqual([
+		expect(generateBasicMeta(metadata)).toEqual([
 			{ name: "keywords", content: "solo" },
 			{ name: "numeric", content: "7" },
 		]);
@@ -75,7 +76,7 @@ describe("generateBasic", () => {
 			keywords: [],
 		};
 
-		expect(generateBasic(metadata)).toEqual([]);
+		expect(generateBasicMeta(metadata)).toEqual([]);
 	});
 
 	test("renders only googlebot directives when robots object only sets googleBot", () => {
@@ -88,8 +89,34 @@ describe("generateBasic", () => {
 			},
 		};
 
-		expect(generateBasic(metadata)).toEqual([
+		expect(generateBasicMeta(metadata)).toEqual([
 			{ name: "googlebot", content: "index, nofollow" },
+		]);
+	});
+});
+
+describe("generateBasicLinks", () => {
+	test("returns no links when manifest is not provided", () => {
+		expect(generateBasicLinks({})).toEqual([]);
+	});
+
+	test("emits a manifest link when provided as a string", () => {
+		const metadata: InputMetadata = {
+			manifest: "/site.webmanifest",
+		};
+
+		expect(generateBasicLinks(metadata)).toEqual([
+			{ rel: "manifest", href: "/site.webmanifest" },
+		]);
+	});
+
+	test("stringifies manifest URL objects", () => {
+		const metadata: InputMetadata = {
+			manifest: new URL("https://example.com/app.webmanifest"),
+		};
+
+		expect(generateBasicLinks(metadata)).toEqual([
+			{ rel: "manifest", href: "https://example.com/app.webmanifest" },
 		]);
 	});
 });

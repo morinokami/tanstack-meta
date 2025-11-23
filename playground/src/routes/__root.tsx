@@ -12,9 +12,7 @@ export const Route = createRootRoute({
 		const { meta, links } = generateMetadata({
 			charSet: "utf-8",
 			title: "TanStack Start Starter",
-			pinterest: {
-				richPin: true,
-			},
+			manifest: "https://nextjs.org/manifest.json",
 		});
 
 		return {
@@ -30,6 +28,7 @@ export const Route = createRootRoute({
 					rel: "stylesheet",
 					href: appCss,
 				},
+				...links,
 			],
 		};
 	},

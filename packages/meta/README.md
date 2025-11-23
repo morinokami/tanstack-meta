@@ -39,7 +39,7 @@ export const Route = createFileRoute("/")({
 - [x] `description`
 - [x] `applicationName`
 - [ ] `authors`
-- [ ] `manifest`
+- [x] `manifest`
 - [x] `generator`
 - [x] `keywords`
 - [x] `referrer`

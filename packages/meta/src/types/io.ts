@@ -13,7 +13,7 @@ export type InputMetadata = {
 	description?: NextMetadata["description"];
 	applicationName?: NextMetadata["applicationName"];
 	// authors: NextMetadata["authors"];
-	// manifest: NextMetadata["manifest"];
+	manifest?: NextMetadata["manifest"];
 	generator?: NextMetadata["generator"];
 	keywords?: NextMetadata["keywords"];
 	referrer?: NextMetadata["referrer"];
@@ -39,6 +39,7 @@ export type NormalizedMetadata = {
 	title: string | null;
 	description: ResolvedMetadata["description"];
 	applicationName: ResolvedMetadata["applicationName"];
+	manifest: ResolvedMetadata["manifest"];
 	generator: ResolvedMetadata["generator"];
 	keywords: ResolvedMetadata["keywords"];
 	referrer: ResolvedMetadata["referrer"];

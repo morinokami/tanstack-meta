@@ -1,3 +1,5 @@
+import type { WithStringifiedURLs } from "next/dist/lib/metadata/types/metadata-interface";
+
 import type { InputMetadata, NormalizedMetadata } from "../types/io";
 import {
 	normalizeFacebook,
@@ -17,6 +19,7 @@ export function normalizeMetadata(metadata: InputMetadata): NormalizedMetadata {
 		title: metadata.title ?? null,
 		description: metadata.description ?? null,
 		applicationName: metadata.applicationName ?? null,
+		manifest: convertUrlsToStrings(metadata.manifest) ?? null,
 		generator: metadata.generator ?? null,
 		keywords: Array.isArray(metadata.keywords)
 			? metadata.keywords
@@ -41,11 +44,28 @@ export function normalizeMetadata(metadata: InputMetadata): NormalizedMetadata {
 		other: metadata.other ?? null,
 
 		facebook: normalizeFacebook(metadata.facebook),
-		pinterest: metadata.pinterest ?? null,
+		pinterest: convertUrlsToStrings(metadata.pinterest) ?? null,
 		formatDetection: metadata.formatDetection ?? null,
 		verification: normalizeVerification(metadata.verification),
 		openGraph: normalizeOpenGraph(metadata.openGraph),
 		twitter: normalizeTwitter(metadata.twitter),
 		appLinks: normalizeAppLink(metadata.appLinks),
 	};
+}
+
+function convertUrlsToStrings<T>(input: T): WithStringifiedURLs<T> {
+	if (input instanceof URL) {
+		return input.toString() as unknown as WithStringifiedURLs<T>;
+	} else if (Array.isArray(input)) {
+		return input.map((item) =>
+			convertUrlsToStrings(item),
+		) as WithStringifiedURLs<T>;
+	} else if (input && typeof input === "object") {
+		const result: Record<string, unknown> = {};
+		for (const [key, value] of Object.entries(input)) {
+			result[key] = convertUrlsToStrings(value);
+		}
+		return result as WithStringifiedURLs<T>;
+	}
+	return input as WithStringifiedURLs<T>;
 }

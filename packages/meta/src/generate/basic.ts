@@ -1,12 +1,11 @@
 import { normalizeMetadata } from "../normalize";
-import type { InputMetadata, OutputMeta } from "../types/io";
+import type { InputMetadata, OutputLinks, OutputMeta } from "../types/io";
 import { _meta, _multiMeta, nonNullable } from "./utils";
 
 // https://github.com/vercel/next.js/blob/5b97f1f7b51dddfc1df42e0bd03730f90ebc9337/packages/next/src/lib/metadata/generate/basic.tsx#L54
-export function generateBasic(metadata: InputMetadata): OutputMeta {
+export function generateBasicMeta(metadata: InputMetadata): OutputMeta {
 	const normalizedMetadata = normalizeMetadata(metadata);
 
-	// TODO: links?
 	return [
 		normalizedMetadata.charSet
 			? { charSet: normalizedMetadata.charSet }
@@ -41,6 +40,16 @@ export function generateBasic(metadata: InputMetadata): OutputMeta {
 				})
 			: []),
 	].filter(nonNullable);
+}
+
+export function generateBasicLinks(metadata: InputMetadata): OutputLinks {
+	const normalizedMetadata = normalizeMetadata(metadata);
+
+	return [
+		normalizedMetadata.manifest
+			? { rel: "manifest", href: normalizedMetadata.manifest }
+			: undefined,
+	];
 }
 
 export function generateFacebook(metadata: InputMetadata): OutputMeta {
