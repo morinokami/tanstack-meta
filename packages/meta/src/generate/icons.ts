@@ -1,5 +1,4 @@
-import { normalizeMetadata } from "../normalize";
-import type { InputMetadata, OutputLinks } from "../types/io";
+import type { NormalizedMetadata, OutputLinks } from "../types/io";
 import type { Icon, IconDescriptor } from "../types/metadata-types";
 import { nonNullable } from "./utils";
 
@@ -19,8 +18,8 @@ function IconLink({ rel, icon }: { rel?: string; icon: Icon }) {
 	}
 }
 
-export function generateIcons(metadata: InputMetadata): OutputLinks {
-	const { icons } = normalizeMetadata(metadata);
+export function generateIcons(metadata: NormalizedMetadata): OutputLinks {
+	const { icons } = metadata;
 
 	if (!icons) return [];
 

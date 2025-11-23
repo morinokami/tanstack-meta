@@ -1,32 +1,32 @@
 import { describe, expect, test } from "bun:test";
 
-import type { InputMetadata } from "../types/io";
+import { normalizeMetadata } from "../normalize";
 import { generateIcons } from "./icons";
 
 describe("generateIcons", () => {
 	test("returns an empty array when icons is not provided", () => {
-		expect(generateIcons({})).toEqual([]);
+		expect(generateIcons(normalizeMetadata({}))).toEqual([]);
 	});
 
 	test("returns an empty array when icons object only has empty arrays", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			icons: {
 				icon: [],
 				shortcut: [],
 				apple: [],
 				other: [],
 			},
-		};
+		});
 
 		expect(generateIcons(metadata)).toEqual([]);
 	});
 
 	test("emits icon links with default rel", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			icons: {
 				icon: ["/icon.png", { url: "/icon-192.png", sizes: "192x192" }],
 			},
-		};
+		});
 
 		expect(generateIcons(metadata)).toEqual([
 			{ rel: "icon", href: "/icon.png" },
@@ -35,11 +35,11 @@ describe("generateIcons", () => {
 	});
 
 	test("emits shortcut icon links", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			icons: {
 				shortcut: ["/favicon.ico"],
 			},
-		};
+		});
 
 		expect(generateIcons(metadata)).toEqual([
 			{ rel: "shortcut icon", href: "/favicon.ico" },
@@ -47,11 +47,11 @@ describe("generateIcons", () => {
 	});
 
 	test("emits apple-touch-icon links", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			icons: {
 				apple: [{ url: "/apple-icon.png", sizes: "180x180" }],
 			},
-		};
+		});
 
 		expect(generateIcons(metadata)).toEqual([
 			{ rel: "apple-touch-icon", href: "/apple-icon.png", sizes: "180x180" },
@@ -59,7 +59,7 @@ describe("generateIcons", () => {
 	});
 
 	test("emits icon, shortcut, apple, and other descriptors", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			icons: {
 				icon: [
 					"/icon.png",
@@ -78,7 +78,7 @@ describe("generateIcons", () => {
 					},
 				],
 			},
-		};
+		});
 
 		expect(generateIcons(metadata)).toEqual([
 			{ rel: "shortcut icon", href: "/favicon.ico" },
@@ -95,7 +95,7 @@ describe("generateIcons", () => {
 	});
 
 	test("uses provided rel on descriptors and stringifies URL objects", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			icons: {
 				other: [
 					{
@@ -105,7 +105,7 @@ describe("generateIcons", () => {
 					},
 				],
 			},
-		};
+		});
 
 		expect(generateIcons(metadata)).toEqual([
 			{
@@ -117,11 +117,11 @@ describe("generateIcons", () => {
 	});
 
 	test("does not override explicit rel on icon descriptors", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			icons: {
 				icon: [{ url: "/icon.png", rel: "alternate icon" }],
 			},
-		};
+		});
 
 		expect(generateIcons(metadata)).toEqual([
 			{ rel: "alternate icon", href: "/icon.png" },
@@ -129,11 +129,11 @@ describe("generateIcons", () => {
 	});
 
 	test("uses default rel='icon' for other descriptors without rel", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			icons: {
 				other: [{ url: "/custom.png" }],
 			},
-		};
+		});
 
 		expect(generateIcons(metadata)).toEqual([
 			{ rel: "icon", href: "/custom.png" },
@@ -141,14 +141,14 @@ describe("generateIcons", () => {
 	});
 
 	test("handles URL objects across icon types", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			icons: {
 				icon: [new URL("https://example.com/icon.png")],
 				shortcut: [new URL("https://example.com/favicon.ico")],
 				apple: [new URL("https://example.com/apple.png")],
 				other: [{ url: new URL("https://example.com/other.png") }],
 			},
-		};
+		});
 
 		expect(generateIcons(metadata)).toEqual([
 			{ rel: "shortcut icon", href: "https://example.com/favicon.ico" },
@@ -159,13 +159,13 @@ describe("generateIcons", () => {
 	});
 
 	test("handles partial icon lists with empty arrays", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			icons: {
 				icon: ["/icon.png"],
 				shortcut: [],
 				apple: [],
 			},
-		};
+		});
 
 		expect(generateIcons(metadata)).toEqual([
 			{ rel: "icon", href: "/icon.png" },
@@ -173,14 +173,14 @@ describe("generateIcons", () => {
 	});
 
 	test("preserves media attribute for icons", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			icons: {
 				icon: [
 					{ url: "/icon-light.png", media: "(prefers-color-scheme: light)" },
 					{ url: "/icon-dark.png", media: "(prefers-color-scheme: dark)" },
 				],
 			},
-		};
+		});
 
 		expect(generateIcons(metadata)).toEqual([
 			{

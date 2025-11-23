@@ -1,36 +1,37 @@
 import { normalizeMetadata } from "../normalize";
-import type { InputMetadata, OutputLinks, OutputMeta } from "../types/io";
+import type {
+	InputMetadata,
+	NormalizedMetadata,
+	OutputLinks,
+	OutputMeta,
+} from "../types/io";
 import { _meta, _multiMeta, nonNullable } from "./utils";
 
 // https://github.com/vercel/next.js/blob/5b97f1f7b51dddfc1df42e0bd03730f90ebc9337/packages/next/src/lib/metadata/generate/basic.tsx#L54
-export function generateBasicMeta(metadata: InputMetadata): OutputMeta {
-	const normalizedMetadata = normalizeMetadata(metadata);
-
+export function generateBasicMeta(metadata: NormalizedMetadata): OutputMeta {
 	return [
-		normalizedMetadata.charSet
-			? { charSet: normalizedMetadata.charSet }
-			: undefined,
+		metadata.charSet ? { charSet: metadata.charSet } : undefined,
 		metadata.title ? { title: metadata.title } : undefined,
-		_meta({ name: "description", content: normalizedMetadata.description }),
+		_meta({ name: "description", content: metadata.description }),
 		_meta({
 			name: "application-name",
-			content: normalizedMetadata.applicationName,
+			content: metadata.applicationName,
 		}),
-		_meta({ name: "generator", content: normalizedMetadata.generator }),
+		_meta({ name: "generator", content: metadata.generator }),
 		_meta({
 			name: "keywords",
-			content: Array.isArray(normalizedMetadata.keywords)
-				? normalizedMetadata.keywords.join(",")
-				: normalizedMetadata.keywords,
+			content: Array.isArray(metadata.keywords)
+				? metadata.keywords.join(",")
+				: metadata.keywords,
 		}),
-		_meta({ name: "referrer", content: normalizedMetadata.referrer }),
-		_meta({ name: "creator", content: normalizedMetadata.creator }),
-		_meta({ name: "publisher", content: normalizedMetadata.publisher }),
-		_meta({ name: "robots", content: normalizedMetadata.robots?.basic }),
-		_meta({ name: "googlebot", content: normalizedMetadata.robots?.googleBot }),
-		_meta({ name: "abstract", content: normalizedMetadata.abstract }),
-		...(normalizedMetadata.other
-			? Object.entries(normalizedMetadata.other).flatMap(([name, content]) => {
+		_meta({ name: "referrer", content: metadata.referrer }),
+		_meta({ name: "creator", content: metadata.creator }),
+		_meta({ name: "publisher", content: metadata.publisher }),
+		_meta({ name: "robots", content: metadata.robots?.basic }),
+		_meta({ name: "googlebot", content: metadata.robots?.googleBot }),
+		_meta({ name: "abstract", content: metadata.abstract }),
+		...(metadata.other
+			? Object.entries(metadata.other).flatMap(([name, content]) => {
 					if (Array.isArray(content)) {
 						return content.map((contentItem) =>
 							_meta({ name, content: contentItem }),
@@ -42,27 +43,25 @@ export function generateBasicMeta(metadata: InputMetadata): OutputMeta {
 	].filter(nonNullable);
 }
 
-export function generateBasicLinks(metadata: InputMetadata): OutputLinks {
-	const normalizedMetadata = normalizeMetadata(metadata);
-
+export function generateBasicLinks(metadata: NormalizedMetadata): OutputLinks {
 	return [
-		normalizedMetadata.manifest
-			? { rel: "manifest", href: normalizedMetadata.manifest }
+		metadata.manifest
+			? { rel: "manifest", href: metadata.manifest }
 			: undefined,
-		...(normalizedMetadata.archives
-			? normalizedMetadata.archives.map((archive) => ({
+		...(metadata.archives
+			? metadata.archives.map((archive) => ({
 					rel: "archives",
 					href: archive,
 				}))
 			: []),
-		...(normalizedMetadata.assets
-			? normalizedMetadata.assets.map((asset) => ({
+		...(metadata.assets
+			? metadata.assets.map((asset) => ({
 					rel: "assets",
 					href: asset,
 				}))
 			: []),
-		...(normalizedMetadata.bookmarks
-			? normalizedMetadata.bookmarks.map((bookmark) => ({
+		...(metadata.bookmarks
+			? metadata.bookmarks.map((bookmark) => ({
 					rel: "bookmarks",
 					href: bookmark,
 				}))
@@ -70,8 +69,8 @@ export function generateBasicLinks(metadata: InputMetadata): OutputLinks {
 	].filter(nonNullable);
 }
 
-export function generateFacebook(metadata: InputMetadata): OutputMeta {
-	const { facebook } = normalizeMetadata(metadata);
+export function generateFacebook(metadata: NormalizedMetadata): OutputMeta {
+	const { facebook } = metadata;
 
 	if (!facebook) return [];
 
@@ -85,8 +84,8 @@ export function generateFacebook(metadata: InputMetadata): OutputMeta {
 		.filter(nonNullable);
 }
 
-export function generatePinterest(metadata: InputMetadata): OutputMeta {
-	const { pinterest } = normalizeMetadata(metadata);
+export function generatePinterest(metadata: NormalizedMetadata): OutputMeta {
+	const { pinterest } = metadata;
 
 	if (!pinterest) return [];
 
@@ -104,8 +103,10 @@ const formatDetectionKeys = [
 	"email",
 	"url",
 ] as const;
-export function generateFormatDetection(metadata: InputMetadata): OutputMeta {
-	const { formatDetection } = normalizeMetadata(metadata);
+export function generateFormatDetection(
+	metadata: NormalizedMetadata,
+): OutputMeta {
+	const { formatDetection } = metadata;
 
 	if (!formatDetection) return [];
 
@@ -120,8 +121,8 @@ export function generateFormatDetection(metadata: InputMetadata): OutputMeta {
 	return content ? [_meta({ name: "format-detection", content })] : [];
 }
 
-export function generateVerification(metadata: InputMetadata): OutputMeta {
-	const { verification } = normalizeMetadata(metadata);
+export function generateVerification(metadata: NormalizedMetadata): OutputMeta {
+	const { verification } = metadata;
 
 	if (!verification) return [];
 

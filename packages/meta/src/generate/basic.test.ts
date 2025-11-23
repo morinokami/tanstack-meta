@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
-
-import type { InputMetadata } from "../types/io";
+import { normalizeMetadata } from "../normalize";
 import {
 	generateBasicLinks,
 	generateBasicMeta,
@@ -12,7 +11,7 @@ import {
 
 describe("generateBasic", () => {
 	test("builds meta entries for provided metadata fields", () => {
-		const metadata = {
+		const metadata = normalizeMetadata({
 			charSet: "utf-8",
 			title: "My Title",
 			description: "A description",
@@ -37,7 +36,7 @@ describe("generateBasic", () => {
 				custom: "value",
 				multi: ["one", "two"],
 			},
-		} satisfies InputMetadata;
+		});
 
 		expect(generateBasicMeta(metadata)).toEqual([
 			{ charSet: "utf-8" },
@@ -59,11 +58,11 @@ describe("generateBasic", () => {
 	});
 
 	test("filters out falsy fields and stringifies non-string metadata", () => {
-		const metadata = {
+		const metadata = normalizeMetadata({
 			description: "",
 			keywords: "solo",
 			other: { numeric: 7, empty: "", zero: 0 },
-		} satisfies InputMetadata;
+		});
 
 		expect(generateBasicMeta(metadata)).toEqual([
 			{ name: "keywords", content: "solo" },
@@ -72,22 +71,22 @@ describe("generateBasic", () => {
 	});
 
 	test("does not emit keywords when provided an empty array", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			keywords: [],
-		};
+		});
 
 		expect(generateBasicMeta(metadata)).toEqual([]);
 	});
 
 	test("renders only googlebot directives when robots object only sets googleBot", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			robots: {
 				googleBot: {
 					index: true,
 					follow: false,
 				},
 			},
-		};
+		});
 
 		expect(generateBasicMeta(metadata)).toEqual([
 			{ name: "googlebot", content: "index, nofollow" },
@@ -97,13 +96,13 @@ describe("generateBasic", () => {
 
 describe("generateBasicLinks", () => {
 	test("returns no links when manifest is not provided", () => {
-		expect(generateBasicLinks({})).toEqual([]);
+		expect(generateBasicLinks(normalizeMetadata({}))).toEqual([]);
 	});
 
 	test("emits a manifest link when provided as a string", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			manifest: "/site.webmanifest",
-		};
+		});
 
 		expect(generateBasicLinks(metadata)).toEqual([
 			{ rel: "manifest", href: "/site.webmanifest" },
@@ -111,9 +110,9 @@ describe("generateBasicLinks", () => {
 	});
 
 	test("stringifies manifest URL objects", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			manifest: new URL("https://example.com/app.webmanifest"),
-		};
+		});
 
 		expect(generateBasicLinks(metadata)).toEqual([
 			{ rel: "manifest", href: "https://example.com/app.webmanifest" },
@@ -121,12 +120,12 @@ describe("generateBasicLinks", () => {
 	});
 
 	test("emits archives links when provided", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			archives: [
 				"https://example.com/archive1",
 				"https://example.com/archive2",
 			],
-		};
+		});
 
 		expect(generateBasicLinks(metadata)).toEqual([
 			{ rel: "archives", href: "https://example.com/archive1" },
@@ -135,12 +134,12 @@ describe("generateBasicLinks", () => {
 	});
 
 	test("emits assets links when provided", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			assets: [
 				"https://example.com/assets.css",
 				"https://example.com/assets.js",
 			],
-		};
+		});
 
 		expect(generateBasicLinks(metadata)).toEqual([
 			{ rel: "assets", href: "https://example.com/assets.css" },
@@ -149,12 +148,12 @@ describe("generateBasicLinks", () => {
 	});
 
 	test("emits bookmarks links when provided", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			bookmarks: [
 				"https://example.com/bookmark1",
 				"https://example.com/bookmark2",
 			],
-		};
+		});
 
 		expect(generateBasicLinks(metadata)).toEqual([
 			{ rel: "bookmarks", href: "https://example.com/bookmark1" },
@@ -165,13 +164,13 @@ describe("generateBasicLinks", () => {
 
 describe("generateFormatDetection", () => {
 	test("returns an empty array when formatDetection is not provided", () => {
-		expect(generateFormatDetection({})).toEqual([]);
+		expect(generateFormatDetection(normalizeMetadata({}))).toEqual([]);
 	});
 
 	test("emits only disabled format-detection directives", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			formatDetection: { telephone: false, date: true, email: false },
-		};
+		});
 
 		expect(generateFormatDetection(metadata)).toEqual([
 			{
@@ -182,15 +181,15 @@ describe("generateFormatDetection", () => {
 	});
 
 	test("returns empty when all format-detection fields are enabled", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			formatDetection: { telephone: true, address: true },
-		};
+		});
 
 		expect(generateFormatDetection(metadata)).toEqual([]);
 	});
 
 	test("handles all format-detection fields disabled", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			formatDetection: {
 				telephone: false,
 				date: false,
@@ -198,7 +197,7 @@ describe("generateFormatDetection", () => {
 				email: false,
 				url: false,
 			},
-		};
+		});
 
 		expect(generateFormatDetection(metadata)).toEqual([
 			{
@@ -209,13 +208,13 @@ describe("generateFormatDetection", () => {
 	});
 
 	test("respects formatDetectionKeys order regardless of input order", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			formatDetection: {
 				url: false,
 				telephone: false,
 				email: false,
 			},
-		};
+		});
 
 		expect(generateFormatDetection(metadata)).toEqual([
 			{
@@ -228,15 +227,15 @@ describe("generateFormatDetection", () => {
 
 describe("generateFacebook", () => {
 	test("returns an empty array when facebook is not provided", () => {
-		expect(generateFacebook({})).toEqual([]);
+		expect(generateFacebook(normalizeMetadata({}))).toEqual([]);
 	});
 
 	test("emits app_id when provided", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			facebook: {
 				appId: "123",
 			},
-		};
+		});
 
 		expect(generateFacebook(metadata)).toEqual([
 			{ property: "fb:app_id", content: "123" },
@@ -244,11 +243,11 @@ describe("generateFacebook", () => {
 	});
 
 	test("emits only admins when app_id is absent", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			facebook: {
 				admins: ["admin-only"],
 			},
-		};
+		});
 
 		expect(generateFacebook(metadata)).toEqual([
 			{ property: "fb:admins", content: "admin-only" },
@@ -256,11 +255,11 @@ describe("generateFacebook", () => {
 	});
 
 	test("handles multiple admins", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			facebook: {
 				admins: ["admin1", "admin2", "admin3"],
 			},
-		};
+		});
 
 		expect(generateFacebook(metadata)).toEqual([
 			{ property: "fb:admins", content: "admin1" },
@@ -270,11 +269,11 @@ describe("generateFacebook", () => {
 	});
 
 	test("returns empty array when admins is empty", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			facebook: {
 				admins: [],
 			},
-		};
+		});
 
 		expect(generateFacebook(metadata)).toEqual([]);
 	});
@@ -282,13 +281,13 @@ describe("generateFacebook", () => {
 
 describe("generatePinterest", () => {
 	test("returns an empty array when pinterest is not provided", () => {
-		expect(generatePinterest({})).toEqual([]);
+		expect(generatePinterest(normalizeMetadata({}))).toEqual([]);
 	});
 
 	test("emits rich pin flag when provided", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			pinterest: { richPin: true },
-		};
+		});
 
 		expect(generatePinterest(metadata)).toEqual([
 			{ property: "pinterest-rich-pin", content: "true" },
@@ -298,11 +297,11 @@ describe("generatePinterest", () => {
 
 describe("generateVerification", () => {
 	test("returns an empty array when verification is not provided", () => {
-		expect(generateVerification({})).toEqual([]);
+		expect(generateVerification(normalizeMetadata({}))).toEqual([]);
 	});
 
 	test("emits verification tags for known providers and custom entries", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			verification: {
 				google: ["g1", "g2"],
 				yahoo: "yahoo-key",
@@ -313,7 +312,7 @@ describe("generateVerification", () => {
 					another: "one",
 				},
 			},
-		};
+		});
 
 		expect(generateVerification(metadata)).toEqual([
 			{ name: "google-site-verification", content: "g1" },
@@ -328,27 +327,27 @@ describe("generateVerification", () => {
 	});
 
 	test("handles nullish verification fields gracefully", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			verification: {
 				google: null,
 				yahoo: undefined,
 				yandex: [],
 				me: "",
 			},
-		};
+		});
 
 		expect(generateVerification(metadata)).toEqual([]);
 	});
 
 	test("handles mixed array and string values for custom entries", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			verification: {
 				other: {
 					"site-a": "single",
 					"site-b": ["multi1", "multi2"],
 				},
 			},
-		};
+		});
 
 		expect(generateVerification(metadata)).toEqual([
 			{ name: "site-a", content: "single" },

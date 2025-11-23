@@ -1,5 +1,6 @@
 import { links } from "./links";
 import { meta } from "./meta";
+import { normalizeMetadata } from "./normalize";
 import type { InputMetadata, OutputLinks, OutputMeta } from "./types/io";
 
 type OutputMetadata = {
@@ -8,9 +9,10 @@ type OutputMetadata = {
 };
 
 export function generateMetadata(metadata: InputMetadata): OutputMetadata {
+	const normalizedMetadata = normalizeMetadata(metadata);
 	return {
-		meta: meta(metadata),
-		links: links(metadata),
+		meta: meta(normalizedMetadata),
+		links: links(normalizedMetadata),
 	};
 }
 

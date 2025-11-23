@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 
+import { normalizeMetadata } from "../normalize";
 import type { InputMetadata } from "../types/io";
 import {
 	generateAppLinks,
@@ -9,11 +10,11 @@ import {
 
 describe("generateOpenGraph", () => {
 	test("returns an empty array when openGraph is not provided", () => {
-		expect(generateOpenGraph({})).toEqual([]);
+		expect(generateOpenGraph(normalizeMetadata({}))).toEqual([]);
 	});
 
 	test("generates base Open Graph tags and media descriptors", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			openGraph: {
 				determiner: "the",
 				title: "OG Title",
@@ -47,7 +48,7 @@ describe("generateOpenGraph", () => {
 				faxNumbers: ["999"],
 				alternateLocale: ["fr_FR", "ja_JP"],
 			},
-		};
+		});
 
 		expect(generateOpenGraph(metadata)).toEqual([
 			{ property: "og:determiner", content: "the" },
@@ -83,7 +84,7 @@ describe("generateOpenGraph", () => {
 	});
 
 	test("handles multiple media entries and secureUrl-only descriptors", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			openGraph: {
 				images: [
 					{ url: "https://img.com/1.png" },
@@ -97,7 +98,7 @@ describe("generateOpenGraph", () => {
 				],
 				audio: [{ url: "https://aud.com/1.mp3" }, "https://aud.com/2.mp3"],
 			},
-		};
+		});
 
 		expect(generateOpenGraph(metadata)).toEqual([
 			{ property: "og:image", content: "https://img.com/1.png" },
@@ -333,7 +334,9 @@ describe("generateOpenGraph", () => {
 
 		for (const { name, openGraph, expected } of cases) {
 			test(name, () => {
-				expect(generateOpenGraph({ openGraph })).toEqual(expected);
+				expect(generateOpenGraph(normalizeMetadata({ openGraph }))).toEqual(
+					expected,
+				);
 			});
 		}
 	});
@@ -342,11 +345,11 @@ describe("generateOpenGraph", () => {
 describe("generateTwitter", () => {
 	// TODO: more thorough tests
 	test("returns an empty array when twitter is not provided", () => {
-		expect(generateTwitter({})).toEqual([]);
+		expect(generateTwitter(normalizeMetadata({}))).toEqual([]);
 	});
 
 	test("renders summary card basics and ignores images while normalization is stubbed", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			twitter: {
 				title: "Twitter Title",
 				description: "Twitter Description",
@@ -356,7 +359,7 @@ describe("generateTwitter", () => {
 				creatorId: "222",
 				images: ["https://example.com/ignored.png"],
 			},
-		};
+		});
 
 		expect(generateTwitter(metadata)).toEqual([
 			{ name: "twitter:card", content: "summary" },
@@ -370,7 +373,7 @@ describe("generateTwitter", () => {
 	});
 
 	test("renders player card with multiple players", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			twitter: {
 				card: "player",
 				title: "Player Title",
@@ -394,7 +397,7 @@ describe("generateTwitter", () => {
 					},
 				],
 			},
-		};
+		});
 
 		expect(generateTwitter(metadata)).toEqual([
 			{ name: "twitter:card", content: "player" },
@@ -416,7 +419,7 @@ describe("generateTwitter", () => {
 	});
 
 	test("renders app card across platforms, skipping missing pieces", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			twitter: {
 				card: "app",
 				title: "App Title",
@@ -436,7 +439,7 @@ describe("generateTwitter", () => {
 					},
 				},
 			},
-		};
+		});
 
 		expect(generateTwitter(metadata)).toEqual([
 			{ name: "twitter:card", content: "app" },
@@ -464,11 +467,11 @@ describe("generateTwitter", () => {
 
 describe("generateAppLinks", () => {
 	test("returns an empty array when appLinks is not provided", () => {
-		expect(generateAppLinks({})).toEqual([]);
+		expect(generateAppLinks(normalizeMetadata({}))).toEqual([]);
 	});
 
 	test("emits platform-specific app link descriptors", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			appLinks: {
 				ios: [{ url: "ios-url", app_store_id: "111", app_name: "iOS" }],
 				iphone: [{ url: "iphone-url" }],
@@ -479,7 +482,7 @@ describe("generateAppLinks", () => {
 				windows_universal: [{ url: "uwp-url" }],
 				web: [{ url: "web-url", should_fallback: false }],
 			},
-		};
+		});
 
 		expect(generateAppLinks(metadata)).toEqual([
 			{ property: "al:ios:url", content: "ios-url" },
@@ -498,7 +501,7 @@ describe("generateAppLinks", () => {
 	});
 
 	test("handles multiple entries per platform", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			appLinks: {
 				ios: [
 					{ url: "ios-url-1", app_store_id: "111" },
@@ -509,7 +512,7 @@ describe("generateAppLinks", () => {
 					{ package: "pkg2", url: "android-url-2" },
 				],
 			},
-		};
+		});
 
 		expect(generateAppLinks(metadata)).toEqual([
 			{ property: "al:ios:url", content: "ios-url-1" },
@@ -524,12 +527,12 @@ describe("generateAppLinks", () => {
 	});
 
 	test("handles partial platform coverage", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			appLinks: {
 				ios: [{ url: "ios-only", app_store_id: "123" }],
 				web: [{ url: "web-fallback" }],
 			},
-		};
+		});
 
 		expect(generateAppLinks(metadata)).toEqual([
 			{ property: "al:ios:url", content: "ios-only" },
@@ -539,7 +542,7 @@ describe("generateAppLinks", () => {
 	});
 
 	test("handles optional fields and URL objects", () => {
-		const metadata: InputMetadata = {
+		const metadata = normalizeMetadata({
 			appLinks: {
 				ios: [
 					{ url: "ios-url-1", app_store_id: "111", app_name: "App1" },
@@ -547,7 +550,7 @@ describe("generateAppLinks", () => {
 				],
 				web: [{ url: new URL("https://example.com/app") }],
 			},
-		};
+		});
 
 		expect(generateAppLinks(metadata)).toEqual([
 			{ property: "al:ios:url", content: "ios-url-1" },
