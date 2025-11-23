@@ -24,7 +24,7 @@ function nonNullable<T>(value: T): value is NonNullable<T> {
 	return value !== null && value !== undefined;
 }
 
-function _metaFilter<T extends {} | {}[]>(items: (T | null | undefined)[]) {
+function _metaFilter<T>(items: (T | T[] | null | undefined)[]): T[] {
 	const acc: T[] = [];
 	for (const item of items) {
 		if (Array.isArray(item)) {

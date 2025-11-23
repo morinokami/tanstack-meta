@@ -1,13 +1,23 @@
 import type { ResolvedMetadata } from "next";
+import type { ResolvedMetadataWithURLs } from "next/dist/lib/metadata/types/metadata-interface";
+
 import type { InputMetadata, SimplifyTitleInUnion } from "../types/io";
-import type { OpenGraph, OpenGraphType } from "../types/opengraph-types";
-import type { Twitter } from "../types/twitter-types";
+import type { OpenGraphType } from "../types/opengraph-types";
 
 function resolveArray<T>(value: T | T[]): T[] {
 	if (Array.isArray(value)) {
 		return value as any;
 	}
 	return [value] as any;
+}
+
+function resolveAsArrayOrUndefined<T>(
+	value: T | T[] | undefined | null,
+): T extends undefined | null ? undefined : T[] {
+	if (typeof value === "undefined" || value === null) {
+		return undefined as any;
+	}
+	return resolveArray(value) as any;
 }
 
 // type FlattenArray<T> = T extends (infer U)[] ? U : T;
@@ -174,4 +184,64 @@ export function normalizeOpenGraph(
 	resolveProps(resolved, openGraph);
 
 	return resolved;
+}
+
+const TwitterBasicInfoKeys = [
+	"site",
+	"siteId",
+	"creator",
+	"creatorId",
+	"description",
+] as const;
+
+export function normalizeTwitter(twitter: InputMetadata["twitter"]) {
+	if (!twitter) return null;
+	let card = "card" in twitter ? twitter.card : undefined;
+	const resolved = {
+		...twitter,
+		title: twitter.title,
+	} as NonNullable<SimplifyTitleInUnion<ResolvedMetadata["twitter"]>>;
+	for (const infoKey of TwitterBasicInfoKeys) {
+		resolved[infoKey] = twitter[infoKey] || null;
+	}
+
+	// TODO:
+	// resolved.images = resolveImages(
+	// 	twitter.images,
+	// 	metadataBase,
+	// 	metadataContext.isStaticMetadataRouteFile,
+	// );
+	resolved.images = [];
+
+	card = card || (resolved.images?.length ? "summary_large_image" : "summary");
+	resolved.card = card;
+
+	if ("card" in resolved) {
+		switch (resolved.card) {
+			case "player": {
+				resolved.players = resolveAsArrayOrUndefined(resolved.players) || [];
+				break;
+			}
+			case "app": {
+				resolved.app = resolved.app || {};
+				break;
+			}
+			case "summary":
+			case "summary_large_image":
+				break;
+			default:
+				resolved satisfies never;
+		}
+	}
+
+	return resolved;
+}
+
+export function normalizeAppLink(appLinks: InputMetadata["appLinks"]) {
+	if (!appLinks) return null;
+	for (const key in appLinks) {
+		// @ts-expect-error // TODO: type infer
+		appLinks[key] = resolveAsArrayOrUndefined(appLinks[key]);
+	}
+	return appLinks as ResolvedMetadataWithURLs["appLinks"];
 }

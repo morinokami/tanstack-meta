@@ -1,6 +1,10 @@
 import type { InputMetadata, NormalizedMetadata } from "../types/io";
 import { normalizeRobotsValue } from "./basic";
-import { normalizeOpenGraph } from "./opengraph";
+import {
+	normalizeAppLink,
+	normalizeOpenGraph,
+	normalizeTwitter,
+} from "./opengraph";
 
 // https://github.com/vercel/next.js/blob/d673568300ab9336ebe610516c5a3439ab7cb8f5/packages/next/src/lib/metadata/resolve-metadata.ts#L213
 export function normalizeMetadata(metadata: InputMetadata): NormalizedMetadata {
@@ -33,5 +37,7 @@ export function normalizeMetadata(metadata: InputMetadata): NormalizedMetadata {
 		other: metadata.other ?? null,
 
 		openGraph: normalizeOpenGraph(metadata.openGraph),
+		twitter: normalizeTwitter(metadata.twitter),
+		appLinks: normalizeAppLink(metadata.appLinks),
 	};
 }

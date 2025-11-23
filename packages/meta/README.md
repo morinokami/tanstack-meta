@@ -58,8 +58,8 @@ export const Route = createFileRoute("/")({
 - [ ] `formatDetection`
 - [ ] `verification`
 - [ ] `appleWebApp`
-- [ ] `openGraph`
-- [ ] `twitter`
-- [ ] `appLinks`
+- [x] `openGraph`
+- [x] `twitter`
+- [x] `appLinks`
 - [ ] `icons`
 - [ ] `viewport`

@@ -17,38 +17,19 @@ export const Route = createRootRoute({
 			...meta({
 				charSet: "utf-8",
 				title: "TanStack Start Starter",
-				openGraph: {
-					title: "Next.js",
-					description: "The React Framework for the Web",
-					url: "https://nextjs.org",
-					siteName: "Next.js",
-					images: [
-						{
-							url: "https://nextjs.org/og.png", // Must be an absolute URL
-							width: 800,
-							height: 600,
-						},
-						{
-							url: "https://nextjs.org/og-alt.png", // Must be an absolute URL
-							width: 1800,
-							height: 1600,
-							alt: "My custom alt",
-						},
-					],
-					videos: [
-						{
-							url: "https://nextjs.org/video.mp4", // Must be an absolute URL
-							width: 800,
-							height: 600,
-						},
-					],
-					audio: [
-						{
-							url: "https://nextjs.org/audio.mp3", // Must be an absolute URL
-						},
-					],
-					locale: "en_US",
-					type: "website",
+				appLinks: {
+					ios: {
+						url: "https://nextjs.org/ios",
+						app_store_id: "app_store_id",
+					},
+					android: {
+						package: "com.example.android/package",
+						app_name: "app_name_android",
+					},
+					web: {
+						url: "https://nextjs.org/web",
+						should_fallback: true,
+					},
 				},
 			}),
 		],

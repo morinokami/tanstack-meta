@@ -1,5 +1,6 @@
 import { normalizeMetadata } from "../normalize";
 import type { InputMetadata, OutputMetadata } from "../types/io";
+import type { TwitterAppDescriptor } from "../types/twitter-types";
 import { _meta, _multiMeta } from "./utils";
 
 // https://github.com/vercel/next.js/blob/f9f625b90e6d4a562758c6a43234e168dcc23aa1/packages/next/src/lib/metadata/generate/opengraph.tsx
@@ -216,5 +217,84 @@ export function generateOpenGraph(metadata: InputMetadata): OutputMetadata {
 			contents: openGraph.alternateLocale,
 		}),
 		...(typedOpenGraph ? typedOpenGraph.flat() : []),
+	].flat();
+}
+
+function TwitterAppItem({
+	app,
+	type,
+}: {
+	app: TwitterAppDescriptor;
+	type: "iphone" | "ipad" | "googleplay";
+}) {
+	return [
+		_meta({ name: `twitter:app:name:${type}`, content: app.name }),
+		_meta({ name: `twitter:app:id:${type}`, content: app.id[type] }),
+		_meta({
+			name: `twitter:app:url:${type}`,
+			content: app.url?.[type]?.toString(),
+		}),
+	];
+}
+
+export function generateTwitter(metadata: InputMetadata): OutputMetadata {
+	const { twitter } = normalizeMetadata(metadata);
+
+	if (!twitter) return [];
+
+	const { card } = twitter;
+	return [
+		_meta({ name: "twitter:card", content: card }),
+		_meta({ name: "twitter:site", content: twitter.site }),
+		_meta({ name: "twitter:site:id", content: twitter.siteId }),
+		_meta({ name: "twitter:creator", content: twitter.creator }),
+		_meta({ name: "twitter:creator:id", content: twitter.creatorId }),
+		_meta({ name: "twitter:title", content: twitter.title }),
+		_meta({ name: "twitter:description", content: twitter.description }),
+		_multiMeta({ namePrefix: "twitter:image", contents: twitter.images }),
+		...(card === "player"
+			? twitter.players.flatMap((player) => [
+					_meta({
+						name: "twitter:player",
+						content: player.playerUrl.toString(),
+					}),
+					_meta({
+						name: "twitter:player:stream",
+						content: player.streamUrl.toString(),
+					}),
+					_meta({ name: "twitter:player:width", content: player.width }),
+					_meta({ name: "twitter:player:height", content: player.height }),
+				])
+			: []),
+		...(card === "app"
+			? [
+					TwitterAppItem({ app: twitter.app, type: "iphone" }),
+					TwitterAppItem({ app: twitter.app, type: "ipad" }),
+					TwitterAppItem({ app: twitter.app, type: "googleplay" }),
+				]
+			: []),
+	].flat();
+}
+
+export function generateAppLinks(metadata: InputMetadata): OutputMetadata {
+	const { appLinks } = normalizeMetadata(metadata);
+
+	if (!appLinks) return [];
+
+	return [
+		_multiMeta({ propertyPrefix: "al:ios", contents: appLinks.ios }),
+		_multiMeta({ propertyPrefix: "al:iphone", contents: appLinks.iphone }),
+		_multiMeta({ propertyPrefix: "al:ipad", contents: appLinks.ipad }),
+		_multiMeta({ propertyPrefix: "al:android", contents: appLinks.android }),
+		_multiMeta({
+			propertyPrefix: "al:windows_phone",
+			contents: appLinks.windows_phone,
+		}),
+		_multiMeta({ propertyPrefix: "al:windows", contents: appLinks.windows }),
+		_multiMeta({
+			propertyPrefix: "al:windows_universal",
+			contents: appLinks.windows_universal,
+		}),
+		_multiMeta({ propertyPrefix: "al:web", contents: appLinks.web }),
 	].flat();
 }

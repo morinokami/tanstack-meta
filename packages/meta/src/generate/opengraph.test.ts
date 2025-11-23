@@ -1,7 +1,11 @@
 import { describe, expect, test } from "bun:test";
 
 import type { InputMetadata } from "../types/io";
-import { generateOpenGraph } from "./opengraph";
+import {
+	generateAppLinks,
+	generateOpenGraph,
+	generateTwitter,
+} from "./opengraph";
 
 describe("generateOpenGraph", () => {
 	test("returns an empty array when openGraph is not provided", () => {
@@ -334,5 +338,226 @@ describe("generateOpenGraph", () => {
 				);
 			});
 		}
+	});
+});
+
+describe("generateTwitter", () => {
+	// TODO: more thorough tests
+	test("returns an empty array when twitter is not provided", () => {
+		expect(generateTwitter({})).toEqual([]);
+	});
+
+	test("renders summary card basics and ignores images while normalization is stubbed", () => {
+		const metadata: InputMetadata = {
+			twitter: {
+				title: "Twitter Title",
+				description: "Twitter Description",
+				site: "@site",
+				siteId: "111",
+				creator: "@creator",
+				creatorId: "222",
+				images: ["https://example.com/ignored.png"],
+			},
+		};
+
+		expect(generateTwitter(metadata)?.filter(Boolean) ?? []).toEqual([
+			{ name: "twitter:card", content: "summary" },
+			{ name: "twitter:site", content: "@site" },
+			{ name: "twitter:site:id", content: "111" },
+			{ name: "twitter:creator", content: "@creator" },
+			{ name: "twitter:creator:id", content: "222" },
+			{ name: "twitter:title", content: "Twitter Title" },
+			{ name: "twitter:description", content: "Twitter Description" },
+		]);
+	});
+
+	test("renders player card with multiple players", () => {
+		const metadata: InputMetadata = {
+			twitter: {
+				card: "player",
+				title: "Player Title",
+				description: "Player Description",
+				site: "@site",
+				siteId: "999",
+				creator: "@creator",
+				creatorId: "888",
+				players: [
+					{
+						playerUrl: "https://player1.com",
+						streamUrl: "https://stream1.com",
+						width: 720,
+						height: 480,
+					},
+					{
+						playerUrl: "https://player2.com",
+						streamUrl: "https://stream2.com",
+						width: 1280,
+						height: 720,
+					},
+				],
+			},
+		};
+
+		expect(generateTwitter(metadata)?.filter(Boolean) ?? []).toEqual([
+			{ name: "twitter:card", content: "player" },
+			{ name: "twitter:site", content: "@site" },
+			{ name: "twitter:site:id", content: "999" },
+			{ name: "twitter:creator", content: "@creator" },
+			{ name: "twitter:creator:id", content: "888" },
+			{ name: "twitter:title", content: "Player Title" },
+			{ name: "twitter:description", content: "Player Description" },
+			{ name: "twitter:player", content: "https://player1.com" },
+			{ name: "twitter:player:stream", content: "https://stream1.com" },
+			{ name: "twitter:player:width", content: "720" },
+			{ name: "twitter:player:height", content: "480" },
+			{ name: "twitter:player", content: "https://player2.com" },
+			{ name: "twitter:player:stream", content: "https://stream2.com" },
+			{ name: "twitter:player:width", content: "1280" },
+			{ name: "twitter:player:height", content: "720" },
+		]);
+	});
+
+	test("renders app card across platforms, skipping missing pieces", () => {
+		const metadata: InputMetadata = {
+			twitter: {
+				card: "app",
+				title: "App Title",
+				description: "App Description",
+				site: "@site",
+				app: {
+					name: "MyApp",
+					id: {
+						iphone: 111,
+						ipad: "222",
+						googleplay: "com.example.app",
+					},
+					url: {
+						iphone: "https://apps.apple.com/app",
+						googleplay:
+							"https://play.google.com/store/apps/details?id=com.example.app",
+					},
+				},
+			},
+		};
+
+		expect(generateTwitter(metadata)?.filter(Boolean) ?? []).toEqual([
+			{ name: "twitter:card", content: "app" },
+			{ name: "twitter:site", content: "@site" },
+			{ name: "twitter:title", content: "App Title" },
+			{ name: "twitter:description", content: "App Description" },
+			{ name: "twitter:app:name:iphone", content: "MyApp" },
+			{ name: "twitter:app:id:iphone", content: "111" },
+			{
+				name: "twitter:app:url:iphone",
+				content: "https://apps.apple.com/app",
+			},
+			{ name: "twitter:app:name:ipad", content: "MyApp" },
+			{ name: "twitter:app:id:ipad", content: "222" },
+			{ name: "twitter:app:name:googleplay", content: "MyApp" },
+			{ name: "twitter:app:id:googleplay", content: "com.example.app" },
+			{
+				name: "twitter:app:url:googleplay",
+				content:
+					"https://play.google.com/store/apps/details?id=com.example.app",
+			},
+		]);
+	});
+});
+
+describe("generateAppLinks", () => {
+	test("returns an empty array when appLinks is not provided", () => {
+		expect(generateAppLinks({})).toEqual([]);
+	});
+
+	test("emits platform-specific app link descriptors", () => {
+		const metadata: InputMetadata = {
+			appLinks: {
+				ios: [{ url: "ios-url", app_store_id: "111", app_name: "iOS" }],
+				iphone: [{ url: "iphone-url" }],
+				ipad: [{ url: "ipad-url" }],
+				android: [{ url: "android-url", package: "pkg" }],
+				windows_phone: [{ url: "wp-url" }],
+				windows: [{ url: "windows-url" }],
+				windows_universal: [{ url: "uwp-url" }],
+				web: [{ url: "web-url", should_fallback: false }],
+			},
+		};
+
+		expect(generateAppLinks(metadata)?.filter(Boolean) ?? []).toEqual([
+			{ property: "al:ios:url", content: "ios-url" },
+			{ property: "al:ios:app_store_id", content: "111" },
+			{ property: "al:ios:app_name", content: "iOS" },
+			{ property: "al:iphone:url", content: "iphone-url" },
+			{ property: "al:ipad:url", content: "ipad-url" },
+			{ property: "al:android:url", content: "android-url" },
+			{ property: "al:android:package", content: "pkg" },
+			{ property: "al:windows_phone:url", content: "wp-url" },
+			{ property: "al:windows:url", content: "windows-url" },
+			{ property: "al:windows_universal:url", content: "uwp-url" },
+			{ property: "al:web:url", content: "web-url" },
+			{ property: "al:web:should_fallback", content: "false" },
+		]);
+	});
+
+	test("handles multiple entries per platform", () => {
+		const metadata: InputMetadata = {
+			appLinks: {
+				ios: [
+					{ url: "ios-url-1", app_store_id: "111" },
+					{ url: "ios-url-2", app_store_id: "222" },
+				],
+				android: [
+					{ package: "pkg1", url: "android-url-1" },
+					{ package: "pkg2", url: "android-url-2" },
+				],
+			},
+		};
+
+		expect(generateAppLinks(metadata)?.filter(Boolean) ?? []).toEqual([
+			{ property: "al:ios:url", content: "ios-url-1" },
+			{ property: "al:ios:app_store_id", content: "111" },
+			{ property: "al:ios:url", content: "ios-url-2" },
+			{ property: "al:ios:app_store_id", content: "222" },
+			{ property: "al:android:package", content: "pkg1" },
+			{ property: "al:android:url", content: "android-url-1" },
+			{ property: "al:android:package", content: "pkg2" },
+			{ property: "al:android:url", content: "android-url-2" },
+		]);
+	});
+
+	test("handles partial platform coverage", () => {
+		const metadata: InputMetadata = {
+			appLinks: {
+				ios: [{ url: "ios-only", app_store_id: "123" }],
+				web: [{ url: "web-fallback" }],
+			},
+		};
+
+		expect(generateAppLinks(metadata)?.filter(Boolean) ?? []).toEqual([
+			{ property: "al:ios:url", content: "ios-only" },
+			{ property: "al:ios:app_store_id", content: "123" },
+			{ property: "al:web:url", content: "web-fallback" },
+		]);
+	});
+
+	test("handles optional fields and URL objects", () => {
+		const metadata: InputMetadata = {
+			appLinks: {
+				ios: [
+					{ url: "ios-url-1", app_store_id: "111", app_name: "App1" },
+					{ url: "ios-url-2", app_store_id: "222" },
+				],
+				web: [{ url: new URL("https://example.com/app") }],
+			},
+		};
+
+		expect(generateAppLinks(metadata)?.filter(Boolean) ?? []).toEqual([
+			{ property: "al:ios:url", content: "ios-url-1" },
+			{ property: "al:ios:app_store_id", content: "111" },
+			{ property: "al:ios:app_name", content: "App1" },
+			{ property: "al:ios:url", content: "ios-url-2" },
+			{ property: "al:ios:app_store_id", content: "222" },
+			{ property: "al:web:url", content: "https://example.com/app" },
+		]);
 	});
 });
