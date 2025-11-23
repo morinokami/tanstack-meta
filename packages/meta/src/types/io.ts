@@ -58,4 +58,5 @@ export type NormalizedMetadata = {
 	appLinks: ResolvedMetadataWithURLs["appLinks"];
 };
 
-export type OutputMetadata = AnyRouteMatch["meta"];
+export type OutputMeta = NonNullable<AnyRouteMatch["meta"]>;
+export type OutputLinks = NonNullable<AnyRouteMatch["links"]>;

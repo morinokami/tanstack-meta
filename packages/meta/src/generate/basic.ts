@@ -1,9 +1,9 @@
 import { normalizeMetadata } from "../normalize";
-import type { InputMetadata, OutputMetadata } from "../types/io";
+import type { InputMetadata, OutputMeta } from "../types/io";
 import { _meta, _multiMeta, nonNullable } from "./utils";
 
 // https://github.com/vercel/next.js/blob/5b97f1f7b51dddfc1df42e0bd03730f90ebc9337/packages/next/src/lib/metadata/generate/basic.tsx#L54
-export function generateBasic(metadata: InputMetadata): OutputMetadata {
+export function generateBasic(metadata: InputMetadata): OutputMeta {
 	const normalizedMetadata = normalizeMetadata(metadata);
 
 	// TODO: links?
@@ -43,7 +43,7 @@ export function generateBasic(metadata: InputMetadata): OutputMetadata {
 	].filter(nonNullable);
 }
 
-export function generateFacebook(metadata: InputMetadata): OutputMetadata {
+export function generateFacebook(metadata: InputMetadata): OutputMeta {
 	const { facebook } = normalizeMetadata(metadata);
 
 	if (!facebook) return [];
@@ -65,9 +65,7 @@ const formatDetectionKeys = [
 	"email",
 	"url",
 ] as const;
-export function generateFormatDetection(
-	metadata: InputMetadata,
-): OutputMetadata {
+export function generateFormatDetection(metadata: InputMetadata): OutputMeta {
 	const { formatDetection } = normalizeMetadata(metadata);
 
 	if (!formatDetection) return [];
@@ -83,7 +81,7 @@ export function generateFormatDetection(
 	return content ? [_meta({ name: "format-detection", content })] : [];
 }
 
-export function generateVerification(metadata: InputMetadata): OutputMetadata {
+export function generateVerification(metadata: InputMetadata): OutputMeta {
 	const { verification } = normalizeMetadata(metadata);
 
 	if (!verification) return [];

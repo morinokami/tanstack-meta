@@ -1,10 +1,10 @@
 import { normalizeMetadata } from "../normalize";
-import type { InputMetadata, OutputMetadata } from "../types/io";
+import type { InputMetadata, OutputMeta } from "../types/io";
 import type { TwitterAppDescriptor } from "../types/twitter-types";
 import { _meta, _multiMeta, nonNullable } from "./utils";
 
 // https://github.com/vercel/next.js/blob/f9f625b90e6d4a562758c6a43234e168dcc23aa1/packages/next/src/lib/metadata/generate/opengraph.tsx
-export function generateOpenGraph(metadata: InputMetadata): OutputMetadata {
+export function generateOpenGraph(metadata: InputMetadata): OutputMeta {
 	const { openGraph } = normalizeMetadata(metadata);
 
 	if (!openGraph) return [];
@@ -239,7 +239,7 @@ function TwitterAppItem({
 	];
 }
 
-export function generateTwitter(metadata: InputMetadata): OutputMetadata {
+export function generateTwitter(metadata: InputMetadata): OutputMeta {
 	const { twitter } = normalizeMetadata(metadata);
 
 	if (!twitter) return [];
@@ -280,7 +280,7 @@ export function generateTwitter(metadata: InputMetadata): OutputMetadata {
 		.filter(nonNullable);
 }
 
-export function generateAppLinks(metadata: InputMetadata): OutputMetadata {
+export function generateAppLinks(metadata: InputMetadata): OutputMeta {
 	const { appLinks } = normalizeMetadata(metadata);
 
 	if (!appLinks) return [];
