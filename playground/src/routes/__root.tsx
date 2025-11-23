@@ -12,7 +12,24 @@ export const Route = createRootRoute({
 		const { meta, links } = generateMetadata({
 			charSet: "utf-8",
 			title: "TanStack Start Starter",
-			archives: ["https://nextjs.org/13"],
+			icons: {
+				icon: [
+					{ url: "/icon.png" },
+					new URL("/icon.png", "https://example.com"),
+					{ url: "/icon-dark.png", media: "(prefers-color-scheme: dark)" },
+				],
+				shortcut: ["/shortcut-icon.png"],
+				apple: [
+					{ url: "/apple-icon.png" },
+					{ url: "/apple-icon-x3.png", sizes: "180x180", type: "image/png" },
+				],
+				other: [
+					{
+						rel: "apple-touch-icon-precomposed",
+						url: "/apple-touch-icon-precomposed.png",
+					},
+				],
+			},
 		});
 
 		return {

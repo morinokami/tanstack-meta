@@ -6,6 +6,7 @@ import {
 	normalizeRobotsValue,
 	normalizeVerification,
 } from "./basic";
+import { normalizeIcons } from "./icons";
 import {
 	normalizeAppLink,
 	normalizeOpenGraph,
@@ -22,11 +23,7 @@ export function normalizeMetadata(metadata: InputMetadata): NormalizedMetadata {
 		applicationName: metadata.applicationName ?? null,
 		manifest: convertUrlsToStrings(metadata.manifest) ?? null,
 		generator: metadata.generator ?? null,
-		keywords: Array.isArray(metadata.keywords)
-			? metadata.keywords
-			: metadata.keywords
-				? [metadata.keywords]
-				: null,
+		keywords: resolveAsArrayOrUndefined(metadata.keywords) ?? null,
 		referrer: metadata.referrer ?? null,
 		creator: metadata.creator ?? null,
 		publisher: metadata.publisher ?? null,
@@ -54,6 +51,7 @@ export function normalizeMetadata(metadata: InputMetadata): NormalizedMetadata {
 		openGraph: normalizeOpenGraph(metadata.openGraph),
 		twitter: normalizeTwitter(metadata.twitter),
 		appLinks: normalizeAppLink(metadata.appLinks),
+		icons: convertUrlsToStrings(normalizeIcons(metadata.icons)),
 	};
 }
 

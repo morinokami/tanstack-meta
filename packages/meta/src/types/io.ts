@@ -1,6 +1,7 @@
 import type { AnyRouteMatch } from "@tanstack/react-router";
 import type { Metadata as NextMetadata, ResolvedMetadata } from "next";
-import type { ResolvedMetadataWithURLs } from "next/dist/lib/metadata/types/metadata-interface";
+
+import type { ResolvedMetadataWithURLs } from "./metadata-interface";
 
 // Simplify the type of the title property in the opengraph type
 export type SimplifyTitleInUnion<T> = T extends { title?: unknown }
@@ -35,6 +36,7 @@ export type InputMetadata = {
 	openGraph?: SimplifyTitleInUnion<NextMetadata["openGraph"]>;
 	twitter?: SimplifyTitleInUnion<NextMetadata["twitter"]>;
 	appLinks?: NextMetadata["appLinks"];
+	icons?: NextMetadata["icons"];
 };
 
 export type NormalizedMetadata = {
@@ -64,6 +66,7 @@ export type NormalizedMetadata = {
 	openGraph: SimplifyTitleInUnion<ResolvedMetadata["openGraph"]>;
 	twitter: SimplifyTitleInUnion<ResolvedMetadata["twitter"]>;
 	appLinks: ResolvedMetadataWithURLs["appLinks"];
+	icons: ResolvedMetadata["icons"];
 };
 
 export type OutputMeta = NonNullable<AnyRouteMatch["meta"]>;

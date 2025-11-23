@@ -58,12 +58,12 @@ export const Route = createFileRoute("/")({
 - [ ] `alternates`
 - [ ] `itunes`
 - [x] `facebook`
-- [ ] `pinterest`
+- [x] `pinterest`
 - [x] `formatDetection`
 - [x] `verification`
 - [ ] `appleWebApp`
 - [x] `openGraph`
 - [x] `twitter`
 - [x] `appLinks`
-- [ ] `icons`
+- [x] `icons`
 - [ ] `viewport`
