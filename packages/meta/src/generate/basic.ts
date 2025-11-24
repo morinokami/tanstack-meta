@@ -17,6 +17,11 @@ export function generateBasicMeta(metadata: NormalizedMetadata): OutputMeta {
 			name: "application-name",
 			content: metadata.applicationName,
 		}),
+		...(metadata.authors
+			? metadata.authors.map((author) =>
+					_meta({ name: "author", content: author.name }),
+				)
+			: []),
 		_meta({ name: "generator", content: metadata.generator }),
 		_meta({
 			name: "keywords",
@@ -45,6 +50,12 @@ export function generateBasicMeta(metadata: NormalizedMetadata): OutputMeta {
 
 export function generateBasicLinks(metadata: NormalizedMetadata): OutputLinks {
 	return [
+		...(metadata.authors
+			? metadata.authors.map((author) => ({
+					rel: "author",
+					href: author.url,
+				}))
+			: []),
 		metadata.manifest
 			? { rel: "manifest", href: metadata.manifest }
 			: undefined,

@@ -16,6 +16,10 @@ describe("generateBasic", () => {
 			title: "My Title",
 			description: "A description",
 			applicationName: "MyApp",
+			authors: [
+				{ name: "Author One", url: "https://example.com/one" },
+				{ name: "Author Two" },
+			],
 			generator: "MetaGen",
 			keywords: ["alpha", "beta"],
 			referrer: "no-referrer",
@@ -43,6 +47,8 @@ describe("generateBasic", () => {
 			{ title: "My Title" },
 			{ name: "description", content: "A description" },
 			{ name: "application-name", content: "MyApp" },
+			{ name: "author", content: "Author One" },
+			{ name: "author", content: "Author Two" },
 			{ name: "generator", content: "MetaGen" },
 			{ name: "keywords", content: "alpha,beta" },
 			{ name: "referrer", content: "no-referrer" },
@@ -97,6 +103,20 @@ describe("generateBasic", () => {
 describe("generateBasicLinks", () => {
 	test("returns no links when manifest is not provided", () => {
 		expect(generateBasicLinks(normalizeMetadata({}))).toEqual([]);
+	});
+
+	test("emits author links when provided", () => {
+		const metadata = normalizeMetadata({
+			authors: [
+				{ url: "https://example.com/one" },
+				{ url: "https://example.com/two" },
+			],
+		});
+
+		expect(generateBasicLinks(metadata)).toEqual([
+			{ rel: "author", href: "https://example.com/one" },
+			{ rel: "author", href: "https://example.com/two" },
+		]);
 	});
 
 	test("emits a manifest link when provided as a string", () => {

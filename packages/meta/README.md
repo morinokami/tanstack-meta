@@ -38,7 +38,7 @@ export const Route = createFileRoute("/")({
 - [x] `title`
 - [x] `description`
 - [x] `applicationName`
-- [ ] `authors`
+- [x] `authors`
 - [x] `manifest`
 - [x] `generator`
 - [x] `keywords`
@@ -50,7 +50,6 @@ export const Route = createFileRoute("/")({
 - [x] `archives`
 - [x] `assets`
 - [x] `bookmarks`
-- [ ] `pagination`
 - [x] `category`
 - [x] `classification`
 - [x] `other`
