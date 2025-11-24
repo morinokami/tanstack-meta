@@ -1,10 +1,21 @@
 # tanstack-meta
 
-f: Next.js Metadata -> Tanstack Router Metadata
+A small library that transforms structured, Next.js [Metadata](https://nextjs.org/docs/app/api-reference/functions/generate-metadata)-like objects into metadata compatible with TanStack Router/Start, helping you manage document heads type-safely.
+
+Here's an example of how you can use `tanstack-meta`.
+While it makes the code slightly longer, it improves readability and clarity, and enables richer IDE type completion:
+
+| Without `tanstack-meta` | With `tanstack-meta` |
+| ----------------------- | -------------------- |
+| ![Screenshot](./.github/assets/before.webp) | ![Screenshot](./.github/assets/after.webp) |
 
 ## Usage
 
-```tsx
+```bash
+npm install tanstack-meta
+```
+
+```ts
 import { createFileRoute } from "@tanstack/react-router";
 import { meta } from "tanstack-meta";
 
@@ -32,37 +43,9 @@ export const Route = createFileRoute("/")({
 })
 ```
 
-## TODOs
+You can generally use it the same way as Next.js’s `generateMetadata` function, but keep the following points in mind:
 
-- [x] `charSet`
-- [x] `title`
-- [x] `description`
-- [x] `applicationName`
-- [x] `authors`
-- [x] `manifest`
-- [x] `generator`
-- [x] `keywords`
-- [x] `referrer`
-- [x] `creator`
-- [x] `publisher`
-- [x] `robots`
-- [x] `abstract`
-- [x] `archives`
-- [x] `assets`
-- [x] `bookmarks`
-- [x] `category`
-- [x] `classification`
-- [x] `other`
-
-- [x] `alternates`
-- [x] `itunes`
-- [x] `facebook`
-- [x] `pinterest`
-- [x] `formatDetection`
-- [x] `verification`
-- [x] `appleWebApp`
-- [x] `openGraph`
-- [x] `twitter`
-- [x] `appLinks`
-- [x] `icons`
-- [ ] `viewport`
+- Features that work across routes are not supported
+  - `title` only accepts a plain string
+  - `metadataBase` is not available
+- `viewport` is not supported yet
