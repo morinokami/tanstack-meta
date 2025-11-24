@@ -1,14 +1,11 @@
 import { describe, expect, test } from "bun:test";
 
 import { normalizeMetadata } from "../normalize";
-import type { InputMetadata } from "../types/io";
 import { generateAlternatesLinks } from "./alternates";
 
 describe("generateAlternatesLinks", () => {
 	test("returns empty when alternates is not provided", () => {
-		expect(generateAlternatesLinks(normalizeMetadata({} as InputMetadata))).toEqual(
-			[],
-		);
+		expect(generateAlternatesLinks(normalizeMetadata({}))).toEqual([]);
 	});
 
 	test("emits canonical link when provided", () => {
