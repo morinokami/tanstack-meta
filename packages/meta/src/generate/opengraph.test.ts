@@ -83,6 +83,101 @@ describe("generateOpenGraph", () => {
 		]);
 	});
 
+	test("handles URL objects in images", () => {
+		const metadata = normalizeMetadata({
+			openGraph: {
+				title: "OG Title with URL objects",
+				images: [
+					{
+						url: new URL("https://img.com/url-object.png"),
+						width: 1200,
+						height: 630,
+						alt: "URL object image",
+					},
+					new URL("https://img.com/direct-url-object.png"),
+				],
+			},
+		});
+
+		expect(generateOpenGraph(metadata)).toEqual([
+			{ property: "og:title", content: "OG Title with URL objects" },
+			{ property: "og:image", content: "https://img.com/url-object.png" },
+			{ property: "og:image:width", content: "1200" },
+			{ property: "og:image:height", content: "630" },
+			{ property: "og:image:alt", content: "URL object image" },
+			{
+				property: "og:image",
+				content: "https://img.com/direct-url-object.png",
+			},
+		]);
+	});
+
+	test("handles secureUrl as URL objects", () => {
+		const metadata = normalizeMetadata({
+			openGraph: {
+				title: "OG Title with secureUrl",
+				images: [
+					{
+						url: "https://img.com/image.png",
+						secureUrl: new URL("https://secure.img.com/image.png"),
+						width: 800,
+						height: 600,
+					},
+				],
+			},
+		});
+
+		expect(generateOpenGraph(metadata)).toEqual([
+			{ property: "og:title", content: "OG Title with secureUrl" },
+			{ property: "og:image", content: "https://img.com/image.png" },
+			{
+				property: "og:image:secure_url",
+				content: "https://secure.img.com/image.png",
+			},
+			{ property: "og:image:width", content: "800" },
+			{ property: "og:image:height", content: "600" },
+		]);
+	});
+
+	test("filters out invalid images", () => {
+		const metadata = normalizeMetadata({
+			openGraph: {
+				title: "OG Title with invalid images",
+				images: [
+					{ url: "https://img.com/valid.png" },
+					{ url: "" }, // Empty URL
+					"https://img.com/valid2.png",
+					"", // Empty string
+				],
+			},
+		});
+
+		expect(generateOpenGraph(metadata)).toEqual([
+			{ property: "og:title", content: "OG Title with invalid images" },
+			{ property: "og:image", content: "https://img.com/valid.png" },
+			{ property: "og:image", content: "https://img.com/valid2.png" },
+		]);
+	});
+
+	test("filters out relative URLs", () => {
+		const metadata = normalizeMetadata({
+			openGraph: {
+				title: "OG Title with relative URLs",
+				images: [
+					"/relative-path.png",
+					"https://img.com/absolute.png",
+					"../another-relative.png",
+					"relative-no-slash.png",
+				],
+			},
+		});
+
+		expect(generateOpenGraph(metadata)).toEqual([
+			{ property: "og:title", content: "OG Title with relative URLs" },
+			{ property: "og:image", content: "https://img.com/absolute.png" },
+		]);
+	});
+
 	test("handles multiple media entries and secureUrl-only descriptors", () => {
 		const metadata = normalizeMetadata({
 			openGraph: {
@@ -343,12 +438,11 @@ describe("generateOpenGraph", () => {
 });
 
 describe("generateTwitter", () => {
-	// TODO: more thorough tests
 	test("returns an empty array when twitter is not provided", () => {
 		expect(generateTwitter(normalizeMetadata({}))).toEqual([]);
 	});
 
-	test("renders summary card basics and ignores images while normalization is stubbed", () => {
+	test("renders summary card with images", () => {
 		const metadata = normalizeMetadata({
 			twitter: {
 				title: "Twitter Title",
@@ -357,18 +451,86 @@ describe("generateTwitter", () => {
 				siteId: "111",
 				creator: "@creator",
 				creatorId: "222",
-				images: ["https://example.com/ignored.png"],
+				images: ["https://example.com/image.png"],
 			},
 		});
 
 		expect(generateTwitter(metadata)).toEqual([
-			{ name: "twitter:card", content: "summary" },
+			{ name: "twitter:card", content: "summary_large_image" },
 			{ name: "twitter:site", content: "@site" },
 			{ name: "twitter:site:id", content: "111" },
 			{ name: "twitter:creator", content: "@creator" },
 			{ name: "twitter:creator:id", content: "222" },
 			{ name: "twitter:title", content: "Twitter Title" },
 			{ name: "twitter:description", content: "Twitter Description" },
+			{ name: "twitter:image", content: "https://example.com/image.png" },
+		]);
+	});
+
+	test("renders summary card without images", () => {
+		const metadata = normalizeMetadata({
+			twitter: {
+				title: "Twitter Title",
+				description: "Twitter Description",
+				site: "@site",
+			},
+		});
+
+		expect(generateTwitter(metadata)).toEqual([
+			{ name: "twitter:card", content: "summary" },
+			{ name: "twitter:site", content: "@site" },
+			{ name: "twitter:title", content: "Twitter Title" },
+			{ name: "twitter:description", content: "Twitter Description" },
+		]);
+	});
+
+	test("handles URL objects in twitter images", () => {
+		const metadata = normalizeMetadata({
+			twitter: {
+				title: "Twitter Title with URL objects",
+				images: [
+					{
+						url: new URL("https://img.com/twitter-url-object.png"),
+						alt: "Twitter URL object image",
+					},
+					new URL("https://img.com/direct-twitter-url.png"),
+				],
+			},
+		});
+
+		expect(generateTwitter(metadata)).toEqual([
+			{ name: "twitter:card", content: "summary_large_image" },
+			{ name: "twitter:title", content: "Twitter Title with URL objects" },
+			{
+				name: "twitter:image",
+				content: "https://img.com/twitter-url-object.png",
+			},
+			{ name: "twitter:image:alt", content: "Twitter URL object image" },
+			{
+				name: "twitter:image",
+				content: "https://img.com/direct-twitter-url.png",
+			},
+		]);
+	});
+
+	test("filters out invalid twitter images", () => {
+		const metadata = normalizeMetadata({
+			twitter: {
+				title: "Twitter Title with invalid images",
+				images: [
+					{ url: "https://img.com/valid.png" },
+					{ url: "" }, // Empty URL
+					"https://img.com/valid2.png",
+					"", // Empty string
+				],
+			},
+		});
+
+		expect(generateTwitter(metadata)).toEqual([
+			{ name: "twitter:card", content: "summary_large_image" },
+			{ name: "twitter:title", content: "Twitter Title with invalid images" },
+			{ name: "twitter:image", content: "https://img.com/valid.png" },
+			{ name: "twitter:image", content: "https://img.com/valid2.png" },
 		]);
 	});
 

@@ -9,24 +9,39 @@ import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({
 	head: () => {
+		const title =
+			"TanStack | High Quality Open-Source Software for Web Developers";
+		const description =
+			"Headless, type-safe, powerful utilities for complex workflows like Data Management, Data Visualization, Charts, Tables, and UI Components.";
+		const ogImage = "https://tanstack.com/assets/og-C0HGjoLl.png";
+
 		const { meta, links } = generateMetadata({
 			charSet: "utf-8",
-			title: "TanStack Start Starter",
-			itunes: {
-				appId: "myAppStoreID",
-				appArgument: "myAppArgument",
+			title,
+			description,
+			openGraph: {
+				title,
+				description,
+				type: "website",
+				images: [ogImage],
 			},
-			appleWebApp: {
-				title: "Apple Web App",
-				statusBarStyle: "black-translucent",
-				startupImage: [
-					"/assets/startup/apple-touch-startup-image-768x1004.png",
-					{
-						url: "/assets/startup/apple-touch-startup-image-1536x2008.png",
-						media: "(device-width: 768px) and (device-height: 1024px)",
-					},
+			twitter: {
+				card: "summary_large_image",
+				title,
+				description,
+				creator: "@tannerlinsley",
+				site: "@tannerlinsley",
+				images: [ogImage],
+			},
+			icons: {
+				icon: [
+					{ url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+					{ url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+					{ url: "/favicon.ico" },
 				],
+				apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
 			},
+			manifest: "/site.webmanifest",
 		});
 
 		return {

@@ -68,9 +68,9 @@ type TwitterPlayerDescriptor = {
 };
 
 type ResolvedTwitterImage = {
-	url: string | URL;
+	url: string;
 	alt?: string | undefined;
-	secureUrl?: string | URL | undefined;
+	secureUrl?: string | undefined;
 	type?: string | undefined;
 	width?: string | number | undefined;
 	height?: string | number | undefined;

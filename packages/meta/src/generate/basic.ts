@@ -1,7 +1,6 @@
 import type { NormalizedMetadata, OutputLinks, OutputMeta } from "../types/io";
 import { _meta, _multiMeta, nonNullable } from "./utils";
 
-// https://github.com/vercel/next.js/blob/5b97f1f7b51dddfc1df42e0bd03730f90ebc9337/packages/next/src/lib/metadata/generate/basic.tsx#L54
 export function generateBasicMeta(metadata: NormalizedMetadata): OutputMeta {
 	return [
 		metadata.charSet ? { charSet: metadata.charSet } : undefined,

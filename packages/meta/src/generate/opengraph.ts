@@ -2,7 +2,6 @@ import type { NormalizedMetadata, OutputMeta } from "../types/io";
 import type { TwitterAppDescriptor } from "../types/twitter-types";
 import { _meta, _multiMeta, nonNullable } from "./utils";
 
-// https://github.com/vercel/next.js/blob/f9f625b90e6d4a562758c6a43234e168dcc23aa1/packages/next/src/lib/metadata/generate/opengraph.tsx
 export function generateOpenGraph(metadata: NormalizedMetadata): OutputMeta {
 	const { openGraph } = metadata;
 
