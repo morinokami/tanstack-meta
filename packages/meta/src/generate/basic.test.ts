@@ -7,6 +7,7 @@ import {
 	generateBasicMeta,
 	generateFacebook,
 	generateFormatDetection,
+	generateItunes,
 	generatePinterest,
 	generateVerification,
 } from "./basic";
@@ -375,6 +376,76 @@ describe("generateVerification", () => {
 			{ name: "site-a", content: "single" },
 			{ name: "site-b", content: "multi1" },
 			{ name: "site-b", content: "multi2" },
+		]);
+	});
+});
+
+describe("generateItunes", () => {
+	test("returns an empty array when itunes is not provided", () => {
+		expect(generateItunes(normalizeMetadata({}))).toEqual([]);
+	});
+
+	test("emits app id and optional argument", () => {
+		const metadata = normalizeMetadata({
+			itunes: {
+				appId: "123456789",
+				appArgument: "myapp://open",
+			},
+		});
+
+		expect(generateItunes(metadata)).toEqual([
+			{
+				name: "apple-itunes-app",
+				content: "app-id=123456789, app-argument=myapp://open",
+			},
+		]);
+	});
+
+	test("emits only app id when argument is not provided", () => {
+		const metadata = normalizeMetadata({
+			itunes: {
+				appId: "123456789",
+			},
+		});
+
+		expect(generateItunes(metadata)).toEqual([
+			{
+				name: "apple-itunes-app",
+				content: "app-id=123456789",
+			},
+		]);
+	});
+
+	test("omits app-argument when empty string", () => {
+		const metadata = normalizeMetadata({
+			itunes: {
+				appId: "123456789",
+				appArgument: "",
+			},
+		});
+
+		expect(generateItunes(metadata)).toEqual([
+			{
+				name: "apple-itunes-app",
+				content: "app-id=123456789",
+			},
+		]);
+	});
+
+	test("handles special characters in appArgument", () => {
+		const metadata = normalizeMetadata({
+			itunes: {
+				appId: "123456789",
+				appArgument: "myapp://open?param=value&other=123",
+			},
+		});
+
+		expect(generateItunes(metadata)).toEqual([
+			{
+				name: "apple-itunes-app",
+				content:
+					"app-id=123456789, app-argument=myapp://open?param=value&other=123",
+			},
 		]);
 	});
 });

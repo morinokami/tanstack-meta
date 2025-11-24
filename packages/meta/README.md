@@ -55,7 +55,7 @@ export const Route = createFileRoute("/")({
 - [x] `other`
 
 - [x] `alternates`
-- [ ] `itunes`
+- [x] `itunes`
 - [x] `facebook`
 - [x] `pinterest`
 - [x] `formatDetection`

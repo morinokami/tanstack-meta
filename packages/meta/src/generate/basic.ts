@@ -74,6 +74,20 @@ export function generateBasicLinks(metadata: NormalizedMetadata): OutputLinks {
 	].filter(nonNullable);
 }
 
+export function generateItunes(metadata: NormalizedMetadata): OutputMeta {
+	const { itunes } = metadata;
+
+	if (!itunes) return [];
+
+	const { appId, appArgument } = itunes;
+	let content = `app-id=${appId}`;
+	if (appArgument) {
+		content += `, app-argument=${appArgument}`;
+	}
+
+	return [_meta({ name: "apple-itunes-app", content })].filter(nonNullable);
+}
+
 export function generateFacebook(metadata: NormalizedMetadata): OutputMeta {
 	const { facebook } = metadata;
 

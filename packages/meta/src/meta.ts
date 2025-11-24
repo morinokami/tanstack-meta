@@ -3,6 +3,7 @@ import {
 	generateBasicMeta,
 	generateFacebook,
 	generateFormatDetection,
+	generateItunes,
 	generatePinterest,
 	generateVerification,
 } from "./generate/basic";
@@ -18,6 +19,7 @@ export function meta(metadata: NormalizedMetadata): OutputMeta {
 	// https://github.com/vercel/next.js/blob/d89a7a07fd30f50ef889f0d505a95edb8a99cf69/packages/next/src/lib/metadata/metadata.tsx#L353
 	return [
 		generateBasicMeta(metadata),
+		generateItunes(metadata),
 		generateFacebook(metadata),
 		generatePinterest(metadata),
 		generateFormatDetection(metadata),

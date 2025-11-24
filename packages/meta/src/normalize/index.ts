@@ -5,6 +5,7 @@ import {
 	normalizeAlternates,
 	normalizeAppleWebApp,
 	normalizeFacebook,
+	normalizeItunes,
 	normalizeRobotsValue,
 	normalizeVerification,
 } from "./basic";
@@ -48,6 +49,7 @@ export function normalizeMetadata(metadata: InputMetadata): NormalizedMetadata {
 		other: metadata.other ?? null,
 
 		alternates: convertUrlsToStrings(normalizeAlternates(metadata.alternates)),
+		itunes: normalizeItunes(metadata.itunes),
 		facebook: normalizeFacebook(metadata.facebook),
 		pinterest: convertUrlsToStrings(metadata.pinterest) ?? null,
 		formatDetection: metadata.formatDetection ?? null,

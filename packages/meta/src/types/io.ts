@@ -30,6 +30,7 @@ export type InputMetadata = {
 	other?: NextMetadata["other"];
 
 	alternates?: NextMetadata["alternates"];
+	itunes?: NextMetadata["itunes"];
 	facebook?: NextMetadata["facebook"];
 	pinterest?: NextMetadata["pinterest"];
 	formatDetection?: NextMetadata["formatDetection"];
@@ -63,6 +64,7 @@ export type NormalizedMetadata = {
 	other: ResolvedMetadata["other"];
 
 	alternates: ResolvedMetadata["alternates"];
+	itunes: ResolvedMetadata["itunes"];
 	facebook: ResolvedMetadata["facebook"];
 	pinterest: ResolvedMetadata["pinterest"];
 	formatDetection: ResolvedMetadata["formatDetection"];

@@ -152,6 +152,15 @@ export const normalizeAppleWebApp = (
 	};
 };
 
+export const normalizeItunes = (itunes: InputMetadata["itunes"]) => {
+	if (!itunes) return null;
+
+	return {
+		appId: itunes.appId,
+		appArgument: itunes.appArgument ? itunes.appArgument : undefined,
+	};
+};
+
 export const normalizeFacebook = (facebook: InputMetadata["facebook"]) => {
 	if (!facebook) return null;
 

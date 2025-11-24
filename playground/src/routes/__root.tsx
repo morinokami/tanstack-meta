@@ -12,6 +12,10 @@ export const Route = createRootRoute({
 		const { meta, links } = generateMetadata({
 			charSet: "utf-8",
 			title: "TanStack Start Starter",
+			itunes: {
+				appId: "myAppStoreID",
+				appArgument: "myAppArgument",
+			},
 			appleWebApp: {
 				title: "Apple Web App",
 				statusBarStyle: "black-translucent",
