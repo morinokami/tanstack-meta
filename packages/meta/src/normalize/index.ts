@@ -2,6 +2,7 @@ import type { WithStringifiedURLs } from "next/dist/lib/metadata/types/metadata-
 
 import type { InputMetadata, NormalizedMetadata } from "../types/io";
 import {
+	normalizeAlternates,
 	normalizeFacebook,
 	normalizeRobotsValue,
 	normalizeVerification,
@@ -45,12 +46,13 @@ export function normalizeMetadata(metadata: InputMetadata): NormalizedMetadata {
 		classification: metadata.classification ?? null,
 		other: metadata.other ?? null,
 
+		alternates: convertUrlsToStrings(normalizeAlternates(metadata.alternates)),
 		facebook: normalizeFacebook(metadata.facebook),
 		pinterest: convertUrlsToStrings(metadata.pinterest) ?? null,
 		formatDetection: metadata.formatDetection ?? null,
 		verification: normalizeVerification(metadata.verification),
-		openGraph: normalizeOpenGraph(metadata.openGraph),
-		twitter: normalizeTwitter(metadata.twitter),
+		openGraph: convertUrlsToStrings(normalizeOpenGraph(metadata.openGraph)),
+		twitter: convertUrlsToStrings(normalizeTwitter(metadata.twitter)),
 		appLinks: normalizeAppLink(metadata.appLinks),
 		icons: convertUrlsToStrings(normalizeIcons(metadata.icons)),
 	};

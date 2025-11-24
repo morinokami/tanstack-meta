@@ -29,6 +29,7 @@ export type InputMetadata = {
 	classification?: NextMetadata["classification"];
 	other?: NextMetadata["other"];
 
+	alternates?: NextMetadata["alternates"];
 	facebook?: NextMetadata["facebook"];
 	pinterest?: NextMetadata["pinterest"];
 	formatDetection?: NextMetadata["formatDetection"];
@@ -60,6 +61,7 @@ export type NormalizedMetadata = {
 	classification: ResolvedMetadata["classification"];
 	other: ResolvedMetadata["other"];
 
+	alternates: ResolvedMetadata["alternates"];
 	facebook: ResolvedMetadata["facebook"];
 	pinterest: ResolvedMetadata["pinterest"];
 	formatDetection: ResolvedMetadata["formatDetection"];

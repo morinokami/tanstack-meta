@@ -1,6 +1,71 @@
+import type { AlternateLinkDescriptor } from "../types/alternative-urls-types";
 import type { InputMetadata } from "../types/io";
 import type { ResolvedVerification } from "../types/metadata-types";
 import { resolveAsArrayOrUndefined } from "./utils";
+
+function resolveUrlValuesOfObject(
+	obj:
+		| Record<
+				string,
+				string | URL | AlternateLinkDescriptor[] | null | undefined
+		  >
+		| null
+		| undefined,
+): null | Record<string, AlternateLinkDescriptor[]> {
+	if (!obj) return null;
+
+	const result: Record<string, AlternateLinkDescriptor[]> = {};
+	for (const [key, value] of Object.entries(obj)) {
+		if (typeof value === "string" || value instanceof URL) {
+			result[key] = [
+				{
+					url: value,
+				},
+			];
+		} else if (value?.length) {
+			result[key] = [];
+			value.forEach((item, index) => {
+				result[key][index] = {
+					url: item.url,
+					title: item.title,
+				};
+			});
+		}
+	}
+	return result;
+}
+function resolveCanonicalUrl(
+	urlOrDescriptor: string | URL | null | AlternateLinkDescriptor | undefined,
+): null | AlternateLinkDescriptor {
+	if (!urlOrDescriptor) return null;
+
+	const url =
+		typeof urlOrDescriptor === "string" || urlOrDescriptor instanceof URL
+			? urlOrDescriptor
+			: urlOrDescriptor.url;
+
+	// Return string url because structureClone can't handle URL instance
+	return {
+		url,
+	};
+}
+export const normalizeAlternates = (
+	alternates: InputMetadata["alternates"],
+) => {
+	if (!alternates) return null;
+
+	const canonical = resolveCanonicalUrl(alternates.canonical);
+	const languages = resolveUrlValuesOfObject(alternates.languages);
+	const media = resolveUrlValuesOfObject(alternates.media);
+	const types = resolveUrlValuesOfObject(alternates.types);
+
+	return {
+		canonical,
+		languages,
+		media,
+		types,
+	};
+};
 
 const robotsKeys = [
 	"noarchive",

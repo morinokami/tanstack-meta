@@ -12,7 +12,19 @@ export const Route = createRootRoute({
 		const { meta, links } = generateMetadata({
 			charSet: "utf-8",
 			title: "TanStack Start Starter",
-			authors: [{ name: "Seb" }, { name: "Josh", url: "https://nextjs.org" }],
+			alternates: {
+				canonical: "https://nextjs.org",
+				languages: {
+					"en-US": "https://nextjs.org/en-US",
+					"de-DE": "https://nextjs.org/de-DE",
+				},
+				media: {
+					"only screen and (max-width: 600px)": "https://nextjs.org/mobile",
+				},
+				types: {
+					"application/rss+xml": "https://nextjs.org/rss",
+				},
+			},
 		});
 
 		return {
