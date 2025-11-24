@@ -1,6 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { normalizeMetadata } from "../normalize";
 import {
+	generateAppleWebAppLinks,
+	generateAppleWebAppMeta,
 	generateBasicLinks,
 	generateBasicMeta,
 	generateFacebook,
@@ -373,6 +375,118 @@ describe("generateVerification", () => {
 			{ name: "site-a", content: "single" },
 			{ name: "site-b", content: "multi1" },
 			{ name: "site-b", content: "multi2" },
+		]);
+	});
+});
+
+describe("generateAppleWebAppMeta", () => {
+	test("returns an empty array when appleWebApp is not provided", () => {
+		expect(generateAppleWebAppMeta(normalizeMetadata({}))).toEqual([]);
+	});
+
+	test("emits apple web app meta tags", () => {
+		const metadata = normalizeMetadata({
+			appleWebApp: {
+				capable: true,
+				title: "App Title",
+				statusBarStyle: "black-translucent",
+			},
+		});
+
+		expect(generateAppleWebAppMeta(metadata)).toEqual([
+			{ name: "mobile-web-app-capable", content: "yes" },
+			{ name: "apple-mobile-web-app-title", content: "App Title" },
+			{
+				name: "apple-mobile-web-app-status-bar-style",
+				content: "black-translucent",
+			},
+		]);
+	});
+});
+
+describe("generateAppleWebAppLinks", () => {
+	test("returns an empty array when startup images are not provided", () => {
+		expect(generateAppleWebAppLinks(normalizeMetadata({}))).toEqual([]);
+	});
+
+	test("emits single startup image", () => {
+		const metadata = normalizeMetadata({
+			appleWebApp: {
+				startupImage: [{ url: "https://example.com/startup.png" }],
+			},
+		});
+
+		expect(generateAppleWebAppLinks(metadata)).toEqual([
+			{
+				rel: "apple-touch-startup-image",
+				href: "https://example.com/startup.png",
+			},
+		]);
+	});
+
+	test("returns empty array when startupImage is empty array", () => {
+		const metadata = normalizeMetadata({
+			appleWebApp: {
+				startupImage: [],
+			},
+		});
+
+		expect(generateAppleWebAppLinks(metadata)).toEqual([]);
+	});
+
+	test("emits startup images with optional media", () => {
+		const metadata = normalizeMetadata({
+			appleWebApp: {
+				startupImage: [
+					{ url: "https://example.com/startup.png" },
+					{
+						url: "https://example.com/startup-dark.png",
+						media: "(prefers-color-scheme: dark)",
+					},
+				],
+			},
+		});
+
+		expect(generateAppleWebAppLinks(metadata)).toEqual([
+			{
+				rel: "apple-touch-startup-image",
+				href: "https://example.com/startup.png",
+			},
+			{
+				rel: "apple-touch-startup-image",
+				href: "https://example.com/startup-dark.png",
+				media: "(prefers-color-scheme: dark)",
+			},
+		]);
+	});
+
+	test("handles multiple images for different device sizes", () => {
+		const metadata = normalizeMetadata({
+			appleWebApp: {
+				startupImage: [
+					{
+						url: "https://example.com/startup-iphone.png",
+						media: "(device-width: 375px) and (device-height: 667px)",
+					},
+					{
+						url: "https://example.com/startup-ipad.png",
+						media: "(device-width: 768px) and (device-height: 1024px)",
+					},
+				],
+			},
+		});
+
+		expect(generateAppleWebAppLinks(metadata)).toEqual([
+			{
+				rel: "apple-touch-startup-image",
+				href: "https://example.com/startup-iphone.png",
+				media: "(device-width: 375px) and (device-height: 667px)",
+			},
+			{
+				rel: "apple-touch-startup-image",
+				href: "https://example.com/startup-ipad.png",
+				media: "(device-width: 768px) and (device-height: 1024px)",
+			},
 		]);
 	});
 });

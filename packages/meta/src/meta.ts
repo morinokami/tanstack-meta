@@ -1,4 +1,5 @@
 import {
+	generateAppleWebAppMeta,
 	generateBasicMeta,
 	generateFacebook,
 	generateFormatDetection,
@@ -21,6 +22,7 @@ export function meta(metadata: NormalizedMetadata): OutputMeta {
 		generatePinterest(metadata),
 		generateFormatDetection(metadata),
 		generateVerification(metadata),
+		generateAppleWebAppMeta(metadata),
 		generateOpenGraph(metadata),
 		generateTwitter(metadata),
 		generateAppLinks(metadata),

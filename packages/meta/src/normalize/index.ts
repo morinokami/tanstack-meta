@@ -3,6 +3,7 @@ import type { WithStringifiedURLs } from "next/dist/lib/metadata/types/metadata-
 import type { InputMetadata, NormalizedMetadata } from "../types/io";
 import {
 	normalizeAlternates,
+	normalizeAppleWebApp,
 	normalizeFacebook,
 	normalizeRobotsValue,
 	normalizeVerification,
@@ -51,6 +52,7 @@ export function normalizeMetadata(metadata: InputMetadata): NormalizedMetadata {
 		pinterest: convertUrlsToStrings(metadata.pinterest) ?? null,
 		formatDetection: metadata.formatDetection ?? null,
 		verification: normalizeVerification(metadata.verification),
+		appleWebApp: normalizeAppleWebApp(metadata.appleWebApp),
 		openGraph: convertUrlsToStrings(normalizeOpenGraph(metadata.openGraph)),
 		twitter: convertUrlsToStrings(normalizeTwitter(metadata.twitter)),
 		appLinks: normalizeAppLink(metadata.appLinks),

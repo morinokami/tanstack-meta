@@ -34,6 +34,7 @@ export type InputMetadata = {
 	pinterest?: NextMetadata["pinterest"];
 	formatDetection?: NextMetadata["formatDetection"];
 	verification?: NextMetadata["verification"];
+	appleWebApp?: NextMetadata["appleWebApp"];
 	openGraph?: SimplifyTitleInUnion<NextMetadata["openGraph"]>;
 	twitter?: SimplifyTitleInUnion<NextMetadata["twitter"]>;
 	appLinks?: NextMetadata["appLinks"];
@@ -66,6 +67,7 @@ export type NormalizedMetadata = {
 	pinterest: ResolvedMetadata["pinterest"];
 	formatDetection: ResolvedMetadata["formatDetection"];
 	verification: ResolvedMetadata["verification"];
+	appleWebApp: ResolvedMetadata["appleWebApp"];
 	openGraph: SimplifyTitleInUnion<ResolvedMetadata["openGraph"]>;
 	twitter: SimplifyTitleInUnion<ResolvedMetadata["twitter"]>;
 	appLinks: ResolvedMetadataWithURLs["appLinks"];

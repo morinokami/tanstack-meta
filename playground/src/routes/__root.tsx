@@ -12,18 +12,16 @@ export const Route = createRootRoute({
 		const { meta, links } = generateMetadata({
 			charSet: "utf-8",
 			title: "TanStack Start Starter",
-			alternates: {
-				canonical: "https://nextjs.org",
-				languages: {
-					"en-US": "https://nextjs.org/en-US",
-					"de-DE": "https://nextjs.org/de-DE",
-				},
-				media: {
-					"only screen and (max-width: 600px)": "https://nextjs.org/mobile",
-				},
-				types: {
-					"application/rss+xml": "https://nextjs.org/rss",
-				},
+			appleWebApp: {
+				title: "Apple Web App",
+				statusBarStyle: "black-translucent",
+				startupImage: [
+					"/assets/startup/apple-touch-startup-image-768x1004.png",
+					{
+						url: "/assets/startup/apple-touch-startup-image-1536x2008.png",
+						media: "(device-width: 768px) and (device-height: 1024px)",
+					},
+				],
 			},
 		});
 

@@ -128,6 +128,30 @@ export const normalizeVerification = (
 	return res;
 };
 
+export const normalizeAppleWebApp = (
+	appleWebApp: InputMetadata["appleWebApp"],
+) => {
+	if (!appleWebApp) return null;
+	if (appleWebApp === true) {
+		return {
+			capable: true,
+		};
+	}
+
+	const startupImages = appleWebApp.startupImage
+		? resolveAsArrayOrUndefined(appleWebApp.startupImage)?.map((item) =>
+				typeof item === "string" ? { url: item } : item,
+			)
+		: null;
+
+	return {
+		capable: "capable" in appleWebApp ? !!appleWebApp.capable : true,
+		title: appleWebApp.title || null,
+		startupImage: startupImages,
+		statusBarStyle: appleWebApp.statusBarStyle || "default",
+	};
+};
+
 export const normalizeFacebook = (facebook: InputMetadata["facebook"]) => {
 	if (!facebook) return null;
 

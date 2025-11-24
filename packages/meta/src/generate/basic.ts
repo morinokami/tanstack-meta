@@ -151,3 +151,42 @@ export function generateVerification(metadata: NormalizedMetadata): OutputMeta {
 		.flat()
 		.filter(nonNullable);
 }
+
+export function generateAppleWebAppMeta(
+	metadata: NormalizedMetadata,
+): OutputMeta {
+	const { appleWebApp } = metadata;
+
+	if (!appleWebApp) return [];
+
+	const { capable, title, statusBarStyle } = appleWebApp;
+
+	return [
+		capable
+			? _meta({ name: "mobile-web-app-capable", content: "yes" })
+			: undefined,
+		_meta({ name: "apple-mobile-web-app-title", content: title }),
+		statusBarStyle
+			? _meta({
+					name: "apple-mobile-web-app-status-bar-style",
+					content: statusBarStyle,
+				})
+			: undefined,
+	].filter(nonNullable);
+}
+
+export function generateAppleWebAppLinks(
+	metadata: NormalizedMetadata,
+): OutputLinks {
+	const { appleWebApp } = metadata;
+
+	if (!appleWebApp || !appleWebApp.startupImage) return [];
+
+	const { startupImage } = appleWebApp;
+
+	return startupImage.map((image) => ({
+		rel: "apple-touch-startup-image",
+		href: image.url.toString(),
+		media: image.media,
+	}));
+}
