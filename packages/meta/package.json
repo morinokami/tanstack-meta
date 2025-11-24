@@ -1,8 +1,11 @@
 {
 	"name": "tanstack-meta",
 	"version": "0.0.1",
-	"description": "TODO:",
-	"keywords": [],
+	"description": "A small library that helps you manage document heads type-safely in TanStack Router/Start",
+	"keywords": [
+		"react",
+		"tanstack"
+	],
 	"author": "Shinya Fujino <shf0811@gmail.com> (https://github.com/morinokami)",
 	"license": "MIT",
 	"type": "module",
@@ -24,11 +27,13 @@
 		"dist"
 	],
 	"scripts": {
-		"build": "tsdown"
+		"build": "tsdown",
+		"publint": "publint"
 	},
 	"devDependencies": {
-		"@tanstack/react-router": "1.136.18",
+		"@tanstack/react-router": "1.139.3",
 		"next": "16.0.3",
+		"publint": "0.3.15",
 		"tsdown": "0.16.6"
 	}
 }

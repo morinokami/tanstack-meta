@@ -30,3 +30,6 @@ jobs:
 
       - name: Build
         run: bun meta build
+
+      - name: Run publint
+        run: bun meta publint
