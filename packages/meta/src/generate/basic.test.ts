@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+
 import { normalizeMetadata } from "../normalize";
 import {
 	generateAppleWebAppLinks,
@@ -185,64 +186,71 @@ describe("generateBasicLinks", () => {
 	});
 });
 
-describe("generateFormatDetection", () => {
-	test("returns an empty array when formatDetection is not provided", () => {
-		expect(generateFormatDetection(normalizeMetadata({}))).toEqual([]);
+describe("generateItunes", () => {
+	test("returns an empty array when itunes is not provided", () => {
+		expect(generateItunes(normalizeMetadata({}))).toEqual([]);
 	});
 
-	test("emits only disabled format-detection directives", () => {
+	test("emits app id and optional argument", () => {
 		const metadata = normalizeMetadata({
-			formatDetection: { telephone: false, date: true, email: false },
+			itunes: {
+				appId: "123456789",
+				appArgument: "myapp://open",
+			},
 		});
 
-		expect(generateFormatDetection(metadata)).toEqual([
+		expect(generateItunes(metadata)).toEqual([
 			{
-				name: "format-detection",
-				content: "telephone=no, email=no",
+				name: "apple-itunes-app",
+				content: "app-id=123456789, app-argument=myapp://open",
 			},
 		]);
 	});
 
-	test("returns empty when all format-detection fields are enabled", () => {
+	test("emits only app id when argument is not provided", () => {
 		const metadata = normalizeMetadata({
-			formatDetection: { telephone: true, address: true },
-		});
-
-		expect(generateFormatDetection(metadata)).toEqual([]);
-	});
-
-	test("handles all format-detection fields disabled", () => {
-		const metadata = normalizeMetadata({
-			formatDetection: {
-				telephone: false,
-				date: false,
-				address: false,
-				email: false,
-				url: false,
+			itunes: {
+				appId: "123456789",
 			},
 		});
 
-		expect(generateFormatDetection(metadata)).toEqual([
+		expect(generateItunes(metadata)).toEqual([
 			{
-				name: "format-detection",
-				content: "telephone=no, date=no, address=no, email=no, url=no",
+				name: "apple-itunes-app",
+				content: "app-id=123456789",
 			},
 		]);
 	});
 
-	test("respects formatDetectionKeys order regardless of input order", () => {
+	test("omits app-argument when empty string", () => {
 		const metadata = normalizeMetadata({
-			formatDetection: {
-				url: false,
-				telephone: false,
-				email: false,
+			itunes: {
+				appId: "123456789",
+				appArgument: "",
 			},
 		});
 
-		expect(generateFormatDetection(metadata)).toEqual([
+		expect(generateItunes(metadata)).toEqual([
 			{
-				name: "format-detection",
-				content: "telephone=no, email=no, url=no",
+				name: "apple-itunes-app",
+				content: "app-id=123456789",
+			},
+		]);
+	});
+
+	test("handles special characters in appArgument", () => {
+		const metadata = normalizeMetadata({
+			itunes: {
+				appId: "123456789",
+				appArgument: "myapp://open?param=value&other=123",
+			},
+		});
+
+		expect(generateItunes(metadata)).toEqual([
+			{
+				name: "apple-itunes-app",
+				content:
+					"app-id=123456789, app-argument=myapp://open?param=value&other=123",
 			},
 		]);
 	});
@@ -318,6 +326,69 @@ describe("generatePinterest", () => {
 	});
 });
 
+describe("generateFormatDetection", () => {
+	test("returns an empty array when formatDetection is not provided", () => {
+		expect(generateFormatDetection(normalizeMetadata({}))).toEqual([]);
+	});
+
+	test("emits only disabled format-detection directives", () => {
+		const metadata = normalizeMetadata({
+			formatDetection: { telephone: false, date: true, email: false },
+		});
+
+		expect(generateFormatDetection(metadata)).toEqual([
+			{
+				name: "format-detection",
+				content: "telephone=no, email=no",
+			},
+		]);
+	});
+
+	test("returns empty when all format-detection fields are enabled", () => {
+		const metadata = normalizeMetadata({
+			formatDetection: { telephone: true, address: true },
+		});
+
+		expect(generateFormatDetection(metadata)).toEqual([]);
+	});
+
+	test("handles all format-detection fields disabled", () => {
+		const metadata = normalizeMetadata({
+			formatDetection: {
+				telephone: false,
+				date: false,
+				address: false,
+				email: false,
+				url: false,
+			},
+		});
+
+		expect(generateFormatDetection(metadata)).toEqual([
+			{
+				name: "format-detection",
+				content: "telephone=no, date=no, address=no, email=no, url=no",
+			},
+		]);
+	});
+
+	test("respects formatDetectionKeys order regardless of input order", () => {
+		const metadata = normalizeMetadata({
+			formatDetection: {
+				url: false,
+				telephone: false,
+				email: false,
+			},
+		});
+
+		expect(generateFormatDetection(metadata)).toEqual([
+			{
+				name: "format-detection",
+				content: "telephone=no, email=no, url=no",
+			},
+		]);
+	});
+});
+
 describe("generateVerification", () => {
 	test("returns an empty array when verification is not provided", () => {
 		expect(generateVerification(normalizeMetadata({}))).toEqual([]);
@@ -376,76 +447,6 @@ describe("generateVerification", () => {
 			{ name: "site-a", content: "single" },
 			{ name: "site-b", content: "multi1" },
 			{ name: "site-b", content: "multi2" },
-		]);
-	});
-});
-
-describe("generateItunes", () => {
-	test("returns an empty array when itunes is not provided", () => {
-		expect(generateItunes(normalizeMetadata({}))).toEqual([]);
-	});
-
-	test("emits app id and optional argument", () => {
-		const metadata = normalizeMetadata({
-			itunes: {
-				appId: "123456789",
-				appArgument: "myapp://open",
-			},
-		});
-
-		expect(generateItunes(metadata)).toEqual([
-			{
-				name: "apple-itunes-app",
-				content: "app-id=123456789, app-argument=myapp://open",
-			},
-		]);
-	});
-
-	test("emits only app id when argument is not provided", () => {
-		const metadata = normalizeMetadata({
-			itunes: {
-				appId: "123456789",
-			},
-		});
-
-		expect(generateItunes(metadata)).toEqual([
-			{
-				name: "apple-itunes-app",
-				content: "app-id=123456789",
-			},
-		]);
-	});
-
-	test("omits app-argument when empty string", () => {
-		const metadata = normalizeMetadata({
-			itunes: {
-				appId: "123456789",
-				appArgument: "",
-			},
-		});
-
-		expect(generateItunes(metadata)).toEqual([
-			{
-				name: "apple-itunes-app",
-				content: "app-id=123456789",
-			},
-		]);
-	});
-
-	test("handles special characters in appArgument", () => {
-		const metadata = normalizeMetadata({
-			itunes: {
-				appId: "123456789",
-				appArgument: "myapp://open?param=value&other=123",
-			},
-		});
-
-		expect(generateItunes(metadata)).toEqual([
-			{
-				name: "apple-itunes-app",
-				content:
-					"app-id=123456789, app-argument=myapp://open?param=value&other=123",
-			},
 		]);
 	});
 });
