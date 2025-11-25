@@ -13,14 +13,3 @@ export function resolveAsArrayOrUndefined<T>(
 	}
 	return resolveArray(value) as any;
 }
-
-export function getOrigin(url: string | URL): string | undefined {
-	let origin: string | undefined;
-	if (typeof url === "string") {
-		try {
-			url = new URL(url);
-			origin = url.origin;
-		} catch {}
-	}
-	return origin;
-}
