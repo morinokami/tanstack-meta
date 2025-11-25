@@ -259,7 +259,7 @@ export function generateOpenGraph(metadata: NormalizedMetadata): OutputMeta {
 	]);
 }
 
-function TwitterAppItem({
+function createTwitterAppItem({
 	app,
 	type,
 }: {
@@ -316,7 +316,7 @@ export function generateTwitter(metadata: NormalizedMetadata): OutputMeta {
 			: [],
 		card === "app"
 			? (["iphone", "ipad", "googleplay"] as const).flatMap((type) =>
-					TwitterAppItem({ app: twitter.app, type }),
+					createTwitterAppItem({ app: twitter.app, type }),
 				)
 			: [],
 	]);
