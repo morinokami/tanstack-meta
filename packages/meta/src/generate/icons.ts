@@ -1,6 +1,6 @@
 import type { NormalizedMetadata, OutputLinks } from "../types/io";
 import type { Icon, IconDescriptor } from "../types/metadata-types";
-import { _metaFilter } from "./utils";
+import { flattenMetaList } from "./utils";
 
 function IconDescriptorLink({ icon }: { icon: IconDescriptor }) {
 	const { url, rel = "icon", ...props } = icon;
@@ -36,7 +36,7 @@ export function generateIcons(metadata: NormalizedMetadata): OutputLinks {
 	);
 	if (!hasIcon) return [];
 
-	return _metaFilter([
+	return flattenMetaList([
 		shortcutList
 			? shortcutList.map((icon) => IconLink({ rel: "shortcut icon", icon }))
 			: [],

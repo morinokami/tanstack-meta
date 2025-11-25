@@ -1,17 +1,21 @@
 import { describe, expect, test } from "bun:test";
 
-import { _meta, _multiMeta } from "./utils";
+import { createMetaList, createMetaTag, flattenMetaList } from "./utils";
 
-describe("_meta", () => {
+describe("createMetaTag", () => {
 	test("returns a meta object when content is provided", () => {
-		expect(_meta({ name: "description", content: "Hello, world!" })).toEqual({
+		expect(
+			createMetaTag({ name: "description", content: "Hello, world!" }),
+		).toEqual({
 			name: "description",
 			content: "Hello, world!",
 		});
 	});
 
 	test("uses property when name is not provided", () => {
-		expect(_meta({ property: "og:title", content: "My title" })).toEqual({
+		expect(
+			createMetaTag({ property: "og:title", content: "My title" }),
+		).toEqual({
 			property: "og:title",
 			content: "My title",
 		});
@@ -19,7 +23,7 @@ describe("_meta", () => {
 
 	test("includes media attribute when provided", () => {
 		expect(
-			_meta({
+			createMetaTag({
 				name: "theme-color",
 				media: "(prefers-color-scheme: dark)",
 				content: "#000000",
@@ -33,7 +37,7 @@ describe("_meta", () => {
 
 	test("prefers name over property when both are provided", () => {
 		expect(
-			_meta({
+			createMetaTag({
 				name: "description",
 				property: "og:description",
 				content: "Prefer name",
@@ -45,13 +49,13 @@ describe("_meta", () => {
 	});
 
 	test("stringifies non-string content", () => {
-		expect(_meta({ name: "count", content: 42 })).toEqual({
+		expect(createMetaTag({ name: "count", content: 42 })).toEqual({
 			name: "count",
 			content: "42",
 		});
 
 		const url = new URL("https://example.com");
-		expect(_meta({ name: "homepage", content: url })).toEqual({
+		expect(createMetaTag({ name: "homepage", content: url })).toEqual({
 			name: "homepage",
 			content: "https://example.com/",
 		});
@@ -66,28 +70,28 @@ describe("_meta", () => {
 		];
 
 		for (const content of falsyContents) {
-			expect(_meta({ name: "description", content })).toBeUndefined();
+			expect(createMetaTag({ name: "description", content })).toBeUndefined();
 		}
 	});
 
 	test("returns undefined when neither name nor property is provided", () => {
-		expect(_meta({ content: "value" })).toBeUndefined();
+		expect(createMetaTag({ content: "value" })).toBeUndefined();
 	});
 });
 
-describe("_multiMeta", () => {
+describe("createMetaList", () => {
 	test("returns undefined when contents is nullish", () => {
 		expect(
-			_multiMeta({ propertyPrefix: "og:image", contents: undefined }),
+			createMetaList({ propertyPrefix: "og:image", contents: undefined }),
 		).toBeUndefined();
 		expect(
-			_multiMeta({ propertyPrefix: "og:image", contents: null }),
+			createMetaList({ propertyPrefix: "og:image", contents: null }),
 		).toBeUndefined();
 	});
 
 	test("creates meta entries for primitive contents with a property prefix", () => {
 		expect(
-			_multiMeta({
+			createMetaList({
 				propertyPrefix: "og:image",
 				contents: [
 					new URL("https://example.com/one.png"),
@@ -104,7 +108,7 @@ describe("_multiMeta", () => {
 
 	test("creates structured meta entries with snake-cased keys and url alias", () => {
 		expect(
-			_multiMeta({
+			createMetaList({
 				propertyPrefix: "og:image",
 				contents: [
 					{
@@ -126,7 +130,7 @@ describe("_multiMeta", () => {
 
 	test("filters out falsy or undefined entries", () => {
 		expect(
-			_multiMeta({
+			createMetaList({
 				propertyPrefix: "og:image",
 				contents: [
 					"",
@@ -142,7 +146,7 @@ describe("_multiMeta", () => {
 
 	test("uses name prefix when property prefix is absent", () => {
 		expect(
-			_multiMeta({
+			createMetaList({
 				namePrefix: "twitter:image",
 				contents: [
 					"https://example.com/one.png",
@@ -156,6 +160,32 @@ describe("_multiMeta", () => {
 			{ name: "twitter:image", content: "https://example.com/one.png" },
 			{ name: "twitter:image", content: "https://example.com/two.png" },
 			{ name: "twitter:image:alt", content: "An image" },
+		]);
+	});
+});
+
+describe("flattenMetaList", () => {
+	test("flattens nested arrays and removes nullish items", () => {
+		const first = { name: "one", content: "1" };
+		const second = { name: "two", content: "2" };
+		const third = { name: "three", content: "3" };
+
+		expect(
+			flattenMetaList([
+				first,
+				null,
+				[second, undefined],
+				third,
+				[null, undefined],
+			]),
+		).toEqual([first, second, third]);
+	});
+
+	test("accepts readonly nested arrays", () => {
+		const nested = [{ property: "og:title", content: "Title" }] as const;
+
+		expect(flattenMetaList([nested])).toEqual([
+			{ property: "og:title", content: "Title" },
 		]);
 	});
 });

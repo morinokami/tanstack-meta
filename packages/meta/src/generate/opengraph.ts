@@ -1,6 +1,6 @@
 import type { NormalizedMetadata, OutputMeta } from "../types/io";
 import type { TwitterAppDescriptor } from "../types/twitter-types";
-import { _meta, _metaFilter, _multiMeta } from "./utils";
+import { createMetaList, createMetaTag, flattenMetaList } from "./utils";
 
 export function generateOpenGraph(metadata: NormalizedMetadata): OutputMeta {
 	const { openGraph } = metadata;
@@ -12,114 +12,132 @@ export function generateOpenGraph(metadata: NormalizedMetadata): OutputMeta {
 		const openGraphType = openGraph.type;
 		switch (openGraphType) {
 			case "website":
-				typedOpenGraph = _metaFilter([
-					_meta({ property: "og:type", content: "website" }),
+				typedOpenGraph = flattenMetaList([
+					createMetaTag({ property: "og:type", content: "website" }),
 				]);
 				break;
 			case "article":
-				typedOpenGraph = _metaFilter([
-					_meta({ property: "og:type", content: "article" }),
-					_meta({
+				typedOpenGraph = flattenMetaList([
+					createMetaTag({ property: "og:type", content: "article" }),
+					createMetaTag({
 						property: "article:published_time",
 						content: openGraph.publishedTime?.toString(),
 					}),
-					_meta({
+					createMetaTag({
 						property: "article:modified_time",
 						content: openGraph.modifiedTime?.toString(),
 					}),
-					_meta({
+					createMetaTag({
 						property: "article:expiration_time",
 						content: openGraph.expirationTime?.toString(),
 					}),
-					_multiMeta({
+					createMetaList({
 						propertyPrefix: "article:author",
 						contents: openGraph.authors,
 					}),
-					_meta({ property: "article:section", content: openGraph.section }),
-					_multiMeta({
+					createMetaTag({
+						property: "article:section",
+						content: openGraph.section,
+					}),
+					createMetaList({
 						propertyPrefix: "article:tag",
 						contents: openGraph.tags,
 					}),
 				]);
 				break;
 			case "book":
-				typedOpenGraph = _metaFilter([
-					_meta({ property: "og:type", content: "book" }),
-					_meta({ property: "book:isbn", content: openGraph.isbn }),
-					_meta({
+				typedOpenGraph = flattenMetaList([
+					createMetaTag({ property: "og:type", content: "book" }),
+					createMetaTag({ property: "book:isbn", content: openGraph.isbn }),
+					createMetaTag({
 						property: "book:release_date",
 						content: openGraph.releaseDate,
 					}),
-					_multiMeta({
+					createMetaList({
 						propertyPrefix: "book:author",
 						contents: openGraph.authors,
 					}),
-					_multiMeta({ propertyPrefix: "book:tag", contents: openGraph.tags }),
+					createMetaList({
+						propertyPrefix: "book:tag",
+						contents: openGraph.tags,
+					}),
 				]);
 				break;
 			case "profile":
-				typedOpenGraph = _metaFilter([
-					_meta({ property: "og:type", content: "profile" }),
-					_meta({
+				typedOpenGraph = flattenMetaList([
+					createMetaTag({ property: "og:type", content: "profile" }),
+					createMetaTag({
 						property: "profile:first_name",
 						content: openGraph.firstName,
 					}),
-					_meta({ property: "profile:last_name", content: openGraph.lastName }),
-					_meta({ property: "profile:username", content: openGraph.username }),
-					_meta({ property: "profile:gender", content: openGraph.gender }),
+					createMetaTag({
+						property: "profile:last_name",
+						content: openGraph.lastName,
+					}),
+					createMetaTag({
+						property: "profile:username",
+						content: openGraph.username,
+					}),
+					createMetaTag({
+						property: "profile:gender",
+						content: openGraph.gender,
+					}),
 				]);
 				break;
 			case "music.song":
-				typedOpenGraph = _metaFilter([
-					_meta({ property: "og:type", content: "music.song" }),
-					_meta({
+				typedOpenGraph = flattenMetaList([
+					createMetaTag({ property: "og:type", content: "music.song" }),
+					createMetaTag({
 						property: "music:duration",
 						content: openGraph.duration?.toString(),
 					}),
-					_multiMeta({
+					createMetaList({
 						propertyPrefix: "music:album",
 						contents: openGraph.albums,
 					}),
-					_multiMeta({
+					createMetaList({
 						propertyPrefix: "music:musician",
 						contents: openGraph.musicians,
 					}),
 				]);
 				break;
 			case "music.album":
-				typedOpenGraph = _metaFilter([
-					_meta({ property: "og:type", content: "music.album" }),
-					_multiMeta({
+				typedOpenGraph = flattenMetaList([
+					createMetaTag({ property: "og:type", content: "music.album" }),
+					createMetaList({
 						propertyPrefix: "music:song",
 						contents: openGraph.songs,
 					}),
-					_multiMeta({
+					createMetaList({
 						propertyPrefix: "music:musician",
 						contents: openGraph.musicians,
 					}),
-					_meta({
+					createMetaTag({
 						property: "music:release_date",
 						content: openGraph.releaseDate,
 					}),
 				]);
 				break;
 			case "music.playlist":
-				typedOpenGraph = _metaFilter([
-					_meta({ property: "og:type", content: "music.playlist" }),
-					_multiMeta({
+				typedOpenGraph = flattenMetaList([
+					createMetaTag({ property: "og:type", content: "music.playlist" }),
+					createMetaList({
 						propertyPrefix: "music:song",
 						contents: openGraph.songs,
 					}),
-					_multiMeta({
+					createMetaList({
 						propertyPrefix: "music:creator",
 						contents: openGraph.creators,
 					}),
 				]);
 				break;
 			case "music.radio_station":
-				typedOpenGraph = _metaFilter([
-					_meta({ property: "og:type", content: "music.radio_station" }),
-					_multiMeta({
+				typedOpenGraph = flattenMetaList([
+					createMetaTag({
+						property: "og:type",
+						content: "music.radio_station",
+					}),
+					createMetaList({
 						propertyPrefix: "music:creator",
 						contents: openGraph.creators,
 					}),
@@ -127,60 +145,75 @@ export function generateOpenGraph(metadata: NormalizedMetadata): OutputMeta {
 				break;
 
 			case "video.movie":
-				typedOpenGraph = _metaFilter([
-					_meta({ property: "og:type", content: "video.movie" }),
-					_multiMeta({
+				typedOpenGraph = flattenMetaList([
+					createMetaTag({ property: "og:type", content: "video.movie" }),
+					createMetaList({
 						propertyPrefix: "video:actor",
 						contents: openGraph.actors,
 					}),
-					_multiMeta({
+					createMetaList({
 						propertyPrefix: "video:director",
 						contents: openGraph.directors,
 					}),
-					_multiMeta({
+					createMetaList({
 						propertyPrefix: "video:writer",
 						contents: openGraph.writers,
 					}),
-					_meta({ property: "video:duration", content: openGraph.duration }),
-					_meta({
+					createMetaTag({
+						property: "video:duration",
+						content: openGraph.duration,
+					}),
+					createMetaTag({
 						property: "video:release_date",
 						content: openGraph.releaseDate,
 					}),
-					_multiMeta({ propertyPrefix: "video:tag", contents: openGraph.tags }),
+					createMetaList({
+						propertyPrefix: "video:tag",
+						contents: openGraph.tags,
+					}),
 				]);
 				break;
 			case "video.episode":
-				typedOpenGraph = _metaFilter([
-					_meta({ property: "og:type", content: "video.episode" }),
-					_multiMeta({
+				typedOpenGraph = flattenMetaList([
+					createMetaTag({ property: "og:type", content: "video.episode" }),
+					createMetaList({
 						propertyPrefix: "video:actor",
 						contents: openGraph.actors,
 					}),
-					_multiMeta({
+					createMetaList({
 						propertyPrefix: "video:director",
 						contents: openGraph.directors,
 					}),
-					_multiMeta({
+					createMetaList({
 						propertyPrefix: "video:writer",
 						contents: openGraph.writers,
 					}),
-					_meta({ property: "video:duration", content: openGraph.duration }),
-					_meta({
+					createMetaTag({
+						property: "video:duration",
+						content: openGraph.duration,
+					}),
+					createMetaTag({
 						property: "video:release_date",
 						content: openGraph.releaseDate,
 					}),
-					_multiMeta({ propertyPrefix: "video:tag", contents: openGraph.tags }),
-					_meta({ property: "video:series", content: openGraph.series }),
+					createMetaList({
+						propertyPrefix: "video:tag",
+						contents: openGraph.tags,
+					}),
+					createMetaTag({
+						property: "video:series",
+						content: openGraph.series,
+					}),
 				]);
 				break;
 			case "video.tv_show":
-				typedOpenGraph = _metaFilter([
-					_meta({ property: "og:type", content: "video.tv_show" }),
+				typedOpenGraph = flattenMetaList([
+					createMetaTag({ property: "og:type", content: "video.tv_show" }),
 				]);
 				break;
 			case "video.other":
-				typedOpenGraph = _metaFilter([
-					_meta({ property: "og:type", content: "video.other" }),
+				typedOpenGraph = flattenMetaList([
+					createMetaTag({ property: "og:type", content: "video.other" }),
 				]);
 				break;
 
@@ -191,28 +224,34 @@ export function generateOpenGraph(metadata: NormalizedMetadata): OutputMeta {
 		}
 	}
 
-	return _metaFilter([
-		_meta({ property: "og:determiner", content: openGraph.determiner }),
-		_meta({ property: "og:title", content: openGraph.title }),
-		_meta({ property: "og:description", content: openGraph.description }),
-		_meta({ property: "og:url", content: openGraph.url?.toString() }),
-		_meta({ property: "og:site_name", content: openGraph.siteName }),
-		_meta({ property: "og:locale", content: openGraph.locale }),
-		_meta({ property: "og:country_name", content: openGraph.countryName }),
-		_meta({ property: "og:ttl", content: openGraph.ttl?.toString() }),
-		_multiMeta({ propertyPrefix: "og:image", contents: openGraph.images }),
-		_multiMeta({ propertyPrefix: "og:video", contents: openGraph.videos }),
-		_multiMeta({ propertyPrefix: "og:audio", contents: openGraph.audio }),
-		_multiMeta({ propertyPrefix: "og:email", contents: openGraph.emails }),
-		_multiMeta({
+	return flattenMetaList([
+		createMetaTag({ property: "og:determiner", content: openGraph.determiner }),
+		createMetaTag({ property: "og:title", content: openGraph.title }),
+		createMetaTag({
+			property: "og:description",
+			content: openGraph.description,
+		}),
+		createMetaTag({ property: "og:url", content: openGraph.url?.toString() }),
+		createMetaTag({ property: "og:site_name", content: openGraph.siteName }),
+		createMetaTag({ property: "og:locale", content: openGraph.locale }),
+		createMetaTag({
+			property: "og:country_name",
+			content: openGraph.countryName,
+		}),
+		createMetaTag({ property: "og:ttl", content: openGraph.ttl?.toString() }),
+		createMetaList({ propertyPrefix: "og:image", contents: openGraph.images }),
+		createMetaList({ propertyPrefix: "og:video", contents: openGraph.videos }),
+		createMetaList({ propertyPrefix: "og:audio", contents: openGraph.audio }),
+		createMetaList({ propertyPrefix: "og:email", contents: openGraph.emails }),
+		createMetaList({
 			propertyPrefix: "og:phone_number",
 			contents: openGraph.phoneNumbers,
 		}),
-		_multiMeta({
+		createMetaList({
 			propertyPrefix: "og:fax_number",
 			contents: openGraph.faxNumbers,
 		}),
-		_multiMeta({
+		createMetaList({
 			propertyPrefix: "og:locale:alternate",
 			contents: openGraph.alternateLocale,
 		}),
@@ -228,9 +267,9 @@ function TwitterAppItem({
 	type: "iphone" | "ipad" | "googleplay";
 }) {
 	return [
-		_meta({ name: `twitter:app:name:${type}`, content: app.name }),
-		_meta({ name: `twitter:app:id:${type}`, content: app.id[type] }),
-		_meta({
+		createMetaTag({ name: `twitter:app:name:${type}`, content: app.name }),
+		createMetaTag({ name: `twitter:app:id:${type}`, content: app.id[type] }),
+		createMetaTag({
 			name: `twitter:app:url:${type}`,
 			content: app.url?.[type]?.toString(),
 		}),
@@ -243,27 +282,36 @@ export function generateTwitter(metadata: NormalizedMetadata): OutputMeta {
 	if (!twitter) return [];
 
 	const { card } = twitter;
-	return _metaFilter([
-		_meta({ name: "twitter:card", content: card }),
-		_meta({ name: "twitter:site", content: twitter.site }),
-		_meta({ name: "twitter:site:id", content: twitter.siteId }),
-		_meta({ name: "twitter:creator", content: twitter.creator }),
-		_meta({ name: "twitter:creator:id", content: twitter.creatorId }),
-		_meta({ name: "twitter:title", content: twitter.title }),
-		_meta({ name: "twitter:description", content: twitter.description }),
-		_multiMeta({ namePrefix: "twitter:image", contents: twitter.images }),
+	return flattenMetaList([
+		createMetaTag({ name: "twitter:card", content: card }),
+		createMetaTag({ name: "twitter:site", content: twitter.site }),
+		createMetaTag({ name: "twitter:site:id", content: twitter.siteId }),
+		createMetaTag({ name: "twitter:creator", content: twitter.creator }),
+		createMetaTag({ name: "twitter:creator:id", content: twitter.creatorId }),
+		createMetaTag({ name: "twitter:title", content: twitter.title }),
+		createMetaTag({
+			name: "twitter:description",
+			content: twitter.description,
+		}),
+		createMetaList({ namePrefix: "twitter:image", contents: twitter.images }),
 		card === "player"
 			? twitter.players.flatMap((player) => [
-					_meta({
+					createMetaTag({
 						name: "twitter:player",
 						content: player.playerUrl.toString(),
 					}),
-					_meta({
+					createMetaTag({
 						name: "twitter:player:stream",
 						content: player.streamUrl.toString(),
 					}),
-					_meta({ name: "twitter:player:width", content: player.width }),
-					_meta({ name: "twitter:player:height", content: player.height }),
+					createMetaTag({
+						name: "twitter:player:width",
+						content: player.width,
+					}),
+					createMetaTag({
+						name: "twitter:player:height",
+						content: player.height,
+					}),
 				])
 			: [],
 		card === "app"
@@ -279,20 +327,26 @@ export function generateAppLinks(metadata: NormalizedMetadata): OutputMeta {
 
 	if (!appLinks) return [];
 
-	return _metaFilter([
-		_multiMeta({ propertyPrefix: "al:ios", contents: appLinks.ios }),
-		_multiMeta({ propertyPrefix: "al:iphone", contents: appLinks.iphone }),
-		_multiMeta({ propertyPrefix: "al:ipad", contents: appLinks.ipad }),
-		_multiMeta({ propertyPrefix: "al:android", contents: appLinks.android }),
-		_multiMeta({
+	return flattenMetaList([
+		createMetaList({ propertyPrefix: "al:ios", contents: appLinks.ios }),
+		createMetaList({ propertyPrefix: "al:iphone", contents: appLinks.iphone }),
+		createMetaList({ propertyPrefix: "al:ipad", contents: appLinks.ipad }),
+		createMetaList({
+			propertyPrefix: "al:android",
+			contents: appLinks.android,
+		}),
+		createMetaList({
 			propertyPrefix: "al:windows_phone",
 			contents: appLinks.windows_phone,
 		}),
-		_multiMeta({ propertyPrefix: "al:windows", contents: appLinks.windows }),
-		_multiMeta({
+		createMetaList({
+			propertyPrefix: "al:windows",
+			contents: appLinks.windows,
+		}),
+		createMetaList({
 			propertyPrefix: "al:windows_universal",
 			contents: appLinks.windows_universal,
 		}),
-		_multiMeta({ propertyPrefix: "al:web", contents: appLinks.web }),
+		createMetaList({ propertyPrefix: "al:web", contents: appLinks.web }),
 	]);
 }

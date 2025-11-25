@@ -1,48 +1,48 @@
 import type { NormalizedMetadata, OutputLinks, OutputMeta } from "../types/io";
-import { _meta, _metaFilter, _multiMeta } from "./utils";
+import { createMetaList, createMetaTag, flattenMetaList } from "./utils";
 
 export function generateBasicMeta(metadata: NormalizedMetadata): OutputMeta {
-	return _metaFilter([
+	return flattenMetaList([
 		metadata.charSet ? { charSet: metadata.charSet } : undefined,
 		metadata.title ? { title: metadata.title } : undefined,
-		_meta({ name: "description", content: metadata.description }),
-		_meta({
+		createMetaTag({ name: "description", content: metadata.description }),
+		createMetaTag({
 			name: "application-name",
 			content: metadata.applicationName,
 		}),
 		...(metadata.authors
 			? metadata.authors.map((author) =>
-					_meta({ name: "author", content: author.name }),
+					createMetaTag({ name: "author", content: author.name }),
 				)
 			: []),
-		_meta({ name: "generator", content: metadata.generator }),
-		_meta({
+		createMetaTag({ name: "generator", content: metadata.generator }),
+		createMetaTag({
 			name: "keywords",
 			content: Array.isArray(metadata.keywords)
 				? metadata.keywords.join(",")
 				: metadata.keywords,
 		}),
-		_meta({ name: "referrer", content: metadata.referrer }),
-		_meta({ name: "creator", content: metadata.creator }),
-		_meta({ name: "publisher", content: metadata.publisher }),
-		_meta({ name: "robots", content: metadata.robots?.basic }),
-		_meta({ name: "googlebot", content: metadata.robots?.googleBot }),
-		_meta({ name: "abstract", content: metadata.abstract }),
+		createMetaTag({ name: "referrer", content: metadata.referrer }),
+		createMetaTag({ name: "creator", content: metadata.creator }),
+		createMetaTag({ name: "publisher", content: metadata.publisher }),
+		createMetaTag({ name: "robots", content: metadata.robots?.basic }),
+		createMetaTag({ name: "googlebot", content: metadata.robots?.googleBot }),
+		createMetaTag({ name: "abstract", content: metadata.abstract }),
 		...(metadata.other
 			? Object.entries(metadata.other).flatMap(([name, content]) => {
 					if (Array.isArray(content)) {
 						return content.map((contentItem) =>
-							_meta({ name, content: contentItem }),
+							createMetaTag({ name, content: contentItem }),
 						);
 					}
-					return _meta({ name, content });
+					return createMetaTag({ name, content });
 				})
 			: []),
 	]);
 }
 
 export function generateBasicLinks(metadata: NormalizedMetadata): OutputLinks {
-	return _metaFilter<OutputLinks[number]>([
+	return flattenMetaList([
 		...(metadata.authors
 			? metadata.authors.map((author) => ({
 					rel: "author",
@@ -84,7 +84,9 @@ export function generateItunes(metadata: NormalizedMetadata): OutputMeta {
 		content += `, app-argument=${appArgument}`;
 	}
 
-	return _metaFilter([_meta({ name: "apple-itunes-app", content })]);
+	return flattenMetaList([
+		createMetaTag({ name: "apple-itunes-app", content }),
+	]);
 }
 
 export function generateFacebook(metadata: NormalizedMetadata): OutputMeta {
@@ -94,9 +96,9 @@ export function generateFacebook(metadata: NormalizedMetadata): OutputMeta {
 
 	const { appId, admins } = facebook;
 
-	return _metaFilter([
-		_meta({ property: "fb:app_id", content: appId }),
-		_multiMeta({ propertyPrefix: "fb:admins", contents: admins }),
+	return flattenMetaList([
+		createMetaTag({ property: "fb:app_id", content: appId }),
+		createMetaList({ propertyPrefix: "fb:admins", contents: admins }),
 	]);
 }
 
@@ -108,7 +110,10 @@ export function generatePinterest(metadata: NormalizedMetadata): OutputMeta {
 	const { richPin } = pinterest;
 
 	return [
-		_meta({ property: "pinterest-rich-pin", content: richPin?.toString() }),
+		createMetaTag({
+			property: "pinterest-rich-pin",
+			content: richPin?.toString(),
+		}),
 	];
 }
 
@@ -134,7 +139,7 @@ export function generateFormatDetection(
 		}
 	}
 
-	return content ? [_meta({ name: "format-detection", content })] : [];
+	return content ? [createMetaTag({ name: "format-detection", content })] : [];
 }
 
 export function generateVerification(metadata: NormalizedMetadata): OutputMeta {
@@ -142,21 +147,21 @@ export function generateVerification(metadata: NormalizedMetadata): OutputMeta {
 
 	if (!verification) return [];
 
-	return _metaFilter([
-		_multiMeta({
+	return flattenMetaList([
+		createMetaList({
 			namePrefix: "google-site-verification",
 			contents: verification.google,
 		}),
-		_multiMeta({ namePrefix: "y_key", contents: verification.yahoo }),
-		_multiMeta({
+		createMetaList({ namePrefix: "y_key", contents: verification.yahoo }),
+		createMetaList({
 			namePrefix: "yandex-verification",
 			contents: verification.yandex,
 		}),
-		_multiMeta({ namePrefix: "me", contents: verification.me }),
+		createMetaList({ namePrefix: "me", contents: verification.me }),
 		...(verification.other
 			? Object.entries(verification.other).flatMap(
 					([key, value]) =>
-						_multiMeta({ namePrefix: key, contents: value }) ?? [],
+						createMetaList({ namePrefix: key, contents: value }) ?? [],
 				)
 			: []),
 	]);
@@ -171,13 +176,13 @@ export function generateAppleWebAppMeta(
 
 	const { capable, title, statusBarStyle } = appleWebApp;
 
-	return _metaFilter([
+	return flattenMetaList([
 		capable
-			? _meta({ name: "mobile-web-app-capable", content: "yes" })
+			? createMetaTag({ name: "mobile-web-app-capable", content: "yes" })
 			: undefined,
-		_meta({ name: "apple-mobile-web-app-title", content: title }),
+		createMetaTag({ name: "apple-mobile-web-app-title", content: title }),
 		statusBarStyle
-			? _meta({
+			? createMetaTag({
 					name: "apple-mobile-web-app-status-bar-style",
 					content: statusBarStyle,
 				})
