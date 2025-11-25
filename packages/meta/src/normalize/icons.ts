@@ -4,9 +4,14 @@ import type { Icon, IconDescriptor } from "../types/metadata-types";
 import type { FieldResolver } from "../types/resolvers";
 import { isStringOrURL, resolveAsArrayOrUndefined } from "./utils";
 
-export function normalizeIcon(icon: Icon): IconDescriptor {
+const isNonNullableIcon = (
+	icon: IconDescriptor | null | undefined,
+): icon is IconDescriptor => Boolean(icon);
+
+export function normalizeIcon(
+	icon: Icon | null | undefined,
+): IconDescriptor | null | undefined {
 	if (isStringOrURL(icon)) return { url: icon };
-	else if (Array.isArray(icon)) return icon;
 	return icon;
 }
 
@@ -20,13 +25,19 @@ export const normalizeIcons: FieldResolver<"icons"> = (icons) => {
 		apple: [],
 	};
 	if (Array.isArray(icons)) {
-		resolved.icon = icons.map(normalizeIcon).filter(Boolean);
+		resolved.icon = icons.map(normalizeIcon).filter(isNonNullableIcon);
 	} else if (isStringOrURL(icons)) {
-		resolved.icon = [normalizeIcon(icons)];
+		const normalized = normalizeIcon(icons);
+		resolved.icon = normalized ? [normalized] : [];
 	} else {
 		for (const key of IconKeys) {
 			const values = resolveAsArrayOrUndefined(icons[key]);
-			if (values) resolved[key] = values.map(normalizeIcon);
+			if (values) {
+				const normalized = values.map(normalizeIcon).filter(isNonNullableIcon);
+				if (normalized.length) {
+					resolved[key] = normalized;
+				}
+			}
 		}
 	}
 	return resolved;
