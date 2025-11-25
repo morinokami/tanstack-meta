@@ -14,6 +14,7 @@ export function resolveAsArrayOrUndefined<T>(
 	return resolveArray(value);
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: reason
 export function isStringOrURL(icon: any): icon is string | URL {
 	return typeof icon === "string" || icon instanceof URL;
 }

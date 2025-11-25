@@ -28,6 +28,7 @@
 	],
 	"scripts": {
 		"build": "tsdown",
+		"lint": "biome ci",
 		"typecheck": "tsgo --noEmit",
 		"publint": "publint"
 	},

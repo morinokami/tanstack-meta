@@ -1,3 +1,4 @@
+// biome-ignore-all lint/suspicious/noExplicitAny: reason
 // https://github.com/vercel/next.js/blob/f0af7cd02bb14b7e1cba9eb94c005e7ef582d9cf/packages/next/src/lib/metadata/types/resolvers.ts
 
 import type { Metadata, ResolvedMetadataWithURLs } from "./metadata-interface";
