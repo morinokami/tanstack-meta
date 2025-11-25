@@ -1,21 +1,23 @@
 import type { NormalizedMetadata, OutputMeta } from "../types/io";
 import type { TwitterAppDescriptor } from "../types/twitter-types";
-import { _meta, _multiMeta, nonNullable } from "./utils";
+import { _meta, _metaFilter, _multiMeta } from "./utils";
 
 export function generateOpenGraph(metadata: NormalizedMetadata): OutputMeta {
 	const { openGraph } = metadata;
 
 	if (!openGraph) return [];
 
-	let typedOpenGraph;
+	let typedOpenGraph: OutputMeta[number][] | undefined;
 	if ("type" in openGraph) {
 		const openGraphType = openGraph.type;
 		switch (openGraphType) {
 			case "website":
-				typedOpenGraph = [_meta({ property: "og:type", content: "website" })];
+				typedOpenGraph = _metaFilter([
+					_meta({ property: "og:type", content: "website" }),
+				]);
 				break;
 			case "article":
-				typedOpenGraph = [
+				typedOpenGraph = _metaFilter([
 					_meta({ property: "og:type", content: "article" }),
 					_meta({
 						property: "article:published_time",
@@ -38,10 +40,10 @@ export function generateOpenGraph(metadata: NormalizedMetadata): OutputMeta {
 						propertyPrefix: "article:tag",
 						contents: openGraph.tags,
 					}),
-				];
+				]);
 				break;
 			case "book":
-				typedOpenGraph = [
+				typedOpenGraph = _metaFilter([
 					_meta({ property: "og:type", content: "book" }),
 					_meta({ property: "book:isbn", content: openGraph.isbn }),
 					_meta({
@@ -53,10 +55,10 @@ export function generateOpenGraph(metadata: NormalizedMetadata): OutputMeta {
 						contents: openGraph.authors,
 					}),
 					_multiMeta({ propertyPrefix: "book:tag", contents: openGraph.tags }),
-				];
+				]);
 				break;
 			case "profile":
-				typedOpenGraph = [
+				typedOpenGraph = _metaFilter([
 					_meta({ property: "og:type", content: "profile" }),
 					_meta({
 						property: "profile:first_name",
@@ -65,10 +67,10 @@ export function generateOpenGraph(metadata: NormalizedMetadata): OutputMeta {
 					_meta({ property: "profile:last_name", content: openGraph.lastName }),
 					_meta({ property: "profile:username", content: openGraph.username }),
 					_meta({ property: "profile:gender", content: openGraph.gender }),
-				];
+				]);
 				break;
 			case "music.song":
-				typedOpenGraph = [
+				typedOpenGraph = _metaFilter([
 					_meta({ property: "og:type", content: "music.song" }),
 					_meta({
 						property: "music:duration",
@@ -82,10 +84,10 @@ export function generateOpenGraph(metadata: NormalizedMetadata): OutputMeta {
 						propertyPrefix: "music:musician",
 						contents: openGraph.musicians,
 					}),
-				];
+				]);
 				break;
 			case "music.album":
-				typedOpenGraph = [
+				typedOpenGraph = _metaFilter([
 					_meta({ property: "og:type", content: "music.album" }),
 					_multiMeta({
 						propertyPrefix: "music:song",
@@ -99,10 +101,10 @@ export function generateOpenGraph(metadata: NormalizedMetadata): OutputMeta {
 						property: "music:release_date",
 						content: openGraph.releaseDate,
 					}),
-				];
+				]);
 				break;
 			case "music.playlist":
-				typedOpenGraph = [
+				typedOpenGraph = _metaFilter([
 					_meta({ property: "og:type", content: "music.playlist" }),
 					_multiMeta({
 						propertyPrefix: "music:song",
@@ -112,20 +114,20 @@ export function generateOpenGraph(metadata: NormalizedMetadata): OutputMeta {
 						propertyPrefix: "music:creator",
 						contents: openGraph.creators,
 					}),
-				];
+				]);
 				break;
 			case "music.radio_station":
-				typedOpenGraph = [
+				typedOpenGraph = _metaFilter([
 					_meta({ property: "og:type", content: "music.radio_station" }),
 					_multiMeta({
 						propertyPrefix: "music:creator",
 						contents: openGraph.creators,
 					}),
-				];
+				]);
 				break;
 
 			case "video.movie":
-				typedOpenGraph = [
+				typedOpenGraph = _metaFilter([
 					_meta({ property: "og:type", content: "video.movie" }),
 					_multiMeta({
 						propertyPrefix: "video:actor",
@@ -145,10 +147,10 @@ export function generateOpenGraph(metadata: NormalizedMetadata): OutputMeta {
 						content: openGraph.releaseDate,
 					}),
 					_multiMeta({ propertyPrefix: "video:tag", contents: openGraph.tags }),
-				];
+				]);
 				break;
 			case "video.episode":
-				typedOpenGraph = [
+				typedOpenGraph = _metaFilter([
 					_meta({ property: "og:type", content: "video.episode" }),
 					_multiMeta({
 						propertyPrefix: "video:actor",
@@ -169,17 +171,17 @@ export function generateOpenGraph(metadata: NormalizedMetadata): OutputMeta {
 					}),
 					_multiMeta({ propertyPrefix: "video:tag", contents: openGraph.tags }),
 					_meta({ property: "video:series", content: openGraph.series }),
-				];
+				]);
 				break;
 			case "video.tv_show":
-				typedOpenGraph = [
+				typedOpenGraph = _metaFilter([
 					_meta({ property: "og:type", content: "video.tv_show" }),
-				];
+				]);
 				break;
 			case "video.other":
-				typedOpenGraph = [
+				typedOpenGraph = _metaFilter([
 					_meta({ property: "og:type", content: "video.other" }),
-				];
+				]);
 				break;
 
 			default: {
@@ -189,7 +191,7 @@ export function generateOpenGraph(metadata: NormalizedMetadata): OutputMeta {
 		}
 	}
 
-	return [
+	return _metaFilter([
 		_meta({ property: "og:determiner", content: openGraph.determiner }),
 		_meta({ property: "og:title", content: openGraph.title }),
 		_meta({ property: "og:description", content: openGraph.description }),
@@ -214,10 +216,8 @@ export function generateOpenGraph(metadata: NormalizedMetadata): OutputMeta {
 			propertyPrefix: "og:locale:alternate",
 			contents: openGraph.alternateLocale,
 		}),
-		...(typedOpenGraph ? typedOpenGraph.flat() : []),
-	]
-		.flat()
-		.filter(nonNullable);
+		...(typedOpenGraph ?? []),
+	]);
 }
 
 function TwitterAppItem({
@@ -243,7 +243,7 @@ export function generateTwitter(metadata: NormalizedMetadata): OutputMeta {
 	if (!twitter) return [];
 
 	const { card } = twitter;
-	return [
+	return _metaFilter([
 		_meta({ name: "twitter:card", content: card }),
 		_meta({ name: "twitter:site", content: twitter.site }),
 		_meta({ name: "twitter:site:id", content: twitter.siteId }),
@@ -252,7 +252,7 @@ export function generateTwitter(metadata: NormalizedMetadata): OutputMeta {
 		_meta({ name: "twitter:title", content: twitter.title }),
 		_meta({ name: "twitter:description", content: twitter.description }),
 		_multiMeta({ namePrefix: "twitter:image", contents: twitter.images }),
-		...(card === "player"
+		card === "player"
 			? twitter.players.flatMap((player) => [
 					_meta({
 						name: "twitter:player",
@@ -265,17 +265,13 @@ export function generateTwitter(metadata: NormalizedMetadata): OutputMeta {
 					_meta({ name: "twitter:player:width", content: player.width }),
 					_meta({ name: "twitter:player:height", content: player.height }),
 				])
-			: []),
-		...(card === "app"
-			? [
-					TwitterAppItem({ app: twitter.app, type: "iphone" }),
-					TwitterAppItem({ app: twitter.app, type: "ipad" }),
-					TwitterAppItem({ app: twitter.app, type: "googleplay" }),
-				]
-			: []),
-	]
-		.flat()
-		.filter(nonNullable);
+			: [],
+		card === "app"
+			? (["iphone", "ipad", "googleplay"] as const).flatMap((type) =>
+					TwitterAppItem({ app: twitter.app, type }),
+				)
+			: [],
+	]);
 }
 
 export function generateAppLinks(metadata: NormalizedMetadata): OutputMeta {
@@ -283,7 +279,7 @@ export function generateAppLinks(metadata: NormalizedMetadata): OutputMeta {
 
 	if (!appLinks) return [];
 
-	return [
+	return _metaFilter([
 		_multiMeta({ propertyPrefix: "al:ios", contents: appLinks.ios }),
 		_multiMeta({ propertyPrefix: "al:iphone", contents: appLinks.iphone }),
 		_multiMeta({ propertyPrefix: "al:ipad", contents: appLinks.ipad }),
@@ -298,7 +294,5 @@ export function generateAppLinks(metadata: NormalizedMetadata): OutputMeta {
 			contents: appLinks.windows_universal,
 		}),
 		_multiMeta({ propertyPrefix: "al:web", contents: appLinks.web }),
-	]
-		.flat()
-		.filter(nonNullable);
+	]);
 }

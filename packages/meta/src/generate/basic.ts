@@ -1,8 +1,8 @@
 import type { NormalizedMetadata, OutputLinks, OutputMeta } from "../types/io";
-import { _meta, _multiMeta, nonNullable } from "./utils";
+import { _meta, _metaFilter, _multiMeta } from "./utils";
 
 export function generateBasicMeta(metadata: NormalizedMetadata): OutputMeta {
-	return [
+	return _metaFilter([
 		metadata.charSet ? { charSet: metadata.charSet } : undefined,
 		metadata.title ? { title: metadata.title } : undefined,
 		_meta({ name: "description", content: metadata.description }),
@@ -38,11 +38,11 @@ export function generateBasicMeta(metadata: NormalizedMetadata): OutputMeta {
 					return _meta({ name, content });
 				})
 			: []),
-	].filter(nonNullable);
+	]);
 }
 
 export function generateBasicLinks(metadata: NormalizedMetadata): OutputLinks {
-	return [
+	return _metaFilter<OutputLinks[number]>([
 		...(metadata.authors
 			? metadata.authors.map((author) => ({
 					rel: "author",
@@ -70,7 +70,7 @@ export function generateBasicLinks(metadata: NormalizedMetadata): OutputLinks {
 					href: bookmark,
 				}))
 			: []),
-	].filter(nonNullable);
+	]);
 }
 
 export function generateItunes(metadata: NormalizedMetadata): OutputMeta {
@@ -84,7 +84,7 @@ export function generateItunes(metadata: NormalizedMetadata): OutputMeta {
 		content += `, app-argument=${appArgument}`;
 	}
 
-	return [_meta({ name: "apple-itunes-app", content })].filter(nonNullable);
+	return _metaFilter([_meta({ name: "apple-itunes-app", content })]);
 }
 
 export function generateFacebook(metadata: NormalizedMetadata): OutputMeta {
@@ -94,12 +94,10 @@ export function generateFacebook(metadata: NormalizedMetadata): OutputMeta {
 
 	const { appId, admins } = facebook;
 
-	return [
+	return _metaFilter([
 		_meta({ property: "fb:app_id", content: appId }),
 		_multiMeta({ propertyPrefix: "fb:admins", contents: admins }),
-	]
-		.flat()
-		.filter(nonNullable);
+	]);
 }
 
 export function generatePinterest(metadata: NormalizedMetadata): OutputMeta {
@@ -144,7 +142,7 @@ export function generateVerification(metadata: NormalizedMetadata): OutputMeta {
 
 	if (!verification) return [];
 
-	return [
+	return _metaFilter([
 		_multiMeta({
 			namePrefix: "google-site-verification",
 			contents: verification.google,
@@ -156,13 +154,12 @@ export function generateVerification(metadata: NormalizedMetadata): OutputMeta {
 		}),
 		_multiMeta({ namePrefix: "me", contents: verification.me }),
 		...(verification.other
-			? Object.entries(verification.other).map(([key, value]) =>
-					_multiMeta({ namePrefix: key, contents: value }),
+			? Object.entries(verification.other).flatMap(
+					([key, value]) =>
+						_multiMeta({ namePrefix: key, contents: value }) ?? [],
 				)
 			: []),
-	]
-		.flat()
-		.filter(nonNullable);
+	]);
 }
 
 export function generateAppleWebAppMeta(
@@ -174,7 +171,7 @@ export function generateAppleWebAppMeta(
 
 	const { capable, title, statusBarStyle } = appleWebApp;
 
-	return [
+	return _metaFilter([
 		capable
 			? _meta({ name: "mobile-web-app-capable", content: "yes" })
 			: undefined,
@@ -185,7 +182,7 @@ export function generateAppleWebAppMeta(
 					content: statusBarStyle,
 				})
 			: undefined,
-	].filter(nonNullable);
+	]);
 }
 
 export function generateAppleWebAppLinks(

@@ -1,3 +1,7 @@
+import type { OutputMeta } from "../types/io";
+
+export type MetaItem = OutputMeta[number];
+
 // https://github.com/vercel/next.js/blob/d673568300ab9336ebe610516c5a3439ab7cb8f5/packages/next/src/lib/metadata/generate/meta.tsx#L4
 export function _meta({
 	name,
@@ -9,12 +13,12 @@ export function _meta({
 	property?: string;
 	media?: string;
 	content?: string | number | URL | null | undefined;
-}) {
+}): MetaItem | undefined {
 	if ((name || property) && content) {
 		return {
 			...(name ? { name } : { property }),
 			...(media ? { media } : {}),
-			content: typeof content === "string" ? content : content?.toString(),
+			content: typeof content === "string" ? content : content.toString(),
 		};
 	}
 	return undefined;
@@ -24,15 +28,26 @@ export function nonNullable<T>(value: T): value is NonNullable<T> {
 	return value !== null && value !== undefined;
 }
 
-function _metaFilter<T>(items: (T | T[] | null | undefined)[]): T[] {
+export function _metaFilter<T>(
+	items: ReadonlyArray<
+		T | ReadonlyArray<T | null | undefined> | null | undefined
+	>,
+): T[] {
 	const acc: T[] = [];
+	const isArrayOf = (
+		value: T | ReadonlyArray<T | null | undefined>,
+	): value is ReadonlyArray<T | null | undefined> => Array.isArray(value);
+
 	for (const item of items) {
-		if (Array.isArray(item)) {
-			acc.push(...item.filter(nonNullable));
-		} else if (nonNullable(item)) {
+		if (!item) continue;
+		if (!isArrayOf(item)) {
 			acc.push(item);
+			continue;
 		}
+
+		acc.push(...item.filter(nonNullable));
 	}
+
 	return acc;
 }
 
@@ -76,9 +91,9 @@ function ExtendMeta({
 	content?: ExtendMetaContent;
 	namePrefix?: string;
 	propertyPrefix?: string;
-}) {
+}): MetaItem[] | null {
 	if (!content) return null;
-	return _metaFilter(
+	return _metaFilter<MetaItem>(
 		Object.entries(content).map(([k, v]) => {
 			return typeof v === "undefined"
 				? null
@@ -99,12 +114,12 @@ export function _multiMeta({
 	propertyPrefix?: string;
 	namePrefix?: string;
 	contents?: MultiMetaContent;
-}) {
+}): MetaItem[] | undefined {
 	if (typeof contents === "undefined" || contents === null) {
 		return undefined;
 	}
 
-	return _metaFilter(
+	return _metaFilter<MetaItem>(
 		contents.flatMap((content) => {
 			if (
 				typeof content === "string" ||

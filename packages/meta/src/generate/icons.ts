@@ -1,6 +1,6 @@
 import type { NormalizedMetadata, OutputLinks } from "../types/io";
 import type { Icon, IconDescriptor } from "../types/metadata-types";
-import { nonNullable } from "./utils";
+import { _metaFilter } from "./utils";
 
 function IconDescriptorLink({ icon }: { icon: IconDescriptor }) {
 	const { url, rel = "icon", ...props } = icon;
@@ -36,7 +36,7 @@ export function generateIcons(metadata: NormalizedMetadata): OutputLinks {
 	);
 	if (!hasIcon) return [];
 
-	return [
+	return _metaFilter([
 		shortcutList
 			? shortcutList.map((icon) => IconLink({ rel: "shortcut icon", icon }))
 			: [],
@@ -46,7 +46,5 @@ export function generateIcons(metadata: NormalizedMetadata): OutputLinks {
 			: [],
 		otherList ? otherList.map((icon) => IconDescriptorLink({ icon })) : [],
 		// hasIcon ? <IconMark /> : null,
-	]
-		.flat()
-		.filter(nonNullable);
+	]);
 }

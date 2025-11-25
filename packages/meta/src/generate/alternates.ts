@@ -1,6 +1,6 @@
 import type { AlternateLinkDescriptor } from "../types/alternative-urls-types";
 import type { NormalizedMetadata, OutputLinks } from "../types/io";
-import { nonNullable } from "./utils";
+import { _metaFilter } from "./utils";
 
 function AlternateLink({
 	descriptor,
@@ -25,7 +25,7 @@ export function generateAlternatesLinks(
 
 	const { canonical, languages, media, types } = alternates;
 
-	return [
+	return _metaFilter([
 		canonical
 			? AlternateLink({ rel: "canonical", descriptor: canonical })
 			: null,
@@ -50,7 +50,5 @@ export function generateAlternatesLinks(
 					),
 				)
 			: null,
-	]
-		.flat()
-		.filter(nonNullable);
+	]);
 }

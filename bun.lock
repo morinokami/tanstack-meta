@@ -18,6 +18,7 @@
         "next": "16.0.3",
         "publint": "0.3.15",
         "tsdown": "0.16.6",
+        "typescript": "5.9.3",
       },
     },
     "playground": {
