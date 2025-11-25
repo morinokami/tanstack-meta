@@ -23,7 +23,8 @@ export function normalizeMetadata(metadata: InputMetadata): NormalizedMetadata {
 		title: metadata.title ?? null,
 		description: metadata.description ?? null,
 		applicationName: metadata.applicationName ?? null,
-		authors: convertUrlsToStrings(resolveAsArrayOrUndefined(metadata.authors)),
+		authors:
+			convertUrlsToStrings(resolveAsArrayOrUndefined(metadata.authors)) ?? null,
 		manifest: convertUrlsToStrings(metadata.manifest) ?? null,
 		generator: metadata.generator ?? null,
 		keywords: resolveAsArrayOrUndefined(metadata.keywords) ?? null,
