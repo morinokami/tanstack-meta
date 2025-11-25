@@ -1,7 +1,8 @@
-import type { ResolvedMetadata } from "next";
-
 import type { InputMetadata, SimplifyTitleInUnion } from "../types/io";
-import type { ResolvedMetadataWithURLs } from "../types/metadata-interface";
+import type {
+	ResolvedMetadata,
+	ResolvedMetadataWithURLs,
+} from "../types/metadata-interface";
 import type { OpenGraph, OpenGraphType } from "../types/opengraph-types";
 import type { Twitter } from "../types/twitter-types";
 import { resolveArray, resolveAsArrayOrUndefined } from "./utils";

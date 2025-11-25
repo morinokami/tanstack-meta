@@ -1,6 +1,5 @@
-import type { WithStringifiedURLs } from "next/dist/lib/metadata/types/metadata-interface";
-
 import type { InputMetadata, NormalizedMetadata } from "../types/io";
+import type { WithStringifiedURLs } from "../types/metadata-interface";
 import {
 	normalizeAlternates,
 	normalizeAppleWebApp,
