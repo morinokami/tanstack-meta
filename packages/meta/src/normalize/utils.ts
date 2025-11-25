@@ -13,3 +13,7 @@ export function resolveAsArrayOrUndefined<T>(
 	}
 	return resolveArray(value) as any;
 }
+
+export function isStringOrURL(icon: any): icon is string | URL {
+	return typeof icon === "string" || icon instanceof URL;
+}

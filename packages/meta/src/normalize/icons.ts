@@ -2,11 +2,7 @@ import { IconKeys } from "../constants";
 import type { ResolvedMetadataWithURLs } from "../types/metadata-interface";
 import type { Icon, IconDescriptor } from "../types/metadata-types";
 import type { FieldResolver } from "../types/resolvers";
-import { resolveAsArrayOrUndefined } from "./utils";
-
-function isStringOrURL(icon: any): icon is string | URL {
-	return typeof icon === "string" || icon instanceof URL;
-}
+import { isStringOrURL, resolveAsArrayOrUndefined } from "./utils";
 
 export function normalizeIcon(icon: Icon): IconDescriptor {
 	if (isStringOrURL(icon)) return { url: icon };

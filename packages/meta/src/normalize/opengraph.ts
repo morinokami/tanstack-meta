@@ -5,7 +5,11 @@ import type {
 } from "../types/metadata-interface";
 import type { OpenGraph, OpenGraphType } from "../types/opengraph-types";
 import type { Twitter } from "../types/twitter-types";
-import { resolveArray, resolveAsArrayOrUndefined } from "./utils";
+import {
+	isStringOrURL,
+	resolveArray,
+	resolveAsArrayOrUndefined,
+} from "./utils";
 
 type FlattenArray<T> = T extends (infer U)[] ? U : T;
 
@@ -24,10 +28,6 @@ const OgTypeFields = {
 		"videos",
 	],
 } as const;
-
-function isStringOrURL(icon: any): icon is string | URL {
-	return typeof icon === "string" || icon instanceof URL;
-}
 
 function resolveUrl(url: string | URL): URL | null {
 	if (url instanceof URL) return url;
