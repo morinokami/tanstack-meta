@@ -2,12 +2,22 @@ import type { AlternateLinkDescriptor } from "../types/alternative-urls-types";
 import type { NormalizedMetadata, OutputLinks } from "../types/io";
 import { flattenMetaList } from "./utils";
 
+type LinkObject = {
+	rel?: string;
+	href?: string;
+	hrefLang?: string;
+	media?: string;
+	type?: string;
+	title?: string;
+	[key: string]: unknown;
+};
+
 function createAlternateLink({
 	descriptor,
 	...props
 }: {
 	descriptor: AlternateLinkDescriptor;
-} & React.LinkHTMLAttributes<HTMLLinkElement>) {
+} & LinkObject) {
 	if (!descriptor.url) return null;
 	return {
 		...props,
