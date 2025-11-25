@@ -28,14 +28,13 @@
 	],
 	"scripts": {
 		"build": "tsdown",
-		"typecheck": "tsc --noEmit",
+		"typecheck": "tsgo --noEmit",
 		"publint": "publint"
 	},
 	"devDependencies": {
 		"@tanstack/react-router": "1.139.3",
-		"next": "16.0.3",
+		"@typescript/native-preview": "7.0.0-dev.20251125.1",
 		"publint": "0.3.15",
-		"tsdown": "0.16.6",
-		"typescript": "5.9.3"
+		"tsdown": "0.16.6"
 	}
 }
