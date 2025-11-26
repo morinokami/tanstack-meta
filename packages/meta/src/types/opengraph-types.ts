@@ -1,6 +1,6 @@
 // https://github.com/vercel/next.js/blob/f9f625b90e6d4a562758c6a43234e168dcc23aa1/packages/next/src/lib/metadata/types/opengraph-types.ts
 
-import type { AbsoluteTemplateString, TemplateString } from "./metadata-types";
+import type { AbsoluteTemplateString } from "./metadata-types";
 
 export type OpenGraphType =
 	| "article"
@@ -36,7 +36,7 @@ type Locale = string;
 
 type OpenGraphMetadata = {
 	determiner?: "a" | "an" | "the" | "auto" | "" | undefined;
-	title?: string | TemplateString | undefined;
+	title?: string | undefined;
 	description?: string | undefined;
 	emails?: string | Array<string> | undefined;
 	phoneNumbers?: string | Array<string> | undefined;
@@ -195,7 +195,7 @@ export type ResolvedOpenGraph =
 
 type ResolvedOpenGraphMetadata = {
 	determiner?: "a" | "an" | "the" | "auto" | "" | undefined;
-	title: AbsoluteTemplateString;
+	title?: string | undefined;
 	description?: string | undefined;
 	emails?: Array<string> | undefined;
 	phoneNumbers?: Array<string> | undefined;
