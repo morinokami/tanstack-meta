@@ -81,13 +81,13 @@ function resolveAndValidateImage(
 	return baseResult;
 }
 
-export function resolveImages(
+function resolveImages(
 	images: Twitter["images"],
 ): NonNullable<ResolvedMetadataWithURLs["twitter"]>["images"];
-export function resolveImages(
+function resolveImages(
 	images: OpenGraph["images"],
 ): NonNullable<ResolvedMetadataWithURLs["openGraph"]>["images"];
-export function resolveImages(
+function resolveImages(
 	images: OpenGraph["images"] | Twitter["images"],
 ):
 	| NonNullable<ResolvedMetadataWithURLs["twitter"]>["images"]
