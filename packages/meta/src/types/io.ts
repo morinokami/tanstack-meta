@@ -1,7 +1,10 @@
 import type { AnyRouteMatch } from "@tanstack/react-router";
-import type { Metadata as NextMetadata, ResolvedMetadata } from "next";
 
-import type { ResolvedMetadataWithURLs } from "./metadata-interface";
+import type {
+	Metadata as NextMetadata,
+	ResolvedMetadata,
+	ResolvedMetadataWithURLs,
+} from "./metadata-interface";
 
 // Simplify the type of the title property in the opengraph type
 export type SimplifyTitleInUnion<T> = T extends { title?: unknown }

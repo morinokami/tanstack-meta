@@ -1,13 +1,23 @@
 import type { AlternateLinkDescriptor } from "../types/alternative-urls-types";
 import type { NormalizedMetadata, OutputLinks } from "../types/io";
-import { nonNullable } from "./utils";
+import { flattenMetaList } from "./utils";
 
-function AlternateLink({
+type LinkObject = {
+	rel?: string;
+	href?: string;
+	hrefLang?: string;
+	media?: string;
+	type?: string;
+	title?: string;
+	[key: string]: unknown;
+};
+
+function createAlternateLink({
 	descriptor,
 	...props
 }: {
 	descriptor: AlternateLinkDescriptor;
-} & React.LinkHTMLAttributes<HTMLLinkElement>) {
+} & LinkObject) {
 	if (!descriptor.url) return null;
 	return {
 		...props,
@@ -25,32 +35,38 @@ export function generateAlternatesLinks(
 
 	const { canonical, languages, media, types } = alternates;
 
-	return [
+	return flattenMetaList([
 		canonical
-			? AlternateLink({ rel: "canonical", descriptor: canonical })
+			? createAlternateLink({ rel: "canonical", descriptor: canonical })
 			: null,
 		languages
 			? Object.entries(languages).flatMap(([locale, descriptors]) =>
 					descriptors?.map((descriptor) =>
-						AlternateLink({ rel: "alternate", hrefLang: locale, descriptor }),
+						createAlternateLink({
+							rel: "alternate",
+							hrefLang: locale,
+							descriptor,
+						}),
 					),
 				)
 			: null,
 		media
 			? Object.entries(media).flatMap(([mediaName, descriptors]) =>
 					descriptors?.map((descriptor) =>
-						AlternateLink({ rel: "alternate", media: mediaName, descriptor }),
+						createAlternateLink({
+							rel: "alternate",
+							media: mediaName,
+							descriptor,
+						}),
 					),
 				)
 			: null,
 		types
 			? Object.entries(types).flatMap(([type, descriptors]) =>
 					descriptors?.map((descriptor) =>
-						AlternateLink({ rel: "alternate", type, descriptor }),
+						createAlternateLink({ rel: "alternate", type, descriptor }),
 					),
 				)
 			: null,
-	]
-		.flat()
-		.filter(nonNullable);
+	]);
 }

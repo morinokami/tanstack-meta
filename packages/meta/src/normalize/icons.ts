@@ -2,15 +2,16 @@ import { IconKeys } from "../constants";
 import type { ResolvedMetadataWithURLs } from "../types/metadata-interface";
 import type { Icon, IconDescriptor } from "../types/metadata-types";
 import type { FieldResolver } from "../types/resolvers";
-import { resolveAsArrayOrUndefined } from "./utils";
+import { isStringOrURL, resolveAsArrayOrUndefined } from "./utils";
 
-function isStringOrURL(icon: any): icon is string | URL {
-	return typeof icon === "string" || icon instanceof URL;
-}
+const isNonNullableIcon = (
+	icon: IconDescriptor | null | undefined,
+): icon is IconDescriptor => Boolean(icon);
 
-export function normalizeIcon(icon: Icon): IconDescriptor {
+export function normalizeIcon(
+	icon: Icon | null | undefined,
+): IconDescriptor | null | undefined {
 	if (isStringOrURL(icon)) return { url: icon };
-	else if (Array.isArray(icon)) return icon;
 	return icon;
 }
 
@@ -24,13 +25,19 @@ export const normalizeIcons: FieldResolver<"icons"> = (icons) => {
 		apple: [],
 	};
 	if (Array.isArray(icons)) {
-		resolved.icon = icons.map(normalizeIcon).filter(Boolean);
+		resolved.icon = icons.map(normalizeIcon).filter(isNonNullableIcon);
 	} else if (isStringOrURL(icons)) {
-		resolved.icon = [normalizeIcon(icons)];
+		const normalized = normalizeIcon(icons);
+		resolved.icon = normalized ? [normalized] : [];
 	} else {
 		for (const key of IconKeys) {
 			const values = resolveAsArrayOrUndefined(icons[key]);
-			if (values) resolved[key] = values.map(normalizeIcon);
+			if (values) {
+				const normalized = values.map(normalizeIcon).filter(isNonNullableIcon);
+				if (normalized.length) {
+					resolved[key] = normalized;
+				}
+			}
 		}
 	}
 	return resolved;

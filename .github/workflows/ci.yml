@@ -25,6 +25,12 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      - name: Type check
+        run: bun meta typecheck
+
+      - name: Lint
+        run: bun meta lint
+
       - name: Test
         run: bun test
 

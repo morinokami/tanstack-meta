@@ -1,10 +1,11 @@
-import type { ResolvedMetadata } from "next";
-
 import type { InputMetadata, SimplifyTitleInUnion } from "../types/io";
-import type { ResolvedMetadataWithURLs } from "../types/metadata-interface";
+import type {
+	ResolvedMetadata,
+	ResolvedMetadataWithURLs,
+} from "../types/metadata-interface";
 import type { OpenGraph, OpenGraphType } from "../types/opengraph-types";
 import type { Twitter } from "../types/twitter-types";
-import { resolveArray, resolveAsArrayOrUndefined } from "./utils";
+import { isStringOrURL, resolveAsArrayOrUndefined } from "./utils";
 
 type FlattenArray<T> = T extends (infer U)[] ? U : T;
 
@@ -23,10 +24,6 @@ const OgTypeFields = {
 		"videos",
 	],
 } as const;
-
-function isStringOrURL(icon: any): icon is string | URL {
-	return typeof icon === "string" || icon instanceof URL;
-}
 
 function resolveUrl(url: string | URL): URL | null {
 	if (url instanceof URL) return url;
@@ -84,13 +81,13 @@ function resolveAndValidateImage(
 	return baseResult;
 }
 
-export function resolveImages(
+function resolveImages(
 	images: Twitter["images"],
 ): NonNullable<ResolvedMetadataWithURLs["twitter"]>["images"];
-export function resolveImages(
+function resolveImages(
 	images: OpenGraph["images"],
 ): NonNullable<ResolvedMetadataWithURLs["openGraph"]>["images"];
-export function resolveImages(
+function resolveImages(
 	images: OpenGraph["images"] | Twitter["images"],
 ):
 	| NonNullable<ResolvedMetadataWithURLs["twitter"]>["images"]
@@ -128,21 +125,41 @@ function getFieldsByOgType(ogType: OpenGraphType | undefined) {
 export function normalizeOpenGraph(openGraph: InputMetadata["openGraph"]) {
 	if (!openGraph) return null;
 
-	function resolveProps(
-		target: NonNullable<SimplifyTitleInUnion<ResolvedMetadata["openGraph"]>>,
-		og: InputMetadata["openGraph"],
+	type OpenGraphResolved = NonNullable<
+		SimplifyTitleInUnion<ResolvedMetadata["openGraph"]>
+	>;
+	type OpenGraphArrayKeys =
+		(typeof OgTypeFields)[keyof typeof OgTypeFields][number];
+
+	function setArrayField<
+		K extends OpenGraphArrayKeys & keyof OpenGraphResolved,
+	>(
+		target: OpenGraphResolved,
+		og: NonNullable<InputMetadata["openGraph"]>,
+		key: K,
 	) {
-		const ogType = og && "type" in og ? og.type : undefined;
+		const value = og[key];
+		if (typeof value === "undefined") return;
+
+		const normalized =
+			value === null ? null : (resolveAsArrayOrUndefined(value) ?? null);
+		target[key] = normalized as OpenGraphResolved[K];
+	}
+
+	function resolveProps(
+		target: OpenGraphResolved,
+		og: NonNullable<typeof openGraph>,
+	) {
+		const ogType = "type" in og ? og.type : undefined;
 		const keys = getFieldsByOgType(ogType);
-		for (const k of keys) {
-			const key = k as keyof ResolvedMetadata["openGraph"];
-			if (og && key in og) {
-				const value = og[key];
-				// TODO: improve typing inferring
-				(target as any)[key] = value ? resolveArray(value) : null;
-			}
+		for (const key of keys) {
+			setArrayField(
+				target,
+				og,
+				key as OpenGraphArrayKeys & keyof OpenGraphResolved,
+			);
 		}
-		if (og?.images) {
+		if (og.images) {
 			const resolvedImages = resolveImages(og.images);
 			if (resolvedImages && resolvedImages.length > 0) {
 				target.images = resolvedImages;
@@ -152,7 +169,7 @@ export function normalizeOpenGraph(openGraph: InputMetadata["openGraph"]) {
 
 	const resolved = {
 		...openGraph,
-	} as NonNullable<SimplifyTitleInUnion<ResolvedMetadata["openGraph"]>>;
+	} as OpenGraphResolved;
 	resolveProps(resolved, openGraph);
 
 	return resolved;
@@ -205,9 +222,21 @@ export function normalizeTwitter(twitter: InputMetadata["twitter"]) {
 
 export function normalizeAppLink(appLinks: InputMetadata["appLinks"]) {
 	if (!appLinks) return null;
-	for (const key in appLinks) {
-		// @ts-expect-error // TODO: type infer
-		appLinks[key] = resolveAsArrayOrUndefined(appLinks[key]);
+
+	const resolved: ResolvedMetadataWithURLs["appLinks"] = {};
+	for (const key of Object.keys(appLinks) as Array<
+		keyof ResolvedMetadataWithURLs["appLinks"]
+	>) {
+		const value = appLinks[key];
+		if (typeof value === "undefined" || value === null) continue;
+
+		const normalized = resolveAsArrayOrUndefined(value);
+		if (normalized) {
+			resolved[key] = normalized as NonNullable<
+				ResolvedMetadataWithURLs["appLinks"]
+			>[typeof key];
+		}
 	}
-	return appLinks as ResolvedMetadataWithURLs["appLinks"];
+
+	return resolved;
 }

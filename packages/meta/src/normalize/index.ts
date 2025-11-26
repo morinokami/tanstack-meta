@@ -1,6 +1,5 @@
-import type { WithStringifiedURLs } from "next/dist/lib/metadata/types/metadata-interface";
-
 import type { InputMetadata, NormalizedMetadata } from "../types/io";
+import type { WithStringifiedURLs } from "../types/metadata-interface";
 import {
 	normalizeAlternates,
 	normalizeAppleWebApp,
@@ -24,7 +23,8 @@ export function normalizeMetadata(metadata: InputMetadata): NormalizedMetadata {
 		title: metadata.title ?? null,
 		description: metadata.description ?? null,
 		applicationName: metadata.applicationName ?? null,
-		authors: convertUrlsToStrings(resolveAsArrayOrUndefined(metadata.authors)),
+		authors:
+			convertUrlsToStrings(resolveAsArrayOrUndefined(metadata.authors)) ?? null,
 		manifest: convertUrlsToStrings(metadata.manifest) ?? null,
 		generator: metadata.generator ?? null,
 		keywords: resolveAsArrayOrUndefined(metadata.keywords) ?? null,

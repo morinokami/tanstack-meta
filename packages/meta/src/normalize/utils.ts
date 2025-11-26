@@ -1,26 +1,20 @@
 export function resolveArray<T>(value: T | T[]): T[] {
 	if (Array.isArray(value)) {
-		return value as any;
+		return value;
 	}
-	return [value] as any;
+	return [value];
 }
 
 export function resolveAsArrayOrUndefined<T>(
 	value: T | T[] | undefined | null,
-): T extends undefined | null ? undefined : T[] {
+): T[] | undefined {
 	if (typeof value === "undefined" || value === null) {
-		return undefined as any;
+		return undefined;
 	}
-	return resolveArray(value) as any;
+	return resolveArray(value);
 }
 
-export function getOrigin(url: string | URL): string | undefined {
-	let origin: string | undefined;
-	if (typeof url === "string") {
-		try {
-			url = new URL(url);
-			origin = url.origin;
-		} catch {}
-	}
-	return origin;
+// biome-ignore lint/suspicious/noExplicitAny: reason
+export function isStringOrURL(icon: any): icon is string | URL {
+	return typeof icon === "string" || icon instanceof URL;
 }
