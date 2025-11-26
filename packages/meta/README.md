@@ -7,7 +7,7 @@ While it makes the code slightly longer, it improves readability and clarity, an
 
 | Without `tanstack-meta` | With `tanstack-meta` |
 | ----------------------- | -------------------- |
-| ![Screenshot](./.github/assets/before.webp) | ![Screenshot](./.github/assets/after.webp) |
+| ![Screenshot](https://github.com/morinokami/tanstack-meta/blob/main/.github/assets/before.webp?raw=true) | ![Screenshot](https://github.com/morinokami/tanstack-meta/blob/main/.github/assets/after.webp?raw=true) |
 
 ## Usage
 
