@@ -2,7 +2,7 @@
 
 // Reference: https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
 
-import type { AbsoluteTemplateString, TemplateString } from "./metadata-types";
+import type { AbsoluteTemplateString } from "./metadata-types";
 
 export type Twitter =
 	| TwitterSummary
@@ -18,7 +18,7 @@ type TwitterMetadata = {
 	creator?: string | undefined; // username for the account associated to the creator of the content on the site
 	creatorId?: string | undefined; // id for the account associated to the creator of the content on the site
 	description?: string | undefined;
-	title?: string | TemplateString | undefined;
+	title?: string | undefined;
 	images?: TwitterImage | Array<TwitterImage> | undefined;
 };
 type TwitterSummary = TwitterMetadata & {
@@ -81,7 +81,7 @@ type ResolvedTwitterSummary = {
 	creator: string | null;
 	creatorId: string | null;
 	description: string | null;
-	title: AbsoluteTemplateString;
+	title?: string | undefined;
 	images?: Array<ResolvedTwitterImage> | undefined;
 };
 type ResolvedTwitterPlayer = ResolvedTwitterSummary & {

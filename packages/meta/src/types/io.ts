@@ -6,11 +6,6 @@ import type {
 	ResolvedMetadataWithURLs,
 } from "./metadata-interface";
 
-// Simplify the type of the title property in the opengraph type
-export type SimplifyTitleInUnion<T> = T extends { title?: unknown }
-	? Omit<T, "title"> & { title?: string }
-	: T;
-
 export type InputMetadata = {
 	/**
 	 * The character set of the document.
@@ -358,7 +353,7 @@ export type InputMetadata = {
 	 *
 	 * @see https://ogp.me/
 	 */
-	openGraph?: SimplifyTitleInUnion<NextMetadata["openGraph"]>;
+	openGraph?: NextMetadata["openGraph"];
 	/**
 	 * The Twitter metadata for the document.
 	 *
@@ -381,7 +376,7 @@ export type InputMetadata = {
 	 * // <meta name="twitter:image" content="https://example.com/og.png" />
 	 * ```
 	 */
-	twitter?: SimplifyTitleInUnion<NextMetadata["twitter"]>;
+	twitter?: NextMetadata["twitter"];
 	/**
 	 * The Facebook AppLinks metadata for the document.
 	 *
@@ -453,8 +448,8 @@ export type NormalizedMetadata = {
 	formatDetection: ResolvedMetadata["formatDetection"];
 	verification: ResolvedMetadata["verification"];
 	appleWebApp: ResolvedMetadata["appleWebApp"];
-	openGraph: SimplifyTitleInUnion<ResolvedMetadata["openGraph"]>;
-	twitter: SimplifyTitleInUnion<ResolvedMetadata["twitter"]>;
+	openGraph: ResolvedMetadata["openGraph"];
+	twitter: ResolvedMetadata["twitter"];
 	appLinks: ResolvedMetadataWithURLs["appLinks"];
 	icons: ResolvedMetadata["icons"];
 };

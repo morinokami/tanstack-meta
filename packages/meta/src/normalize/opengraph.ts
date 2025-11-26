@@ -1,4 +1,4 @@
-import type { InputMetadata, SimplifyTitleInUnion } from "../types/io";
+import type { InputMetadata } from "../types/io";
 import type {
 	ResolvedMetadata,
 	ResolvedMetadataWithURLs,
@@ -125,9 +125,7 @@ function getFieldsByOgType(ogType: OpenGraphType | undefined) {
 export function normalizeOpenGraph(openGraph: InputMetadata["openGraph"]) {
 	if (!openGraph) return null;
 
-	type OpenGraphResolved = NonNullable<
-		SimplifyTitleInUnion<ResolvedMetadata["openGraph"]>
-	>;
+	type OpenGraphResolved = NonNullable<ResolvedMetadata["openGraph"]>;
 	type OpenGraphArrayKeys =
 		(typeof OgTypeFields)[keyof typeof OgTypeFields][number];
 
@@ -189,7 +187,7 @@ export function normalizeTwitter(twitter: InputMetadata["twitter"]) {
 	const resolved = {
 		...twitter,
 		title: twitter.title,
-	} as NonNullable<SimplifyTitleInUnion<ResolvedMetadata["twitter"]>>;
+	} as NonNullable<ResolvedMetadata["twitter"]>;
 	for (const infoKey of TwitterBasicInfoKeys) {
 		resolved[infoKey] = twitter[infoKey] || null;
 	}
