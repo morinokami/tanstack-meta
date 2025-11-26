@@ -2,8 +2,6 @@
 
 // Reference: https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
 
-import type { AbsoluteTemplateString } from "./metadata-types";
-
 export type Twitter =
 	| TwitterSummary
 	| TwitterSummaryLargeImage

@@ -1,7 +1,5 @@
 // https://github.com/vercel/next.js/blob/f9f625b90e6d4a562758c6a43234e168dcc23aa1/packages/next/src/lib/metadata/types/opengraph-types.ts
 
-import type { AbsoluteTemplateString } from "./metadata-types";
-
 export type OpenGraphType =
 	| "article"
 	| "book"
