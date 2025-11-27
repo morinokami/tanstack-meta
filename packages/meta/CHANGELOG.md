@@ -1,5 +1,13 @@
 # tanstack-meta
 
+## 0.1.1
+
+### Patch Changes
+
+- [#10](https://github.com/morinokami/tanstack-meta/pull/10) [`3d7368a`](https://github.com/morinokami/tanstack-meta/commit/3d7368ab7f134f5a179ffed1d7c220430159f552) Thanks [@morinokami](https://github.com/morinokami)! - docs: enhance README with motivation, improved examples, and API reference
+
+- [#12](https://github.com/morinokami/tanstack-meta/pull/12) [`c22cce2`](https://github.com/morinokami/tanstack-meta/commit/c22cce2afda8612a651f43cf6e06f6d96ff8fda3) Thanks [@morinokami](https://github.com/morinokami)! - chore: update dependencies
+
 ## 0.1.0
 
 ### Minor Changes
