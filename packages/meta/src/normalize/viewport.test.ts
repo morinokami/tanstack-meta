@@ -81,16 +81,17 @@ describe("normalizeViewport", () => {
 		});
 	});
 
-	test.each(["dark", "light", "dark light"] as const)(
-		"handles valid colorScheme value: %s",
-		(colorScheme) => {
-			const result = normalizeViewport({
-				colorScheme,
-			});
+	test.each([
+		"dark",
+		"light",
+		"dark light",
+	] as const)("handles valid colorScheme value: %s", (colorScheme) => {
+		const result = normalizeViewport({
+			colorScheme,
+		});
 
-			expect(result?.colorScheme).toBe(colorScheme);
-		},
-	);
+		expect(result?.colorScheme).toBe(colorScheme);
+	});
 
 	test("coerces string themeColor to descriptor array", () => {
 		const result = normalizeViewport({
