@@ -79,7 +79,7 @@ export function normalizeViewport(
 				case "viewportFit":
 				case "interactiveWidget":
 					// always override the target with the source
-					// @ts-ignore viewport properties
+					// @ts-expect-error: viewport properties
 					newResolvedViewport[key] = viewport[key];
 					break;
 				default:
