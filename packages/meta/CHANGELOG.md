@@ -1,5 +1,11 @@
 # tanstack-meta
 
+## 0.2.0
+
+### Minor Changes
+
+- [#13](https://github.com/morinokami/tanstack-meta/pull/13) [`6e89173`](https://github.com/morinokami/tanstack-meta/commit/6e89173dc85e94a047d767ea633d4777542ad1f0) Thanks [@morinokami](https://github.com/morinokami)! - feat: support viewport
+
 ## 0.1.1
 
 ### Patch Changes
