@@ -17,6 +17,10 @@ export const Route = createRootRoute({
 
 		const { meta, links } = generateMetadata({
 			charSet: "utf-8",
+			viewport: {
+				width: "device-width",
+				initialScale: 1,
+			},
 			title,
 			description,
 			openGraph: {
@@ -45,13 +49,7 @@ export const Route = createRootRoute({
 		});
 
 		return {
-			meta: [
-				{
-					name: "viewport",
-					content: "width=device-width, initial-scale=1",
-				},
-				...meta,
-			],
+			meta,
 			links: [
 				{
 					rel: "stylesheet",

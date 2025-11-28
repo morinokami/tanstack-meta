@@ -4,6 +4,8 @@ import type {
 	Metadata as NextMetadata,
 	ResolvedMetadata,
 	ResolvedMetadataWithURLs,
+	ResolvedViewport,
+	Viewport,
 } from "./metadata-interface";
 
 export type InputMetadata = {
@@ -418,6 +420,7 @@ export type InputMetadata = {
 	 * @see https://developer.mozilla.org/docs/Web/HTML/Attributes/rel#attr-icon
 	 */
 	icons?: NextMetadata["icons"];
+	viewport?: Viewport;
 };
 
 export type NormalizedMetadata = {
@@ -452,6 +455,7 @@ export type NormalizedMetadata = {
 	twitter: ResolvedMetadata["twitter"];
 	appLinks: ResolvedMetadataWithURLs["appLinks"];
 	icons: ResolvedMetadata["icons"];
+	viewport: ResolvedViewport | null;
 };
 
 export type OutputMeta = NonNullable<AnyRouteMatch["meta"]>;

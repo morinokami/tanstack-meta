@@ -15,6 +15,7 @@ import {
 	normalizeTwitter,
 } from "./opengraph";
 import { resolveAsArrayOrUndefined } from "./utils";
+import { normalizeViewport } from "./viewport";
 
 // https://github.com/vercel/next.js/blob/d673568300ab9336ebe610516c5a3439ab7cb8f5/packages/next/src/lib/metadata/resolve-metadata.ts#L213
 export function normalizeMetadata(metadata: InputMetadata): NormalizedMetadata {
@@ -59,6 +60,7 @@ export function normalizeMetadata(metadata: InputMetadata): NormalizedMetadata {
 		twitter: convertUrlsToStrings(normalizeTwitter(metadata.twitter)),
 		appLinks: normalizeAppLink(metadata.appLinks),
 		icons: convertUrlsToStrings(normalizeIcons(metadata.icons)),
+		viewport: normalizeViewport(metadata.viewport ?? null),
 	};
 }
 

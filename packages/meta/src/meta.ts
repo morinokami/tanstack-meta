@@ -13,6 +13,7 @@ import {
 	generateTwitter,
 } from "./generate/opengraph";
 import { flattenMetaList } from "./generate/utils";
+import { generateViewport } from "./generate/viewport";
 import type { NormalizedMetadata, OutputMeta } from "./types/io";
 
 export function meta(metadata: NormalizedMetadata): OutputMeta {
@@ -28,5 +29,6 @@ export function meta(metadata: NormalizedMetadata): OutputMeta {
 		generateOpenGraph(metadata),
 		generateTwitter(metadata),
 		generateAppLinks(metadata),
+		generateViewport(metadata),
 	]);
 }
