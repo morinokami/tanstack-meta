@@ -47,7 +47,6 @@ You can generally use it the same way as Next.js’s [`generateMetadata`](https:
 - Features that work across routes are not supported
   - `title` only accepts a plain string
   - `metadataBase` is not available
-- `viewport` is not supported yet
 
 ## Reference
 
@@ -93,3 +92,4 @@ An object containing `meta` and `links` properties, which can be used as the ret
 - `twitter`
 - `appLinks`
 - `icons`
+- `viewport`
