@@ -9,12 +9,10 @@ export function generateViewport(metadata: NormalizedMetadata): OutputMeta {
 
 	const viewportContent = normalizeViewportLayout(viewport);
 	return flattenMetaList([
-		viewportContent
-			? createMetaTag({
-					name: "viewport",
-					content: viewportContent,
-				})
-			: [],
+		createMetaTag({
+			name: "viewport",
+			content: viewportContent ?? undefined,
+		}),
 		...(viewport.themeColor
 			? viewport.themeColor.map((themeColor) =>
 					createMetaTag({
@@ -24,11 +22,9 @@ export function generateViewport(metadata: NormalizedMetadata): OutputMeta {
 					}),
 				)
 			: []),
-		viewport.colorScheme
-			? createMetaTag({
-					name: "color-scheme",
-					content: viewport.colorScheme,
-				})
-			: [],
+		createMetaTag({
+			name: "color-scheme",
+			content: viewport.colorScheme ?? undefined,
+		}),
 	]);
 }
