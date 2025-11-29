@@ -420,6 +420,31 @@ export type InputMetadata = {
 	 * @see https://developer.mozilla.org/docs/Web/HTML/Attributes/rel#attr-icon
 	 */
 	icons?: NextMetadata["icons"];
+	/**
+	 * Interface for the viewport configuration.
+	 *
+	 * @remarks
+	 * This configuration allows defining properties such as width, initial scale, theme colors,
+	 * and color scheme.
+	 *
+	 * @example
+	 * ```tsx
+	 * viewport: {
+	 *   width: "device-width",
+	 *   initialScale: 1,
+	 *   themeColor: [
+	 *     { media: "(prefers-color-scheme: dark)", color: "#000000" },
+	 *     { media: "(prefers-color-scheme: light)", color: "#ffffff" }
+	 *   ],
+	 *   colorScheme: "dark"
+	 * }
+	 * // Renders:
+	 * // <meta name="viewport" content="width=device-width, initial-scale=1" />
+	 * // <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000" />
+	 * // <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+	 * // <meta name="color-scheme" content="dark" />
+	 * ```
+	 */
 	viewport?: Viewport;
 };
 
