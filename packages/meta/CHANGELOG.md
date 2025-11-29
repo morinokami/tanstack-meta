@@ -1,5 +1,11 @@
 # tanstack-meta
 
+## 0.2.1
+
+### Patch Changes
+
+- [#15](https://github.com/morinokami/tanstack-meta/pull/15) [`fd86490`](https://github.com/morinokami/tanstack-meta/commit/fd86490156e44b65e825416cd13be40778d5f40c) Thanks [@morinokami](https://github.com/morinokami)! - docs: add JSDoc example for viewport configuration
+
 ## 0.2.0
 
 ### Minor Changes
