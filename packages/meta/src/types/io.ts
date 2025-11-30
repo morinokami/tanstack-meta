@@ -8,17 +8,21 @@ import type {
 	Viewport,
 } from "./metadata-interface";
 
+type WithSuggestions<T extends string> = T | (string & {});
+
 export type InputMetadata = {
 	/**
-	 * The character set of the document.
+	 * The character encoding of the document.
 	 *
 	 * @example
 	 * ```tsx
 	 * charSet: "utf-8"
 	 * // Renders: <meta charset="utf-8" />
 	 * ```
+	 *
+	 * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/meta#charset
 	 */
-	charSet?: string | null;
+	charSet?: WithSuggestions<"utf-8"> | null;
 	/**
 	 * The document title.
 	 *
