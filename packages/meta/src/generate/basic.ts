@@ -28,6 +28,8 @@ export function generateBasicMeta(metadata: NormalizedMetadata): OutputMeta {
 		createMetaTag({ name: "robots", content: metadata.robots?.basic }),
 		createMetaTag({ name: "googlebot", content: metadata.robots?.googleBot }),
 		createMetaTag({ name: "abstract", content: metadata.abstract }),
+		createMetaTag({ name: "category", content: metadata.category }),
+		createMetaTag({ name: "classification", content: metadata.classification }),
 		...(metadata.other
 			? Object.entries(metadata.other).flatMap(([name, content]) => {
 					if (Array.isArray(content)) {
