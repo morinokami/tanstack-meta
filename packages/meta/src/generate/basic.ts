@@ -70,6 +70,16 @@ export function generateBasicLinks(metadata: NormalizedMetadata): OutputLinks {
 					href: bookmark,
 				}))
 			: []),
+		...(metadata.pagination
+			? [
+					metadata.pagination.previous
+						? { rel: "previous", href: metadata.pagination.previous }
+						: null,
+					metadata.pagination.next
+						? { rel: "next", href: metadata.pagination.next }
+						: null,
+				]
+			: []),
 	]);
 }
 
