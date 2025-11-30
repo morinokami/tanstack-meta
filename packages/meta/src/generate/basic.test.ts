@@ -88,6 +88,18 @@ describe("generateBasic", () => {
 		expect(generateBasicMeta(metadata)).toEqual([]);
 	});
 
+	test("emits category and classification when provided", () => {
+		const metadata = normalizeMetadata({
+			category: "technology",
+			classification: "business",
+		});
+
+		expect(generateBasicMeta(metadata)).toEqual([
+			{ name: "category", content: "technology" },
+			{ name: "classification", content: "business" },
+		]);
+	});
+
 	test("renders only googlebot directives when robots object only sets googleBot", () => {
 		const metadata = normalizeMetadata({
 			robots: {
