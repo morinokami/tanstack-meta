@@ -1,5 +1,11 @@
 # tanstack-meta
 
+## 0.3.0
+
+### Minor Changes
+
+- [#17](https://github.com/morinokami/tanstack-meta/pull/17) [`f467de6`](https://github.com/morinokami/tanstack-meta/commit/f467de6bdc40f91e423f5eb23113fb85ddc72db6) Thanks [@morinokami](https://github.com/morinokami)! - feat: support pagination
+
 ## 0.2.1
 
 ### Patch Changes
