@@ -11,7 +11,8 @@ export function normalizeViewportLayout(viewport: Viewport) {
 		for (const viewportKey_ in ViewportMetaKeys) {
 			const viewportKey = viewportKey_ as keyof ViewportLayout;
 			if (viewportKey in viewport) {
-				let value = viewport[viewportKey];
+				let value: string | number | boolean | undefined =
+					viewport[viewportKey];
 				if (typeof value === "boolean") {
 					value = value ? "yes" : "no";
 				} else if (!value && viewportKey === "initialScale") {
