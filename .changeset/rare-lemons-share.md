@@ -1,0 +1,5 @@
+---
+"tanstack-meta": minor
+---
+
+Pagination
