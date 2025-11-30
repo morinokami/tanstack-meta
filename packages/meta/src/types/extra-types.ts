@@ -56,8 +56,8 @@ export type ItunesApp = {
 // https://developer.mozilla.org/docs/Web/HTML/Viewport_meta_tag
 // intentionally leaving out user-scalable, use a string if you want that behavior
 export type ViewportLayout = {
-	width?: string | number | undefined;
-	height?: string | number | undefined;
+	width?: "device-width" | number | undefined;
+	height?: "device-height" | number | undefined;
 	initialScale?: number | undefined;
 	minimumScale?: number | undefined;
 	maximumScale?: number | undefined;
