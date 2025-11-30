@@ -184,6 +184,33 @@ describe("generateBasicLinks", () => {
 			{ rel: "bookmarks", href: "https://example.com/bookmark2" },
 		]);
 	});
+
+	test("emits pagination links when previous and next are provided", () => {
+		const metadata = normalizeMetadata({
+			pagination: {
+				previous: "https://example.com/page/1",
+				next: "https://example.com/page/3",
+			},
+		});
+
+		expect(generateBasicLinks(metadata)).toEqual([
+			{ rel: "previous", href: "https://example.com/page/1" },
+			{ rel: "next", href: "https://example.com/page/3" },
+		]);
+	});
+
+	test("omits missing pagination entries and stringifies URLs", () => {
+		const metadata = normalizeMetadata({
+			pagination: {
+				previous: new URL("https://example.com/page/2"),
+				next: null,
+			},
+		});
+
+		expect(generateBasicLinks(metadata)).toEqual([
+			{ rel: "previous", href: "https://example.com/page/2" },
+		]);
+	});
 });
 
 describe("generateItunes", () => {

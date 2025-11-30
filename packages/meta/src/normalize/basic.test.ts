@@ -5,6 +5,7 @@ import {
 	normalizeAppleWebApp,
 	normalizeFacebook,
 	normalizeItunes,
+	normalizePagination,
 	normalizeRobotsValue,
 	normalizeVerification,
 } from "./basic";
@@ -137,6 +138,26 @@ describe("normalizeItunes", () => {
 		expect(result).toEqual({
 			appId: "abc",
 			appArgument: "foo",
+		});
+	});
+});
+
+describe("normalizePagination", () => {
+	test("returns null values when input is falsy", () => {
+		const result = normalizePagination(undefined);
+
+		expect(result).toEqual({ previous: null, next: null });
+	});
+
+	test("converts URL instances to strings and preserves provided values", () => {
+		const result = normalizePagination({
+			previous: new URL("https://example.com/page/1"),
+			next: "https://example.com/page/3",
+		});
+
+		expect(result).toEqual({
+			previous: "https://example.com/page/1",
+			next: "https://example.com/page/3",
 		});
 	});
 });
