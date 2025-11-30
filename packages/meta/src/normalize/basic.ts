@@ -169,3 +169,15 @@ export const normalizeFacebook = (facebook: InputMetadata["facebook"]) => {
 		admins: resolveAsArrayOrUndefined(facebook.admins),
 	};
 };
+
+function resolveUrl(url: string | URL): string {
+	return url instanceof URL ? url.toString() : url;
+}
+export const normalizePagination = (
+	pagination: InputMetadata["pagination"],
+) => {
+	return {
+		previous: pagination?.previous ? resolveUrl(pagination.previous) : null,
+		next: pagination?.next ? resolveUrl(pagination.next) : null,
+	};
+};

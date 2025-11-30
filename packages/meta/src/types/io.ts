@@ -194,6 +194,24 @@ export type InputMetadata = {
 	 */
 	bookmarks?: NextMetadata["bookmarks"];
 	/**
+	 * The pagination link rel properties.
+	 *
+	 * @example
+	 * ```tsx
+	 * pagination: {
+	 *   previous: "https://example.com/items?page=1",
+	 *   next: "https://example.com/items?page=3"
+	 * }
+	 *
+	 * // Renders
+	 * <link rel="prev" href="https://example.com/items?page=1" />
+	 * <link rel="next" href="https://example.com/items?page=3" />
+	 * ```
+	 *
+	 * @see https://developers.google.com/search/blog/2011/09/pagination-with-relnext-and-relprev
+	 */
+	pagination?: NextMetadata["pagination"];
+	/**
 	 * The category meta name property.
 	 *
 	 * @example
@@ -465,6 +483,7 @@ export type NormalizedMetadata = {
 	archives: ResolvedMetadata["archives"];
 	assets: ResolvedMetadata["assets"];
 	bookmarks: ResolvedMetadata["bookmarks"];
+	pagination: ResolvedMetadata["pagination"];
 	category: ResolvedMetadata["category"];
 	classification: ResolvedMetadata["classification"];
 	other: ResolvedMetadata["other"];

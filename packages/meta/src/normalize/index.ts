@@ -5,6 +5,7 @@ import {
 	normalizeAppleWebApp,
 	normalizeFacebook,
 	normalizeItunes,
+	normalizePagination,
 	normalizeRobotsValue,
 	normalizeVerification,
 } from "./basic";
@@ -45,6 +46,7 @@ export function normalizeMetadata(metadata: InputMetadata): NormalizedMetadata {
 		archives: resolveAsArrayOrUndefined(metadata.archives) ?? null,
 		assets: resolveAsArrayOrUndefined(metadata.assets) ?? null,
 		bookmarks: resolveAsArrayOrUndefined(metadata.bookmarks) ?? null,
+		pagination: normalizePagination(metadata.pagination),
 		category: metadata.category ?? null,
 		classification: metadata.classification ?? null,
 		other: metadata.other ?? null,

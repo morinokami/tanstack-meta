@@ -78,6 +78,7 @@ An object containing `meta` and `links` properties, which can be used as the ret
 - `archives`
 - `assets`
 - `bookmarks`
+- `pagination`
 - `category`
 - `classification`
 - `other`
