@@ -2,4 +2,4 @@
 "tanstack-meta": minor
 ---
 
-Pagination
+feat: support pagination
