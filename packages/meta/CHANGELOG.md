@@ -1,5 +1,13 @@
 # tanstack-meta
 
+## 0.3.1
+
+### Patch Changes
+
+- [#21](https://github.com/morinokami/tanstack-meta/pull/21) [`0dd81b5`](https://github.com/morinokami/tanstack-meta/commit/0dd81b54d2ea32fd8304b82cbeac1f3abc838ed2) Thanks [@morinokami](https://github.com/morinokami)! - feat: add type suggestions for viewport and charSet meta tags
+
+- [#19](https://github.com/morinokami/tanstack-meta/pull/19) [`4af37c5`](https://github.com/morinokami/tanstack-meta/commit/4af37c5ef5c03ed84bce860bbcfce0eb4c2bf100) Thanks [@morinokami](https://github.com/morinokami)! - fix: emit category and classification meta tags
+
 ## 0.3.0
 
 ### Minor Changes
