@@ -1,5 +1,11 @@
 # tanstack-meta
 
+## 0.3.2
+
+### Patch Changes
+
+- [#22](https://github.com/morinokami/tanstack-meta/pull/22) [`2158319`](https://github.com/morinokami/tanstack-meta/commit/2158319c780d592400c223e4cd6ecfa6509a656d) Thanks [@morinokami](https://github.com/morinokami)! - docs: reorganize InputMetadata fields by semantic categories and enhance JSDoc
+
 ## 0.3.1
 
 ### Patch Changes
