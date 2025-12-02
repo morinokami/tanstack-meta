@@ -1,5 +1,11 @@
 # tanstack-meta
 
+## 0.3.3
+
+### Patch Changes
+
+- [#24](https://github.com/morinokami/tanstack-meta/pull/24) [`30f8407`](https://github.com/morinokami/tanstack-meta/commit/30f840740430ed19f527485adec3022e0613da65) Thanks [@morinokami](https://github.com/morinokami)! - chore: update dependencies
+
 ## 0.3.2
 
 ### Patch Changes
