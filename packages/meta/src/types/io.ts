@@ -100,7 +100,7 @@ export type InputMetadata = {
 	 */
 	referrer?: NextMetadata["referrer"];
 	/**
-	 * Interface for the viewport configuration.
+	 * The viewport configuration for the document.
 	 *
 	 * @remarks
 	 * This configuration allows defining properties such as width, initial scale, theme colors,
@@ -301,7 +301,7 @@ export type InputMetadata = {
 	 */
 	manifest?: NextMetadata["manifest"];
 	/**
-	 * The icons for the document. Defaults to rel="icon".
+	 * The icons for the document.
 	 *
 	 * @remarks
 	 * You can specify a simple URL or an object to differentiate between icon types (e.g., apple-touch-icon).
