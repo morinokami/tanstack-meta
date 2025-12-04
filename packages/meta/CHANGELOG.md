@@ -1,5 +1,11 @@
 # tanstack-meta
 
+## 0.3.4
+
+### Patch Changes
+
+- [#26](https://github.com/morinokami/tanstack-meta/pull/26) [`1235b85`](https://github.com/morinokami/tanstack-meta/commit/1235b85eb68061241003a547b6757591a239e0f7) Thanks [@morinokami](https://github.com/morinokami)! - docs: update reference
+
 ## 0.3.3
 
 ### Patch Changes
