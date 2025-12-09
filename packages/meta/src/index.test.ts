@@ -67,13 +67,13 @@ describe("createMetadataGenerator", () => {
 		test("uses default when title is null", () => {
 			const result = generateMetadata({ title: null });
 
-			expect(result.meta).toContainEqual({ title: "My Site | My Site" });
+			expect(result.meta).toContainEqual({ title: "My Site" });
 		});
 
 		test("uses default when title is undefined", () => {
 			const result = generateMetadata({});
 
-			expect(result.meta).toContainEqual({ title: "My Site | My Site" });
+			expect(result.meta).toContainEqual({ title: "My Site" });
 		});
 
 		test("ignores template when title is absolute", () => {
@@ -144,6 +144,16 @@ describe("createMetadataGenerator", () => {
 			const result = generateMetadata({ title: "" });
 
 			expect(result.meta).toContainEqual({ title: " | Site" });
+		});
+
+		test("replaces all %s placeholders", () => {
+			const generateMetadata = createMetadataGenerator({
+				titleTemplate: { default: "Site", template: "%s | %s | Site" },
+			});
+
+			const result = generateMetadata({ title: "Docs" });
+
+			expect(result.meta).toContainEqual({ title: "Docs | Docs | Site" });
 		});
 	});
 });

@@ -34,12 +34,16 @@ function resolveTitle(
 	) {
 		title = metadata.title.absolute;
 	} else {
-		title = options.titleTemplate
-			? options.titleTemplate.template.replace(
-					"%s",
-					metadata.title ?? options.titleTemplate.default,
-				)
-			: metadata.title;
+		const { titleTemplate } = options;
+		if (!titleTemplate) {
+			title = metadata.title;
+		} else {
+			if (typeof metadata.title === "string") {
+				title = titleTemplate.template.split("%s").join(metadata.title);
+			} else {
+				title = titleTemplate.default;
+			}
+		}
 	}
 
 	return title;

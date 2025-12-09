@@ -64,10 +64,10 @@ generateMetadata({ title: "About" })
 // Output: <title>About | My Site</title>
 
 generateMetadata({ title: null })
-// Output: <title>Default Title | My Site</title>
+// Output: <title>Default Title</title>
 
 generateMetadata({})
-// Output: <title>Default Title | My Site</title>
+// Output: <title>Default Title</title>
 ```
 
 To opt out of the title template on a specific page, use `title.absolute`:
@@ -76,6 +76,8 @@ To opt out of the title template on a specific page, use `title.absolute`:
 generateMetadata({ title: { absolute: "Home" } })
 // Output: <title>Home</title> (template is ignored)
 ```
+
+`%s` placeholders are all replaced. For example, `template: "%s | %s | My Site"` with `title: "Docs"` renders `<title>Docs | Docs | My Site</title>`.
 
 ## Reference
 

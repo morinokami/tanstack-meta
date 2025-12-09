@@ -17,6 +17,7 @@ export const Route = createRootRoute({
 
 		const { meta, links } = generateMetadata({
 			charSet: "utf-8",
+			title: "TanStack",
 			viewport: {
 				width: "device-width",
 				initialScale: 1,
