@@ -25,7 +25,7 @@ describe("generateMetadata", () => {
 	});
 });
 
-describe("createGenerator", () => {
+describe("createMetadataGenerator", () => {
 	describe("without options", () => {
 		test("passes through title unchanged", () => {
 			const generateMetadata = createMetadataGenerator();
