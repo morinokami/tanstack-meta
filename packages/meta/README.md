@@ -42,23 +42,70 @@ export const Route = createFileRoute("/")({
 })
 ```
 
-You can generally use it the same way as Next.js’s [`generateMetadata`](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) function, but keep the following points in mind:
+You can use it almost the same way as Next.js's [`generateMetadata`](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) function, but note that currently there is no equivalent option for `metadataBase`.
 
-- Features that work across routes are not supported
-  - `title` only accepts a plain string
-  - `metadataBase` is not available
+### Title Template
+
+If you want to use a title template like Next.js's `title.template`, use `createMetadataGenerator` to create a customized metadata generator:
+
+```ts
+import { createMetadataGenerator } from "tanstack-meta";
+
+// Create a generator with title template
+const generateMetadata = createMetadataGenerator({
+  titleTemplate: {
+    default: "Default Title", // Used when title is not provided
+    template: "%s | My Site"  // %s is replaced with the page title
+  }
+});
+
+// In your routes:
+generateMetadata({ title: "About" })
+// Output: <title>About | My Site</title>
+
+generateMetadata({ title: null })
+// Output: <title>Default Title | My Site</title>
+
+generateMetadata({})
+// Output: <title>Default Title | My Site</title>
+```
+
+To opt out of the title template on a specific page, use `title.absolute`:
+
+```ts
+generateMetadata({ title: { absolute: "Home" } })
+// Output: <title>Home</title> (template is ignored)
+```
 
 ## Reference
 
-`tanstack-meta` provides a function called `generateMetadata` that generates the document metadata compatible with TanStack Router/Start's `head` function.
+### `generateMetadata`
 
-### Parameters
+Generates the document metadata compatible with TanStack Router/Start's `head` function.
+
+#### Parameters
 
 An object containing the document metadata to be set.
 
-### Return Value
+#### Return Value
 
 An object containing `meta` and `links` properties, which can be used as the return value of the `head` function.
+
+### `createMetadataGenerator`
+
+Creates a customized metadata generator with options like title templates.
+
+#### Parameters
+
+An options object with the following properties:
+
+- `titleTemplate` (optional): An object containing:
+  - `default`: The default title used when no title is provided
+  - `template`: A template string where `%s` is replaced with the page title
+
+#### Return Value
+
+A function that accepts metadata (with extended `title` support) and returns the same structure as `generateMetadata`.
 
 ### Supported Metadata Fields
 
@@ -81,6 +128,15 @@ An object containing `meta` and `links` properties, which can be used as the ret
   - ```html
     <!-- Output -->
     <title>My Blog</title>
+    ```
+  - When using `createMetadataGenerator` with a title template, you can also use `{ absolute: string }` to bypass the template:
+  - ```tsx
+    // Input (with createMetadataGenerator)
+    { title: { absolute: "Special Page" } }
+    ```
+  - ```html
+    <!-- Output -->
+    <title>Special Page</title>
     ```
 - `description`
   - The document description.
