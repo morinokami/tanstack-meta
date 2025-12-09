@@ -1,5 +1,15 @@
 # tanstack-meta
 
+## 0.4.0
+
+### Minor Changes
+
+- [#28](https://github.com/morinokami/tanstack-meta/pull/28) [`9435008`](https://github.com/morinokami/tanstack-meta/commit/9435008e84907488de1c5751a7a053b954a08a8b) Thanks [@morinokami](https://github.com/morinokami)! - feat: add createMetadataGenerator with titleTemplate support
+
+### Patch Changes
+
+- [#30](https://github.com/morinokami/tanstack-meta/pull/30) [`980ec87`](https://github.com/morinokami/tanstack-meta/commit/980ec877956365b0450a4e919be3e6339b11dc81) Thanks [@morinokami](https://github.com/morinokami)! - chore: update dependencies
+
 ## 0.3.4
 
 ### Patch Changes
