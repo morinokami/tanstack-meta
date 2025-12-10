@@ -26,134 +26,43 @@ describe("generateMetadata", () => {
 });
 
 describe("createMetadataGenerator", () => {
-	describe("without options", () => {
-		test("passes through title unchanged", () => {
-			const generateMetadata = createMetadataGenerator();
-			const result = generateMetadata({ title: "My Page" });
-
-			expect(result.meta).toContainEqual({ title: "My Page" });
-		});
-
-		test("handles null title", () => {
-			const generateMetadata = createMetadataGenerator();
-			const result = generateMetadata({ title: null });
-
-			expect(result.meta).not.toContainEqual(
-				expect.objectContaining({ title: expect.any(String) }),
-			);
-		});
-
-		test("handles undefined title", () => {
-			const generateMetadata = createMetadataGenerator();
-			const result = generateMetadata({});
-
-			expect(result.meta).not.toContainEqual(
-				expect.objectContaining({ title: expect.any(String) }),
-			);
-		});
-	});
-
-	describe("with titleTemplate", () => {
+	test("preserves other metadata when applying title template", () => {
 		const generateMetadata = createMetadataGenerator({
-			titleTemplate: { default: "My Site", template: "%s | My Site" },
+			titleTemplate: { default: "Site", template: "%s - Site" },
 		});
 
-		test("applies template to string title", () => {
-			const result = generateMetadata({ title: "About" });
-
-			expect(result.meta).toContainEqual({ title: "About | My Site" });
+		const result = generateMetadata({
+			title: "Blog",
+			description: "My blog description",
+			keywords: ["blog", "posts"],
 		});
 
-		test("uses default when title is null", () => {
-			const result = generateMetadata({ title: null });
-
-			expect(result.meta).toContainEqual({ title: "My Site" });
+		expect(result.meta).toContainEqual({ title: "Blog - Site" });
+		expect(result.meta).toContainEqual({
+			name: "description",
+			content: "My blog description",
 		});
-
-		test("uses default when title is undefined", () => {
-			const result = generateMetadata({});
-
-			expect(result.meta).toContainEqual({ title: "My Site" });
-		});
-
-		test("ignores template when title is absolute", () => {
-			const result = generateMetadata({ title: { absolute: "Home" } });
-
-			expect(result.meta).toContainEqual({ title: "Home" });
-		});
-
-		test("handles absolute title with special characters", () => {
-			const result = generateMetadata({
-				title: { absolute: "Welcome | Special Page" },
-			});
-
-			expect(result.meta).toContainEqual({ title: "Welcome | Special Page" });
+		expect(result.meta).toContainEqual({
+			name: "keywords",
+			content: "blog,posts",
 		});
 	});
 
-	describe("with other metadata fields", () => {
-		test("preserves other metadata when applying title template", () => {
-			const generateMetadata = createMetadataGenerator({
-				titleTemplate: { default: "Site", template: "%s - Site" },
-			});
-
-			const result = generateMetadata({
-				title: "Blog",
-				description: "My blog description",
-				keywords: ["blog", "posts"],
-			});
-
-			expect(result.meta).toContainEqual({ title: "Blog - Site" });
-			expect(result.meta).toContainEqual({
-				name: "description",
-				content: "My blog description",
-			});
-			expect(result.meta).toContainEqual({
-				name: "keywords",
-				content: "blog,posts",
-			});
-		});
-	});
-
-	describe("template variations", () => {
-		test("supports prefix template", () => {
-			const generateMetadata = createMetadataGenerator({
-				titleTemplate: { default: "Home", template: "Acme | %s" },
-			});
-
-			const result = generateMetadata({ title: "Products" });
-
-			expect(result.meta).toContainEqual({ title: "Acme | Products" });
+	test("combines titleTemplate and baseUrl options", () => {
+		const generateMetadata = createMetadataGenerator({
+			titleTemplate: { default: "Site", template: "%s | Site" },
+			baseUrl: "https://example.com",
 		});
 
-		test("supports template without separator", () => {
-			const generateMetadata = createMetadataGenerator({
-				titleTemplate: { default: "Welcome", template: "%s" },
-			});
-
-			const result = generateMetadata({ title: "Hello" });
-
-			expect(result.meta).toContainEqual({ title: "Hello" });
+		const result = generateMetadata({
+			title: "About",
+			icons: "/favicon.ico",
 		});
 
-		test("handles empty string title with template", () => {
-			const generateMetadata = createMetadataGenerator({
-				titleTemplate: { default: "Default", template: "%s | Site" },
-			});
-
-			const result = generateMetadata({ title: "" });
-
-			expect(result.meta).toContainEqual({ title: " | Site" });
-		});
-
-		test("replaces all %s placeholders", () => {
-			const generateMetadata = createMetadataGenerator({
-				titleTemplate: { default: "Site", template: "%s | %s | Site" },
-			});
-
-			const result = generateMetadata({ title: "Docs" });
-
-			expect(result.meta).toContainEqual({ title: "Docs | Docs | Site" });
+		expect(result.meta).toContainEqual({ title: "About | Site" });
+		expect(result.links).toContainEqual({
+			rel: "icon",
+			href: "https://example.com/favicon.ico",
 		});
 	});
 });

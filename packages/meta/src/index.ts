@@ -1,7 +1,14 @@
 import { links } from "./links";
 import { meta } from "./meta";
 import { normalizeMetadata } from "./normalize";
-import type { InputMetadata, OutputLinks, OutputMeta } from "./types/io";
+import { resolveIcons } from "./resolve/icons";
+import { resolveTitle } from "./resolve/title";
+import type {
+	GeneratorInputMetadata,
+	InputMetadata,
+	OutputLinks,
+	OutputMeta,
+} from "./types/io";
 
 type OutputMetadata = {
 	meta: OutputMeta;
@@ -17,47 +24,20 @@ export function generateMetadata(metadata: InputMetadata): OutputMetadata {
 	};
 }
 
-type GeneratorInputMetadata = Omit<InputMetadata, "title"> & {
-	title?: string | { absolute: string } | null;
-};
-
-function resolveTitle(
-	metadata: GeneratorInputMetadata,
-	options: { titleTemplate?: { default: string; template: string } },
-) {
-	let title: string | null | undefined;
-
-	if (
-		metadata.title &&
-		typeof metadata.title === "object" &&
-		"absolute" in metadata.title
-	) {
-		title = metadata.title.absolute;
-	} else {
-		const { titleTemplate } = options;
-		if (!titleTemplate) {
-			title = metadata.title;
-		} else {
-			if (typeof metadata.title === "string") {
-				title = titleTemplate.template.split("%s").join(metadata.title);
-			} else {
-				title = titleTemplate.default;
-			}
-		}
-	}
-
-	return title;
-}
-
 export function createMetadataGenerator(
-	options: { titleTemplate?: { default: string; template: string } } = {},
-) {
+	options: {
+		titleTemplate?: { default: string; template: string };
+		baseUrl?: string | URL | null;
+	} = {},
+): (metadata: GeneratorInputMetadata) => OutputMetadata {
 	return (metadata: GeneratorInputMetadata) => {
-		const title = resolveTitle(metadata, options);
+		const title = resolveTitle(metadata, options.titleTemplate);
+		const icons = resolveIcons(metadata, options.baseUrl);
 
 		return generateMetadata({
 			...metadata,
 			title,
+			icons,
 		});
 	};
 }
