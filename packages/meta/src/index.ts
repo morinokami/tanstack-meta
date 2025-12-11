@@ -2,6 +2,7 @@ import { links } from "./links";
 import { meta } from "./meta";
 import { normalizeMetadata } from "./normalize";
 import { resolveIcons } from "./resolve/icons";
+import { resolveManifest } from "./resolve/manifest";
 import { resolveTitle } from "./resolve/title";
 import type {
 	GeneratorInputMetadata,
@@ -33,11 +34,13 @@ export function createMetadataGenerator(
 	return (metadata: GeneratorInputMetadata) => {
 		const title = resolveTitle(metadata, options.titleTemplate);
 		const icons = resolveIcons(metadata, options.baseUrl);
+		const manifest = resolveManifest(metadata, options.baseUrl);
 
 		return generateMetadata({
 			...metadata,
 			title,
 			icons,
+			manifest,
 		});
 	};
 }

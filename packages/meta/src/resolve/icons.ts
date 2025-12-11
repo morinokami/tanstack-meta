@@ -1,15 +1,6 @@
 import type { GeneratorInputMetadata, InputMetadata } from "../types/io";
 import type { Icon, Icons } from "../types/metadata-types";
-
-function resolveUrl(url: string | URL, baseUrl: string | URL): string {
-	const urlString = url.toString();
-
-	if (urlString.startsWith("http://") || urlString.startsWith("https://")) {
-		return urlString;
-	}
-
-	return new URL(urlString, baseUrl).toString();
-}
+import { resolveUrl } from "./utils";
 
 function resolveIcon(icon: Icon, baseUrl: string | URL): Icon {
 	if (typeof icon === "string" || icon instanceof URL) {
