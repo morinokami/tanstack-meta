@@ -2,6 +2,7 @@ import { links } from "./links";
 import { meta } from "./meta";
 import { normalizeMetadata } from "./normalize";
 import { resolveAlternates } from "./resolve/alternates";
+import { resolveAppLinks } from "./resolve/app-links";
 import { resolveArchives } from "./resolve/archives";
 import { resolveAssets } from "./resolve/assets";
 import { resolveBookmarks } from "./resolve/bookmarks";
@@ -44,6 +45,7 @@ export function createMetadataGenerator(
 		const archives = resolveArchives(metadata, options.baseUrl);
 		const bookmarks = resolveBookmarks(metadata, options.baseUrl);
 		const alternates = resolveAlternates(metadata, options.baseUrl);
+		const appLinks = resolveAppLinks(metadata, options.baseUrl);
 
 		return generateMetadata({
 			...metadata,
@@ -54,6 +56,7 @@ export function createMetadataGenerator(
 			archives,
 			bookmarks,
 			alternates,
+			appLinks,
 		});
 	};
 }
