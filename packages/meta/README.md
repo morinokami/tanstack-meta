@@ -42,7 +42,7 @@ export const Route = createFileRoute("/")({
 })
 ```
 
-You can use it almost the same way as Next.js's [`generateMetadata`](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) function, but note that currently there is no equivalent option for `metadataBase`.
+You can use it almost the same way as Next.js's [`generateMetadata`](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) function.
 
 ### Title Template
 
@@ -79,6 +79,63 @@ generateMetadata({ title: { absolute: "Home" } })
 
 `%s` placeholders are all replaced. For example, `template: "%s | %s | My Site"` with `title: "Docs"` renders `<title>Docs | Docs | My Site</title>`.
 
+### Base URL
+
+Similar to Next.js's `metadataBase`, you can use the `baseUrl` option to resolve relative URLs to absolute URLs for metadata fields like `icons`, `openGraph`, `twitter`, `alternates`, `appLinks`, `manifest`, `assets`, `archives`, and `bookmarks`:
+
+```ts
+import { createMetadataGenerator } from "tanstack-meta";
+
+const generateMetadata = createMetadataGenerator({
+  baseUrl: "https://example.com"
+});
+
+// Relative URLs are resolved to absolute URLs
+generateMetadata({
+  icons: "/favicon.ico",
+  openGraph: {
+    images: "/og.png"
+  }
+})
+// Output:
+// <link rel="icon" href="https://example.com/favicon.ico" />
+// <meta property="og:image" content="https://example.com/og.png" />
+```
+
+You can also pass a `URL` object:
+
+```ts
+const generateMetadata = createMetadataGenerator({
+  baseUrl: new URL("https://example.com")
+});
+```
+
+Absolute URLs are preserved unchanged:
+
+```ts
+generateMetadata({
+  icons: "https://cdn.example.com/favicon.ico"
+})
+// Output: <link rel="icon" href="https://cdn.example.com/favicon.ico" />
+```
+
+You can combine `baseUrl` with `titleTemplate`:
+
+```ts
+const generateMetadata = createMetadataGenerator({
+  titleTemplate: { default: "My Site", template: "%s | My Site" },
+  baseUrl: "https://example.com"
+});
+
+generateMetadata({
+  title: "About",
+  icons: "/favicon.ico"
+})
+// Output:
+// <title>About | My Site</title>
+// <link rel="icon" href="https://example.com/favicon.ico" />
+```
+
 ## Reference
 
 ### `generateMetadata`
@@ -95,7 +152,7 @@ An object containing `meta` and `links` properties, which can be used as the ret
 
 ### `createMetadataGenerator`
 
-Creates a customized metadata generator with options like title templates.
+Creates a customized metadata generator with options like title templates and base URL resolution.
 
 #### Parameters
 
@@ -104,6 +161,16 @@ An options object with the following properties:
 - `titleTemplate` (optional): An object containing:
   - `default`: The default title used when no title is provided
   - `template`: A template string where `%s` is replaced with the page title
+- `baseUrl` (optional): A string or `URL` object used to resolve relative URLs to absolute URLs. Applies to:
+  - `icons`
+  - `openGraph` (images, audio, videos, url)
+  - `twitter` (images, players, app URLs)
+  - `alternates` (canonical, languages, media, types)
+  - `appLinks` (URLs for ios, android, web, windows, windows_phone, windows_universal)
+  - `manifest`
+  - `assets`
+  - `archives`
+  - `bookmarks`
 
 #### Return Value
 
