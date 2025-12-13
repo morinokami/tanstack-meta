@@ -549,3 +549,7 @@ export type NormalizedMetadata = {
 
 export type OutputMeta = NonNullable<AnyRouteMatch["meta"]>;
 export type OutputLinks = NonNullable<AnyRouteMatch["links"]>;
+
+export type GeneratorInputMetadata = Omit<InputMetadata, "title"> & {
+	title?: string | { absolute: string } | null;
+};
