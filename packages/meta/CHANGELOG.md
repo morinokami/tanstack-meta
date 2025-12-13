@@ -1,5 +1,11 @@
 # tanstack-meta
 
+## 0.5.0
+
+### Minor Changes
+
+- [#31](https://github.com/morinokami/tanstack-meta/pull/31) [`ce55b48`](https://github.com/morinokami/tanstack-meta/commit/ce55b488e960d78c9059b61a49bc9570db454f66) Thanks [@morinokami](https://github.com/morinokami)! - feat: add baseUrl option for resolving relative URLs in metadata
+
 ## 0.4.0
 
 ### Minor Changes
