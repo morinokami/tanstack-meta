@@ -8,7 +8,9 @@ import { resolveAssets } from "./resolve/assets";
 import { resolveBookmarks } from "./resolve/bookmarks";
 import { resolveIcons } from "./resolve/icons";
 import { resolveManifest } from "./resolve/manifest";
+import { resolveOpenGraph } from "./resolve/opengraph";
 import { resolveTitle } from "./resolve/title";
+import { resolveTwitter } from "./resolve/twitter";
 import type {
 	GeneratorInputMetadata,
 	InputMetadata,
@@ -39,6 +41,8 @@ export function createMetadataGenerator(
 	return (metadata: GeneratorInputMetadata) => {
 		const title = resolveTitle(metadata, options.titleTemplate);
 
+		const openGraph = resolveOpenGraph(metadata, options.baseUrl);
+		const twitter = resolveTwitter(metadata, options.baseUrl);
 		const icons = resolveIcons(metadata, options.baseUrl);
 		const manifest = resolveManifest(metadata, options.baseUrl);
 		const assets = resolveAssets(metadata, options.baseUrl);
@@ -50,6 +54,8 @@ export function createMetadataGenerator(
 		return generateMetadata({
 			...metadata,
 			title,
+			openGraph,
+			twitter,
 			icons,
 			manifest,
 			assets,
