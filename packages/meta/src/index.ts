@@ -2,14 +2,6 @@ import { links } from "./links";
 import { meta } from "./meta";
 import { normalizeMetadata } from "./normalize";
 import { resolveAlternates } from "./resolve/alternates";
-import { resolveAppLinks } from "./resolve/app-links";
-import {
-	resolveArchives,
-	resolveAssets,
-	resolveBookmarks,
-	resolveManifest,
-} from "./resolve/basic";
-import { resolveIcons } from "./resolve/icons";
 import { resolveOpenGraph } from "./resolve/opengraph";
 import { resolveTitle } from "./resolve/title";
 import { resolveTwitter } from "./resolve/twitter";
@@ -45,26 +37,14 @@ export function createMetadataGenerator(
 
 		const openGraph = resolveOpenGraph(metadata, options.baseUrl);
 		const twitter = resolveTwitter(metadata, options.baseUrl);
-		const icons = resolveIcons(metadata, options.baseUrl);
-		const manifest = resolveManifest(metadata, options.baseUrl);
-		const assets = resolveAssets(metadata, options.baseUrl);
-		const archives = resolveArchives(metadata, options.baseUrl);
-		const bookmarks = resolveBookmarks(metadata, options.baseUrl);
 		const alternates = resolveAlternates(metadata, options.baseUrl);
-		const appLinks = resolveAppLinks(metadata, options.baseUrl);
 
 		return generateMetadata({
 			...metadata,
 			title,
 			openGraph,
 			twitter,
-			icons,
-			manifest,
-			assets,
-			archives,
-			bookmarks,
 			alternates,
-			appLinks,
 		});
 	};
 }

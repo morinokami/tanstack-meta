@@ -81,7 +81,7 @@ generateMetadata({ title: { absolute: "Home" } })
 
 ### Base URL
 
-Similar to Next.js's `metadataBase`, you can use the `baseUrl` option to resolve relative URLs to absolute URLs for metadata fields like `icons`, `openGraph`, `twitter`, `alternates`, `appLinks`, `manifest`, `assets`, `archives`, and `bookmarks`:
+Similar to Next.js's `metadataBase`, you can use the `baseUrl` option to resolve relative URLs to absolute URLs for metadata fields like `openGraph`, `twitter`, and `alternates`:
 
 ```ts
 import { createMetadataGenerator } from "tanstack-meta";
@@ -92,14 +92,16 @@ const generateMetadata = createMetadataGenerator({
 
 // Relative URLs are resolved to absolute URLs
 generateMetadata({
-  icons: "/favicon.ico",
   openGraph: {
     images: "/og.png"
+  },
+  alternates: {
+    canonical: "/about"
   }
 })
 // Output:
-// <link rel="icon" href="https://example.com/favicon.ico" />
 // <meta property="og:image" content="https://example.com/og.png" />
+// <link rel="canonical" href="https://example.com/about" />
 ```
 
 You can also pass a `URL` object:
@@ -114,9 +116,11 @@ Absolute URLs are preserved unchanged:
 
 ```ts
 generateMetadata({
-  icons: "https://cdn.example.com/favicon.ico"
+  openGraph: {
+    images: "https://cdn.example.com/og.png"
+  }
 })
-// Output: <link rel="icon" href="https://cdn.example.com/favicon.ico" />
+// Output: <meta property="og:image" content="https://cdn.example.com/og.png" />
 ```
 
 You can combine `baseUrl` with `titleTemplate`:
@@ -129,11 +133,13 @@ const generateMetadata = createMetadataGenerator({
 
 generateMetadata({
   title: "About",
-  icons: "/favicon.ico"
+  openGraph: {
+    images: "/og.png"
+  }
 })
 // Output:
 // <title>About | My Site</title>
-// <link rel="icon" href="https://example.com/favicon.ico" />
+// <meta property="og:image" content="https://example.com/og.png" />
 ```
 
 ## Reference
@@ -162,15 +168,9 @@ An options object with the following properties:
   - `default`: The default title used when no title is provided
   - `template`: A template string where `%s` is replaced with the page title
 - `baseUrl` (optional): A string or `URL` object used to resolve relative URLs to absolute URLs. Applies to:
-  - `icons`
   - `openGraph` (images, audio, videos, url)
   - `twitter` (images, players, app URLs)
   - `alternates` (canonical, languages, media, types)
-  - `appLinks` (URLs for ios, android, web, windows, windows_phone, windows_universal)
-  - `manifest`
-  - `assets`
-  - `archives`
-  - `bookmarks`
 
 #### Return Value
 

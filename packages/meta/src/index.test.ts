@@ -56,13 +56,13 @@ describe("createMetadataGenerator", () => {
 
 		const result = generateMetadata({
 			title: "About",
-			icons: "/favicon.ico",
+			openGraph: { images: "/og.png" },
 		});
 
 		expect(result.meta).toContainEqual({ title: "About | Site" });
-		expect(result.links).toContainEqual({
-			rel: "icon",
-			href: "https://example.com/favicon.ico",
+		expect(result.meta).toContainEqual({
+			property: "og:image",
+			content: "https://example.com/og.png",
 		});
 	});
 });
