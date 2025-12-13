@@ -5,4 +5,5 @@ export const generateMetadata = createMetadataGenerator({
 		default: "TanStack | High Quality Open-Source Software for Web Developers",
 		template: "%s | High Quality Open-Source Software for Web Developers",
 	},
+	baseUrl: "https://tanstack.com",
 });

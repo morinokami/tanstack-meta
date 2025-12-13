@@ -13,7 +13,7 @@ export const Route = createRootRoute({
 			"TanStack | High Quality Open-Source Software for Web Developers";
 		const description =
 			"Headless, type-safe, powerful utilities for complex workflows like Data Management, Data Visualization, Charts, Tables, and UI Components.";
-		const ogImage = "https://tanstack.com/assets/og-C0HGjoLl.png";
+		const ogImage = "/assets/og-C0HGjoLl.png";
 
 		const { meta, links } = generateMetadata({
 			charSet: "utf-8",
