@@ -3,11 +3,13 @@ import { meta } from "./meta";
 import { normalizeMetadata } from "./normalize";
 import { resolveAlternates } from "./resolve/alternates";
 import { resolveAppLinks } from "./resolve/app-links";
-import { resolveArchives } from "./resolve/archives";
-import { resolveAssets } from "./resolve/assets";
-import { resolveBookmarks } from "./resolve/bookmarks";
+import {
+	resolveArchives,
+	resolveAssets,
+	resolveBookmarks,
+	resolveManifest,
+} from "./resolve/basic";
 import { resolveIcons } from "./resolve/icons";
-import { resolveManifest } from "./resolve/manifest";
 import { resolveOpenGraph } from "./resolve/opengraph";
 import { resolveTitle } from "./resolve/title";
 import { resolveTwitter } from "./resolve/twitter";
