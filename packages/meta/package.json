@@ -33,9 +33,9 @@
 		"publint": "publint"
 	},
 	"devDependencies": {
-		"@tanstack/react-router": "1.140.0",
-		"@typescript/native-preview": "7.0.0-dev.20251209.1",
-		"publint": "0.3.15",
-		"tsdown": "0.17.2"
+		"@tanstack/react-router": "1.141.2",
+		"@typescript/native-preview": "7.0.0-dev.20251213.1",
+		"publint": "0.3.16",
+		"tsdown": "0.17.3"
 	}
 }
