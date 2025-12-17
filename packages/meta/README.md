@@ -39,7 +39,7 @@ export const Route = createFileRoute("/")({
 
     return { meta, links };
   },
-})
+});
 ```
 
 You can use it almost the same way as Next.js's [`generateMetadata`](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) function.
@@ -55,25 +55,50 @@ import { createMetadataGenerator } from "tanstack-meta";
 const generateMetadata = createMetadataGenerator({
   titleTemplate: {
     default: "Default Title", // Used when title is not provided
-    template: "%s | My Site"  // %s is replaced with the page title
-  }
+    template: "%s | My Site", // %s is replaced with the page title
+  },
 });
 
 // In your routes:
-generateMetadata({ title: "About" })
+generateMetadata({ title: "About" });
 // Output: <title>About | My Site</title>
 
-generateMetadata({ title: null })
+generateMetadata({ title: null });
 // Output: <title>Default Title</title>
 
-generateMetadata({})
+generateMetadata({});
 // Output: <title>Default Title</title>
+```
+
+You can also use a function for more complex title transformations:
+
+```ts
+const generateMetadata = createMetadataGenerator({
+  titleTemplate: {
+    default: "My Site",
+    template: (title) => `${title.toUpperCase()} — My Site`,
+  },
+});
+
+generateMetadata({ title: "about" });
+// Output: <title>ABOUT — My Site</title>
+
+// Conditional logic example
+const generateMetadata = createMetadataGenerator({
+  titleTemplate: {
+    default: "My Site",
+    template: (title) =>
+      title.length > 50
+        ? `${title.slice(0, 47)}... | My Site`
+        : `${title} | My Site`,
+  },
+});
 ```
 
 To opt out of the title template on a specific page, use `title.absolute`:
 
 ```ts
-generateMetadata({ title: { absolute: "Home" } })
+generateMetadata({ title: { absolute: "Home" } });
 // Output: <title>Home</title> (template is ignored)
 ```
 
@@ -87,18 +112,18 @@ Similar to Next.js's `metadataBase`, you can use the `baseUrl` option to resolve
 import { createMetadataGenerator } from "tanstack-meta";
 
 const generateMetadata = createMetadataGenerator({
-  baseUrl: "https://example.com"
+  baseUrl: "https://example.com",
 });
 
 // Relative URLs are resolved to absolute URLs
 generateMetadata({
   openGraph: {
-    images: "/og.png"
+    images: "/og.png",
   },
   alternates: {
-    canonical: "/about"
-  }
-})
+    canonical: "/about",
+  },
+});
 // Output:
 // <meta property="og:image" content="https://example.com/og.png" />
 // <link rel="canonical" href="https://example.com/about" />
@@ -108,7 +133,7 @@ You can also pass a `URL` object:
 
 ```ts
 const generateMetadata = createMetadataGenerator({
-  baseUrl: new URL("https://example.com")
+  baseUrl: new URL("https://example.com"),
 });
 ```
 
@@ -117,9 +142,9 @@ Absolute URLs are preserved unchanged:
 ```ts
 generateMetadata({
   openGraph: {
-    images: "https://cdn.example.com/og.png"
-  }
-})
+    images: "https://cdn.example.com/og.png",
+  },
+});
 // Output: <meta property="og:image" content="https://cdn.example.com/og.png" />
 ```
 
@@ -128,15 +153,15 @@ You can combine `baseUrl` with `titleTemplate`:
 ```ts
 const generateMetadata = createMetadataGenerator({
   titleTemplate: { default: "My Site", template: "%s | My Site" },
-  baseUrl: "https://example.com"
+  baseUrl: "https://example.com",
 });
 
 generateMetadata({
   title: "About",
   openGraph: {
-    images: "/og.png"
-  }
-})
+    images: "/og.png",
+  },
+});
 // Output:
 // <title>About | My Site</title>
 // <meta property="og:image" content="https://example.com/og.png" />
@@ -166,7 +191,7 @@ An options object with the following properties:
 
 - `titleTemplate` (optional): An object containing:
   - `default`: The default title used when no title is provided
-  - `template`: A template string where `%s` is replaced with the page title
+  - `template`: A template string where `%s` is replaced with the page title, or a function that receives the page title and returns the formatted title
 - `baseUrl` (optional): A string or `URL` object used to resolve relative URLs to absolute URLs. Applies to:
   - `openGraph` (images, audio, videos, url)
   - `twitter` (images, players, app URLs)

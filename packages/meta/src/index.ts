@@ -3,7 +3,7 @@ import { meta } from "./meta";
 import { normalizeMetadata } from "./normalize";
 import { resolveAlternates } from "./resolve/alternates";
 import { resolveOpenGraph } from "./resolve/opengraph";
-import { resolveTitle } from "./resolve/title";
+import { resolveTitle, type TitleTemplate } from "./resolve/title";
 import { resolveTwitter } from "./resolve/twitter";
 import type {
 	GeneratorInputMetadata,
@@ -28,7 +28,7 @@ export function generateMetadata(metadata: InputMetadata): OutputMetadata {
 
 export function createMetadataGenerator(
 	options: {
-		titleTemplate?: { default: string; template: string };
+		titleTemplate?: TitleTemplate;
 		baseUrl?: string | URL | null;
 	} = {},
 ): (metadata: GeneratorInputMetadata) => OutputMetadata {
@@ -49,4 +49,9 @@ export function createMetadataGenerator(
 	};
 }
 
-export type { InputMetadata, OutputMetadata, GeneratorInputMetadata };
+export type {
+	InputMetadata,
+	OutputMetadata,
+	GeneratorInputMetadata,
+	TitleTemplate,
+};

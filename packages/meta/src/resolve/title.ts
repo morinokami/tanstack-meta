@@ -1,8 +1,13 @@
 import type { GeneratorInputMetadata, InputMetadata } from "../types/io";
 
+export type TitleTemplate = {
+	default: string;
+	template: string | ((title: string) => string);
+};
+
 export function resolveTitle(
 	metadata: GeneratorInputMetadata,
-	titleTemplate?: { default: string; template: string },
+	titleTemplate?: TitleTemplate,
 ): InputMetadata["title"] {
 	let title: string | null | undefined;
 
@@ -17,7 +22,11 @@ export function resolveTitle(
 			title = metadata.title;
 		} else {
 			if (typeof metadata.title === "string") {
-				title = titleTemplate.template.split("%s").join(metadata.title);
+				if (typeof titleTemplate.template === "function") {
+					title = titleTemplate.template(metadata.title);
+				} else {
+					title = titleTemplate.template.split("%s").join(metadata.title);
+				}
 			} else {
 				title = titleTemplate.default;
 			}

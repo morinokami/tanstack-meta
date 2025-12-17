@@ -100,4 +100,74 @@ describe("resolveTitle", () => {
 			expect(result).toBe("Docs | Docs | Site");
 		});
 	});
+
+	describe("with template function", () => {
+		test("applies template function to string title", () => {
+			const result = resolveTitle(
+				{ title: "About" },
+				{ default: "My Site", template: (title) => `${title} | My Site` },
+			);
+
+			expect(result).toBe("About | My Site");
+		});
+
+		test("allows complex transformations", () => {
+			const result = resolveTitle(
+				{ title: "hello world" },
+				{
+					default: "My Site",
+					template: (title) => `${title.toUpperCase()} — My Site`,
+				},
+			);
+
+			expect(result).toBe("HELLO WORLD — My Site");
+		});
+
+		test("uses default when title is null with template function", () => {
+			const result = resolveTitle(
+				{ title: null },
+				{ default: "My Site", template: (title) => `${title} | My Site` },
+			);
+
+			expect(result).toBe("My Site");
+		});
+
+		test("uses default when title is undefined with template function", () => {
+			const result = resolveTitle(
+				{},
+				{ default: "My Site", template: (title) => `${title} | My Site` },
+			);
+
+			expect(result).toBe("My Site");
+		});
+
+		test("ignores template function when title is absolute", () => {
+			const result = resolveTitle(
+				{ title: { absolute: "Home" } },
+				{ default: "My Site", template: (title) => `${title} | My Site` },
+			);
+
+			expect(result).toBe("Home");
+		});
+
+		test("supports conditional logic in template function", () => {
+			const result = resolveTitle(
+				{
+					title:
+						"This is a very long title that exceeds fifty characters in length",
+				},
+				{
+					default: "My Site",
+					template: (title) =>
+						title.length > 50
+							? `${title.slice(0, 47)}... | My Site`
+							: `${title} | My Site`,
+				},
+			);
+
+			expect(result).toBe(
+				"This is a very long title that exceeds fifty ch... | My Site",
+			);
+		});
+	});
 });
