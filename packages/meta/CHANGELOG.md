@@ -1,5 +1,11 @@
 # tanstack-meta
 
+## 0.6.0
+
+### Minor Changes
+
+- [#36](https://github.com/morinokami/tanstack-meta/pull/36) [`b0a9208`](https://github.com/morinokami/tanstack-meta/commit/b0a9208e8258ccb9b754bcff47a12dfb71224a24) Thanks [@morinokami](https://github.com/morinokami)! - feat: support callback function in titleTemplate.template option
+
 ## 0.5.1
 
 ### Patch Changes
