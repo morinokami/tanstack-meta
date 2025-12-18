@@ -14,7 +14,7 @@
     },
     "packages/meta": {
       "name": "tanstack-meta",
-      "version": "0.5.0",
+      "version": "0.6.0",
       "devDependencies": {
         "@tanstack/react-router": "1.141.2",
         "@typescript/native-preview": "7.0.0-dev.20251213.1",

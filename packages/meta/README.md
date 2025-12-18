@@ -647,3 +647,142 @@ A function that accepts metadata (with extended `title` support) and returns the
     <!-- Output -->
     <meta name="format-detection" content="telephone=no" />
     ```
+
+## Migration from Next.js
+
+If you're migrating from Next.js, `tanstack-meta` provides a familiar API that closely mirrors Next.js's [Metadata API](https://nextjs.org/docs/app/api-reference/functions/generate-metadata). Most metadata objects can be used as-is with minimal changes.
+
+### Basic Migration
+
+**Next.js**:
+
+```tsx
+// app/page.tsx
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "My Page",
+  description: "Page description",
+  openGraph: {
+    title: "My Page",
+    images: ["/og.png"],
+  },
+};
+
+export default function Page() {
+  return <div>...</div>;
+}
+```
+
+**tanstack-meta**:
+
+```tsx
+// routes/index.tsx
+import { createFileRoute } from "@tanstack/react-router";
+import { generateMetadata } from "tanstack-meta";
+
+export const Route = createFileRoute("/")({
+  component: Page,
+  head: () =>
+    generateMetadata({
+      title: "My Page",
+      description: "Page description",
+      openGraph: {
+        title: "My Page",
+        images: ["/og.png"],
+      },
+    }),
+});
+
+function Page() {
+  return <div>...</div>;
+}
+```
+
+### Title Template Migration
+
+In Next.js, title templates are defined in the metadata object. In `tanstack-meta`, use `createMetadataGenerator` to configure templates.
+
+**Next.js**:
+
+```tsx
+// app/layout.tsx
+export const metadata: Metadata = {
+  title: {
+    template: "%s | My Site",
+    default: "My Site",
+  },
+};
+
+// app/about/page.tsx
+export const metadata: Metadata = {
+  title: "About",
+  // Output: <title>About | My Site</title>
+};
+```
+
+**tanstack-meta**:
+
+```tsx
+// src/meta.ts
+import { createMetadataGenerator } from "tanstack-meta";
+
+export const generateMetadata = createMetadataGenerator({
+  titleTemplate: {
+    template: "%s | My Site",
+    default: "My Site",
+  },
+});
+
+// routes/about.tsx
+import { generateMetadata } from "../meta";
+
+export const Route = createFileRoute("/about")({
+  head: () => generateMetadata({ title: "About" }),
+  // Output: <title>About | My Site</title>
+});
+```
+
+### metadataBase Migration
+
+Next.js's `metadataBase` is replaced with `baseUrl` in `createMetadataGenerator`.
+
+**Next.js**:
+
+```tsx
+// app/layout.tsx
+export const metadata: Metadata = {
+  metadataBase: new URL("https://example.com"),
+  openGraph: {
+    images: "/og.png", // Resolved to https://example.com/og.png
+  },
+};
+```
+
+**tanstack-meta**:
+
+```tsx
+// src/meta.ts
+import { createMetadataGenerator } from "tanstack-meta";
+
+export const generateMetadata = createMetadataGenerator({
+  baseUrl: "https://example.com",
+});
+
+// routes/index.tsx
+generateMetadata({
+  openGraph: {
+    images: "/og.png", // Resolved to https://example.com/og.png
+  },
+});
+```
+
+### Key Differences
+
+| | Next.js | tanstack-meta |
+| --- | --- | --- |
+| Definition location | `metadata` export in `page.tsx`/`layout.tsx` | `head` function in route definition |
+| Title template | `title.template` in metadata object | `titleTemplate` in `createMetadataGenerator` |
+| Base URL | `metadataBase` in metadata object | `baseUrl` in `createMetadataGenerator` |
+| Output format | Automatically injected into `<head>` | Returns `{ meta, links }` for TanStack Router |
+| Inheritance | Automatic parent-child merging | Manual composition via shared generator |
