@@ -1,5 +1,11 @@
 # tanstack-meta
 
+## 0.6.1
+
+### Patch Changes
+
+- [#38](https://github.com/morinokami/tanstack-meta/pull/38) [`ae95c8b`](https://github.com/morinokami/tanstack-meta/commit/ae95c8b83c390a9de4f8bfb97067e322e0470398) Thanks [@morinokami](https://github.com/morinokami)! - chore: update dependencies
+
 ## 0.6.0
 
 ### Minor Changes
