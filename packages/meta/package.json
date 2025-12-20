@@ -1,6 +1,6 @@
 {
 	"name": "tanstack-meta",
-	"version": "0.6.0",
+	"version": "0.6.1",
 	"description": "A small library that helps you manage document heads type-safely in TanStack Router/Start",
 	"keywords": [
 		"react",
